@@ -71,7 +71,7 @@ namespace DumbML {
             };
 
             context.SaveData("ctk", ctk);
-            base.output = output;
+            this.output = output;
             
             return output;
         }
@@ -90,6 +90,10 @@ namespace DumbML {
             return (error, new JaggedTensor( gradients));
         }
         public override void Update(JaggedTensor gradients) {
+            if (!Trainable) {
+                return;
+            }
+
             JaggedTensor[] inner = gradients.inner;
 
             for (int i = 0; i < Layers.Count; i++) {

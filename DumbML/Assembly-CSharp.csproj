@@ -91,6 +91,7 @@
     <Compile Include="Assets\GridBased\Rectangle.cs" />
     <Compile Include="Assets\MLTest\AutoencoderTest.cs" />
     <Compile Include="Assets\MLTest\ConvTest.cs" />
+    <Compile Include="Assets\MLTest\GANTester.cs" />
     <Compile Include="Assets\MLTest\PrioritizedBufferTest.cs" />
     <Compile Include="Assets\MLTest\TensorTest.cs" />
     <Compile Include="Assets\MLTest\TestScript.cs" />

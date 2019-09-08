@@ -20,6 +20,9 @@ namespace DumbML {
 
         public override void Update(JaggedTensor[] layerGradients) {
             for (int i = 0; i < layers.Count; i++) {
+                if (!layers[i].Trainable) {
+                    continue;
+                }
                 JaggedTensor gradient = layerGradients[i];
 
                 if (m[i] == null) {

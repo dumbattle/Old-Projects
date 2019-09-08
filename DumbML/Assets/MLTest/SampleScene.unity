@@ -216,6 +216,7 @@ GameObject:
   - component: {fileID: 923556436}
   - component: {fileID: 923556437}
   - component: {fileID: 923556439}
+  - component: {fileID: 923556438}
   m_Layer: 0
   m_Name: Main
   m_TagString: Untagged
@@ -278,7 +279,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   loss: 0
---- !u!114 &923556439
+--- !u!114 &923556438
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -286,6 +287,30 @@ MonoBehaviour:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 923556433}
   m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 12f6c77e24cc9014abe53d7f7c29e71a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  noiseSize: 100
+  testInd: 0
+  tile: {fileID: 1550257537}
+  codeSize: 10
+  loss: 0
+  nna: {fileID: 11400000, guid: 11447f7708991754a9c4839856bacb1c, type: 2}
+  Images: {fileID: 11400000, guid: a1409057eaaa95740be3c6eb7686915a, type: 2}
+  delay: 0
+  epoch: 0
+  batchSize: 8
+  saveInterval: 1
+  remaining: 0
+--- !u!114 &923556439
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 923556433}
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3c2f1fec9cade474a884fd22aac4444a, type: 3}
   m_Name: 
@@ -298,7 +323,7 @@ MonoBehaviour:
   Images: {fileID: 11400000, guid: a1409057eaaa95740be3c6eb7686915a, type: 2}
   delay: 0
   epoch: 0
-  batchSize: 8
+  batchSize: 32
   saveInterval: 1
 --- !u!1 &1550257537
 GameObject:

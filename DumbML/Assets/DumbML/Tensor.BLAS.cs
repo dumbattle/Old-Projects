@@ -349,7 +349,9 @@ namespace DumbML {
                 throw new InvalidOperationException("Tensors have to be 3D to perform 2D depthwise deconvolution");
             }
             if (filter.Shape[2] != input.Shape[2]) {
-                throw new InvalidOperationException("Input and filters need to have the same number of channels");
+                throw new InvalidOperationException(
+                    $"Input and filters need to have the same number of channels. " +
+                    $"Input: {input.Shape.TOSTRING()} Filter: {filter.Shape.TOSTRING()}");
             }
 
             (int padX, int padY) = pad ? (filter.Shape[0] - 1, filter.Shape[1] - 1) : (0, 0);
