@@ -24,11 +24,12 @@ public class ConvTest : MonoBehaviour {
         BuildNetwork();
 
 
-        o = new AdaLerp(nn);
+        o = new Adam(nn);
 
         void BuildNetwork() {
             nn = new NeuralNetwork(5, 5, 3);
-            nn.Add(new FullConv((3, 3), 4, (1, 1), WeightInitializer.Default, LeakyRelu.Default, true));
+            nn.Add(new Convolution2D((3,3), 10, (1,1), WeightInitializer.Default, LeakyRelu.Default, true, true));
+            nn.Add(new Deconvolution2D((3,3), 10, (1,1), WeightInitializer.Default, LeakyRelu.Default, true, true));
             nn.Build();
         }
     }

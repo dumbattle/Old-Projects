@@ -7,8 +7,6 @@ namespace DumbML {
         [fsProperty]
         public Tensor Weights;
         [fsProperty]
-        public ActivationFunction af;
-        [fsProperty]
         public bool pad;
         [fsProperty]
         public (int x, int y) stride;
@@ -16,11 +14,10 @@ namespace DumbML {
         protected Func<float> weightInitializer;
 
 
-        public Deconv2DDepthwise((int x, int y) filterSize, (int x, int y) stride = default, Func<float> weightInitializer = null, ActivationFunction af = null, bool pad = false) {
+        public Deconv2DDepthwise((int x, int y) filterSize, (int x, int y) stride = default, Func<float> weightInitializer = null, bool pad = false) {
             this.weightInitializer = weightInitializer ?? WeightInitializer.Default;
             outputShape = new int[] { filterSize.x, filterSize.y, 0 };
 
-            this.af = af ?? ActivationFunction.None;
             this.pad = pad;
             this.stride = (
                 stride.x > 0 ? stride.x : 1,

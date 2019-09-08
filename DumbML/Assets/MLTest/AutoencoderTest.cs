@@ -187,8 +187,8 @@ public class AutoencoderTest : MonoBehaviour {
         }
         float lr = .001f;
 
-        //o = new SGD(autoencoder, lr: .1f, lossFunction: new BinaryAlphaLoss());
-        o = new Adam(autoencoder, lr: lr, lossFunction: new BinaryAlphaLoss());
+        o = new SGD(autoencoder, lr: .1f, lossFunction: new BinaryAlphaLoss());
+        //o = new Adam(autoencoder, lr: lr, lossFunction: new BinaryAlphaLoss());
         //o = new AdaLerp(autoencoder, lr: lr, finalLR: lr, lossFunction: new BinaryAlphaLoss());
     }
 

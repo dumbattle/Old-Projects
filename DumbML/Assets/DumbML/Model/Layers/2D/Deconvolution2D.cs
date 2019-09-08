@@ -57,16 +57,16 @@ namespace DumbML {
     [fsObject(MemberSerialization = fsMemberSerialization.OptIn)]
     public class Deconvolution2D : NeuralNetwork {
         public Deconvolution2D((int x, int y) filterSize, int numOutputChannels, (int x, int y) stride = default, Func<float> weightInitializer = null, ActivationFunction af = null, bool pad = false, bool bias = false) {
-            if (bias) {
 
-                Add(new Deconv2DDepthwise(filterSize, stride, weightInitializer, null, pad));
-                Add(new Conv2DPointwise(numOutputChannels, weightInitializer));
+            Add(new Deconv2DDepthwise(filterSize, stride, weightInitializer, pad));
+            Add(new Conv2DPointwise(numOutputChannels, weightInitializer));
+
+
+            if (bias) {
                 Add(new Bias());
-                Add(new ActivationLayer(af));
             }
-            else {
-                Add(new Deconv2DDepthwise(filterSize, stride, weightInitializer, null, pad));
-                Add(new Conv2DPointwise(numOutputChannels, weightInitializer, af));
+            if (af != null) {
+                Add(new ActivationLayer(af));
             }
         }
         public override void Build(Layer prevLayer) {

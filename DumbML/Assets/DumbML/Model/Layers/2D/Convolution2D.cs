@@ -57,17 +57,15 @@ namespace DumbML {
     [fsObject(MemberSerialization = fsMemberSerialization.OptIn)]
     public class Convolution2D : NeuralNetwork {
         public Convolution2D((int x, int y) filterSize, int numOutputChannels, (int x, int y) stride = default, Func<float> weightInitializer = null, ActivationFunction af = null, bool pad = false, bool bias = false) {
+
+            Add(new Conv2DDepthwise(filterSize, stride, weightInitializer, pad));
+            Add(new Conv2DPointwise(numOutputChannels, weightInitializer));
+
             if (bias) {
-                //Add(new FullConv(filterSize, numOutputChannels, stride, weightInitializer, null, pad));
-                Add(new Conv2DDepthwise(filterSize, stride, weightInitializer, null, pad));
-                Add(new Conv2DPointwise(numOutputChannels, weightInitializer));
                 Add(new Bias());
-                Add(new ActivationLayer(af));
             }
-            else {
-                Add(new Conv2DDepthwise(filterSize, stride, weightInitializer, null, pad));
-                Add(new Conv2DPointwise(numOutputChannels, weightInitializer, af));
-                //Add(new FullConv(filterSize, numOutputChannels, stride, weightInitializer, af, pad));
+            if (af != null) {
+                Add(new ActivationLayer(af));
             }
         }
 
