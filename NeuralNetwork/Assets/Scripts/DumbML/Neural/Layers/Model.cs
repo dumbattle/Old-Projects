@@ -33,8 +33,18 @@
                 inputs[i].SetVal(input[i]);
             }
         }
-        public Variable[] GetWeights() {
+        public Variable[] GetVariables() {
             return forward.GetVariables();
+        }
+
+        public Tensor[] GetWeights() {
+            var vars = forward.GetVariables();
+            Tensor[] result = new Tensor[vars.Length];
+
+            for (int i = 0; i < result.Length; i++) {
+                result[i] = vars[i].Value.Copy();
+            }
+            return result;
         }
     }
 

@@ -23,13 +23,17 @@ public class SerializationTester : MonoBehaviour {
 
 
         print(model.Compute(input));
+
+        var w = model.GetWeights();
+        foreach (var t in w) {
+            print(t);
+        }
     }
 
     Model CreateNewModel() {
-        Variable w = new Tensor(() => Random.value, 10, 10);
 
         Operation op = new Placeholder(10);
-        op = new MatrixMult(op, w);
+        op = new FullyConnected(10).Build(op);
 
         return new Model(op);
     }

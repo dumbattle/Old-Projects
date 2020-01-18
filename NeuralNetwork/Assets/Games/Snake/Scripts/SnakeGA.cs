@@ -202,7 +202,7 @@ public class SnakeGame {
     }
     Tensor[] newGenes;
     public void Mutate(SnakeGame parent) {
-        Variable[] parentGenes = parent.snake.brain.GetWeights();
+        Variable[] parentGenes = parent.snake.brain.GetVariables();
         newGenes = new Tensor[parentGenes.Length];
 
         for (int i = 0; i < newGenes.Length; i++) {
@@ -210,7 +210,7 @@ public class SnakeGame {
         }
     }
     public void ApplyNewGenes() {
-        Variable[] genes = snake.brain.GetWeights();
+        Variable[] genes = snake.brain.GetVariables();
 
         for (int i = 0; i < genes.Length; i++) {
             genes[i].Value = newGenes[i];
@@ -247,7 +247,7 @@ public class Snake {
         brain.Add(new FullyConnected(4, bias: false));
         brain.Build();
 
-        var a = brain.GetWeights()[0];
+        var a = brain.GetVariables()[0];
 
         //return;
         //manual brain setup

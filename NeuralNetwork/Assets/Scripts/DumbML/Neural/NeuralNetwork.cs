@@ -18,7 +18,7 @@ namespace DumbML {
             set {
                 _trainable = value;
 
-                var vars = GetWeights();
+                var vars = GetVariables();
 
                 foreach (var v in vars) {
                     v.Trainable = _trainable;
