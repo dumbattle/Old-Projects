@@ -1,4 +1,6 @@
-﻿namespace DumbML {
+﻿using System;
+
+namespace DumbML {
     public class Model {
         public int[] outputShape => forward?.shape;
         public Operation forward { get; set; }
@@ -45,6 +47,20 @@
                 result[i] = vars[i].Value.Copy();
             }
             return result;
+        }
+        public void SetWeights(Tensor[] weights) {
+            var v = GetVariables();
+
+            if (v.Length != weights.Length) {
+                throw new ArgumentException($"Number of weights does not match number of variables. Got: {weights.Length} Expected: {v.Length}");
+            }
+
+            for (int i = 0; i < v.Length; i++) {
+                if (!weights[i].CheckShape(v[i].shape)) {
+                    throw new ArgumentException($"Cannot set weight, wrong shape. Got: {weights[i].Shape} Expected: {v[i].shape} Index: {i}");
+                }
+                v[i].Value = weights[i].Copy();
+            }
         }
     }
 

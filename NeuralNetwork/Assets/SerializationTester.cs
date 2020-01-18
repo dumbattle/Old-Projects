@@ -21,17 +21,41 @@ public class SerializationTester : MonoBehaviour {
 
         model = CreateNewModel();
 
-
+        print("Model 1 Output:");
         print(model.Compute(input));
 
         var w = model.GetWeights();
+        print("Model 1 Weights:");
         foreach (var t in w) {
+            print(t);
+        }
+        print("");
+        var m2 = CreateNewModel();
+
+        print("Model 2 Output:");
+        print(m2.Compute(input));
+
+        var w2 = m2.GetWeights();
+        print("Model 2 Weights:");
+        foreach (var t in w2) {
+            print(t);
+        }
+        print("");
+        print("Copy model 1 weights to model 2");
+
+        m2.SetWeights(w);
+
+        print("Model 2 Output:");
+        print(m2.Compute(input));
+
+         w2 = m2.GetWeights();
+        print("Model 2 Weights:");
+        foreach (var t in w2) {
             print(t);
         }
     }
 
     Model CreateNewModel() {
-
         Operation op = new Placeholder(10);
         op = new FullyConnected(10).Build(op);
 
