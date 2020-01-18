@@ -11,16 +11,16 @@
         }
 
         public override void Update(JaggedTensor[] layerGradients) {
-            ClipNorm(layerGradients, 1);
+            //ClipNorm(layerGradients, 1);
             for (int i = 0; i < layers.Count; i++) {
 
-                if (m[i] == null) {
-                    m[i] = layerGradients[i];
-                }
-                else {
-                    m[i] *= momentum;
-                    m[i] += layerGradients[i] * (1 - momentum);
-                }
+                //if (m[i] == null) {
+                //    m[i] = layerGradients[i];
+                //}
+                //else {
+                //    m[i] *= momentum;
+                //    m[i] += layerGradients[i] * (1 - momentum);
+                //}
 
                 layers[i].Update(layerGradients[i] * lr);
             }

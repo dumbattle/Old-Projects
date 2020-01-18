@@ -18,29 +18,31 @@ public class TestScript : MonoBehaviour {
     Tensor[] data, labels;
 
     void Start() {
-        nn = new NeuralNetwork(28,28);
-        nn.Add(new Flatten());
-        nn.Add(new FullyConnected(128, () => Random.value - .5f, ActivationFunction.Relu));
-        nn.Add(new FullyConnected(10, () => Random.value - .5f));
-        nn.Add(new SoftMax());
+        nn = new NeuralNetwork(1000);
+        nn.Add(new FullyConnected(1000, () => Random.value - .5f, ActivationFunction.Sigmoid));
+        nn.Add(new FullyConnected(10, () => Random.value - .5f, ActivationFunction.Sigmoid));
 
         nn.Build();
 
 
-        o = new Adam(nn, lr: .001f);
+        o = new SGD(nn, lr: .001f);
         SetData();
-
+        //sw.Start();
+        //for (int i = 0; i < 1; i++) {
+        //    o.Train(data, labels);
+        //}
+        //sw.Stop();
+        //print(sw.ElapsedMilliseconds);
 
     }
      void Update() {
-
         sw.Start();
-        loss = o.Train(data, labels, batchSize: 32);
+        loss = o.Train(data, labels, batchSize: 1);
         sw.Stop();
 
 
         delay *= .9f;
-        delay += .1f * sw.ElapsedMilliseconds / 1000;
+        delay += .1f * sw.ElapsedMilliseconds;
         sw.Reset();
 
 
@@ -52,7 +54,7 @@ public class TestScript : MonoBehaviour {
 
 
         for (int i = 0; i < dataSize; i++) {
-            data[i] = new Tensor(() => Random.value, 28, 28);
+            data[i] = new Tensor(() => Random.value, 1000);
             labels[i] = new Tensor(10);
             labels[i][Random.Range(0, 10)] = 1;
         }

@@ -84,7 +84,8 @@ namespace DumbML {
                 throw new InvalidOperationException("Tensors have to be 3D to perform 2D depthwise convolution");
             }
             if (filter.Shape[2] != input.Shape[2]) {
-                throw new InvalidOperationException("Input and filters need to have the same number of channels");
+                throw new InvalidOperationException($"Input and filters need to have the same number of channels." +
+                    $" Input: {input.Shape[2] } Filter: {filter.Shape[2] }");
             }
             int strideX = stride.x > 0 ? stride.x : 1;
             int strideY = stride.y > 0 ? stride.y : 1;
