@@ -156,9 +156,7 @@ namespace DumbML {
         }       
 
         public static implicit operator Operation(float f) {
-            return new Variable(new Tensor(() => f, 1)) {
-                Trainable = false
-            };
+            return new Constant(new Tensor(() => f, 1));
         }
         public static implicit operator Operation(Tensor t) {
             return new Variable(t);

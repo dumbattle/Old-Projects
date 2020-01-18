@@ -26,11 +26,7 @@ namespace DumbML {
             return null;
         }
 
-        public static implicit operator Variable(float f) {
-            return new Variable(new Tensor(() => f, 1)) {
-                Trainable = false
-            };
-        }
+        
         public static implicit operator Variable(Tensor t) {
             return new Variable(t);
         }
@@ -38,6 +34,24 @@ namespace DumbML {
             return name ?? result.ToString();
         }
     }
+    public class Constant : Operation {
+        public Tensor Value { get { return result; } set { result = value; } }
 
+        public Constant(Tensor value) : base(value.Shape) {
+            result = value;
+        }
+
+        public override Tensor Compute(Tensor[] operands) {
+            return result;
+        }
+
+        public override Tensor[] BackwardsPass(Tensor e) {
+            return null;
+        }
+
+        public static implicit operator Constant(float f) {
+            return new Constant(new Tensor(() => f, 1));
+        }
+    }
     
 }
