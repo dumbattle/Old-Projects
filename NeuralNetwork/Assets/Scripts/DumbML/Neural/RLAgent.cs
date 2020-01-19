@@ -7,7 +7,10 @@ namespace DumbML {
         public RingBuffer<RLExperience> experiences;
         public float exploration = 0.01f;
         public float discout = .9f;
+        public int updateInterval = 1000;
+        int updateTimer = 0;
         TrainableModel trainModel;
+        Model futureModel;
 
         public RLAgent(int expBufferSize) {
             experiences = new RingBuffer<RLExperience>(expBufferSize);
@@ -23,6 +26,7 @@ namespace DumbML {
             }
 
             var trainOp = forward;
+            futureModel = Copy();
         }
 
 
@@ -32,8 +36,7 @@ namespace DumbML {
         }
 
         public RLExperience GetBestAction(Tensor input) {
-            SetInputs(input);
-            var output = forward.Eval();
+            var output = Compute(input);
             int result = 0;
             for (int i = 1; i < output.Size; i++) {
                 if (output[i] > output[result]) {
@@ -44,13 +47,25 @@ namespace DumbML {
             return new RLExperience(input, output, result);
         }
 
+
         public RLExperience GetRandomAction(Tensor input) {
             SetInputs(input);
             var output = forward.Eval();
             return new RLExperience(input, output, UnityEngine.Random.Range(0, output.Size));
         }
 
+        RLExperience GetFutureAction(Tensor input) {
+            var output = futureModel.Compute(input);
+            int result = 0;
 
+            for (int i = 1; i < output.Size; i++) {
+                if (output[i] > output[result]) {
+                    result = i;
+                }
+            }
+
+            return new RLExperience(input, output, result);
+        }
 
 
         public void AddExperience(RLExperience exp) {
@@ -69,13 +84,6 @@ namespace DumbML {
         }
 
         public float Train(int batchSize, int numBatches) {
-            /* foreach batch 
-             *      get random samples
-             *      foreach sample
-             *          get score: reward + next state reward * discount
-             *          set target tensors and masks
-             *      train 
-             */
             if (experiences.Count < batchSize) {
                 return -1;
             }
@@ -89,7 +97,7 @@ namespace DumbML {
 
                 for (int j = 0; j < batchSize; j++) {
                     var e = batch[j];
-                    if(e.output == null) {
+                    if(e == null) {
                         continue;
                     }
                     Tensor target = new Tensor(e.output.Shape);
@@ -100,7 +108,7 @@ namespace DumbML {
 
                     float reward = e.reward;
                     if (e.nextState != null) {
-                        var n = GetBestAction(e.nextState);
+                        var n = GetFutureAction(e.nextState);
                         reward += n.output[n.action] * discout;
                         target[e.action] = reward;
                     }
@@ -111,13 +119,19 @@ namespace DumbML {
                     labels[j] = target;
                 }
                 loss += trainModel.Train(inputs, labels, batchSize)[0];
+
+                updateTimer++;
+                if (updateTimer >= updateInterval) {
+                    updateTimer = 0;
+                    futureModel.SetWeights(GetWeights());
+                }
             }
 
             return loss / numBatches;
         }
     }
 
-    public struct RLExperience {
+    public class RLExperience {
         public Tensor state;
         public Tensor output;
         public int action;

@@ -20,11 +20,11 @@ namespace Flappy {
             ai = GetAI();
         }
         public void Reset() {
-            if (exp.state != null) {
+            if (exp != null) {
                 exp.reward = -1;
                 ai.AddExperience(exp);
             }
-
+            exp = null;
 
             velocity = 0;
             height = Game.gameSize.y / 2;
@@ -37,14 +37,16 @@ namespace Flappy {
 
             var t = g.GetTensor();
 
-            if (exp.state != null) {
+            if (exp != null) {
                 exp.reward = 1;
                 exp.nextState = t;
                 ai.AddExperience(exp);
             }
 
             exp = ai.GetAction(t);
-            Debug.Log(exp.output);
+
+            Debug.Log($"{exp.output} Value: {ai.v.result} Advantage: {ai.a.result}");
+
             if (exp.action == 0) {
                 Jump();
             }
@@ -62,15 +64,15 @@ namespace Flappy {
         }
 
         public FlappyAgent GetAI() {
-            var result =  new FlappyAgent();
-            result.SetOptimizer(new SGD(.001f), Loss.MSE);
-            return result;
+           return new FlappyAgent();
+   
         }
         
     }
 
 
     public class FlappyAgent : RLAgent {
+        public Operation a, v;
         public FlappyAgent(int expBufferSize = 1000) : base(expBufferSize) {
             //NeuralNetwork result = new NeuralNetwork(4);
             //result.Add(new FullyConnected(10, ActivationFunction.Tanh));
@@ -82,20 +84,22 @@ namespace Flappy {
             //var op = result.Build();
 
             Operation op = new InputLayer(4).Build();
-            op = new FullyConnected(100, ActivationFunction.LeakyRelu,false).Build(op);
-            op = new FullyConnected(100, ActivationFunction.LeakyRelu, false).Build(op);
+            op = new FullyConnected(100, ActivationFunction.LeakyRelu).Build(op);
+            op = new FullyConnected(100, ActivationFunction.LeakyRelu).Build(op);
 
-            var a = new FullyConnected(100, ActivationFunction.LeakyRelu, false).Build(op);
-            a = new FullyConnected(2,null, false).Build(op);
+            a = new FullyConnected(100, ActivationFunction.LeakyRelu).Build(op);
+            a = new FullyConnected(2,null).Build(op);
 
-            var v = new FullyConnected(100, ActivationFunction.LeakyRelu, false).Build(op);
-            v = new FullyConnected(1,null,false).Build(op);
+            v = new FullyConnected(100, ActivationFunction.LeakyRelu).Build(op);
+            v = new FullyConnected(1,null).Build(op);
 
-            v = v - new Sum(a) / 2;
-            v = new Append(v, v);
+            op = v - new Sum(a) / 2;
+            op = new Append(op, op);
 
-            op = a +v;
+            op += a;
             Build(op);
+            SetOptimizer(new SGD(.001f), Loss.MSE);
+
         }
     }
 }
