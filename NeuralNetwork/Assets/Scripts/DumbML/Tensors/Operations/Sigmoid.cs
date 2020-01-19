@@ -1,5 +1,6 @@
 ﻿using Unity.Profiling;
 
+using System.Collections.Generic;
 namespace DumbML {
     public class Sigmoid : Operation {
         static ProfilerMarker profile = new ProfilerMarker("Sigmoid.Eval");
@@ -30,6 +31,9 @@ namespace DumbML {
             profileBackwards.End();
             backwardsArray[0] = error;
             return backwardsArray;
+        }
+        public override Operation Copy(Dictionary<Operation, Operation> track) {
+            return new Sigmoid(inner[0]._Copy(track));
         }
         public override string ToString(bool requireParanthesis) {
             return $"Sigmoid({inner[0].ToString(false)})";
@@ -63,6 +67,9 @@ namespace DumbML {
 
             backwardsArray[0] = error;
             return backwardsArray;
+        }
+        public override Operation Copy(Dictionary<Operation, Operation> track) {
+            return new Tanh(inner[0]._Copy(track));
         }
         public override string ToString(bool requireParanthesis) {
             return $"Sigmoid({inner[0].ToString(false)})";

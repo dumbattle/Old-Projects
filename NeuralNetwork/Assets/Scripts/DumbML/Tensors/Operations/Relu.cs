@@ -1,4 +1,5 @@
 ﻿using Unity.Profiling;
+using System.Collections.Generic;
 
 namespace DumbML {
     public class Relu : Operation {
@@ -26,22 +27,12 @@ namespace DumbML {
             profileBackwards.End();
             return new[] { error };
         }
+        public override Operation Copy(Dictionary<Operation, Operation> track) {
+            return new Relu(inner[0]._Copy(track));
+        }
         public override string ToString(bool requireParanthesis) {
             return $"Relu({inner[0].ToString(false)})";
         }
     }
 
-    public class Step : Operation {
-        public Step(Operation op) : base(op.shape, op) {}
-
-
-        public override Tensor Compute(Tensor[] operands) {
-            result.PointWise(operands[0], (a, b) => (b > 0 ? 1 : 0), true);
-            return result;
-        }
-        public override Tensor[] BackwardsPass(Tensor e) {
-            return new[] { e };
-        }
-
-    }
 }

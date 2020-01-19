@@ -1,4 +1,5 @@
 ﻿using Unity.Profiling;
+using System.Collections.Generic;
 
 namespace DumbML {
     public class Subtract : Operation {
@@ -29,6 +30,9 @@ namespace DumbML {
 
 
             return backwardsArray;
+        }
+        public override Operation Copy(Dictionary<Operation, Operation> track) {
+            return new Subtract(inner[0]._Copy(track),inner[1]._Copy(track));
         }
         public override string ToString(bool requireParanthesis) {
             if (requireParanthesis) {

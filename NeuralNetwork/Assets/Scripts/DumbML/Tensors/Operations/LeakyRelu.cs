@@ -1,5 +1,6 @@
 ﻿using Unity.Profiling;
 
+using System.Collections.Generic;
 namespace DumbML {
     public class LeakyRelu : Operation {
         static ProfilerMarker profile = new ProfilerMarker("LeakyRelu.Eval");
@@ -28,6 +29,9 @@ namespace DumbML {
         }
         public override string ToString(bool requireParanthesis) {
             return $"LeakyRelu({inner[0].ToString(false)})";
+        }
+        public override Operation Copy(Dictionary<Operation, Operation> track) {
+            return new LeakyRelu(inner[0]._Copy(track));
         }
     }
 

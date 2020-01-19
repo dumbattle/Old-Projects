@@ -1,4 +1,5 @@
 ﻿using Unity.Profiling;
+using System.Collections.Generic;
 
 namespace DumbML {
     public class Divide : Operation {
@@ -32,6 +33,9 @@ namespace DumbML {
                 return $"({inner[0].ToString(true)} / {inner[1].ToString(true)})";
             }
             return $"{inner[0].ToString(true)} / {inner[1].ToString(true)}";
+        }
+        public override Operation Copy(Dictionary<Operation, Operation> track) {
+            return new Divide(inner[0]._Copy(track), inner[1]._Copy(track));
         }
     }
 

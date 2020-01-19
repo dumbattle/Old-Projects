@@ -1,4 +1,5 @@
 ﻿using Unity.Profiling;
+using System.Collections.Generic;
 
 namespace DumbML {
 
@@ -31,7 +32,9 @@ namespace DumbML {
             backwardsArray[1] = e;
             return backwardsArray;
         }
-
+        public override Operation Copy(Dictionary<Operation, Operation> track) {
+            return new Add(inner[0]._Copy(track), inner[1]._Copy(track));
+        }
         public override string ToString(bool requireParanthesis) {
             if (requireParanthesis) {
                 return $"({inner[0].ToString(false)} + {inner[1].ToString(false)})";
@@ -90,6 +93,9 @@ namespace DumbML {
             }
 
             return backwardsArray;
+        }
+        public override Operation Copy(Dictionary<Operation, Operation> track) {
+            return new MaxAdd(CopyInner(track));
         }
     }
 }

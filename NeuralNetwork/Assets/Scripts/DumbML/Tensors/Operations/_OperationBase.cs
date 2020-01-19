@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System;
 using System.Linq;
+using System.Reflection;
 
 namespace DumbML {
     public abstract class Operation {
@@ -16,7 +17,7 @@ namespace DumbML {
                 result = new Tensor(shape);
                 this.shape = (int[])shape.Clone();
             }
-            this.inner = inner;
+            this.inner = (Operation[])inner.Clone();
             operands = new Tensor[inner.Length];
 
             for (int i = 0; i < inner.Length; i++) {
@@ -140,6 +141,28 @@ namespace DumbML {
         }
         public Gradients GetNewGradients() => new Gradients(GetVariables());
 
+        public Operation Copy() {
+            var t = new Dictionary<Operation, Operation>();
+            var c = _Copy(t);
+            return c;
+
+        }
+
+        public Operation _Copy(Dictionary<Operation, Operation> track) {
+            var c= Copy(track);
+            track.Add(this, c);
+            return c;
+        }
+        public abstract Operation Copy(Dictionary<Operation, Operation> track);
+
+        protected Operation[] CopyInner(Dictionary<Operation, Operation> track) {
+            Operation[] result = new Operation[inner.Length];
+
+            for (int i = 0; i < result.Length; i++) {
+                result[i] = inner[i]._Copy(track);
+            }
+            return result;
+        }
 
 
         public static Operation operator +(Operation l, Operation r) {

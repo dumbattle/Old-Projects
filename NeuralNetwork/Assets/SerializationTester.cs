@@ -21,44 +21,28 @@ public class SerializationTester : MonoBehaviour {
 
         model = CreateNewModel();
 
-        print("Model 1 Output:");
-        print(model.Compute(input));
+        print($"Model output: {model.Compute(input)}");
+        //foreach (var o in model.forward.GetOperations()) {
+        //    print(o.GetType());
+        //}
 
-        var w = model.GetWeights();
-        print("Model 1 Weights:");
-        foreach (var t in w) {
-            print(t);
-        }
-        print("");
-        var m2 = CreateNewModel();
 
-        print("Model 2 Output:");
-        print(m2.Compute(input));
+        var copy = model.Copy();
 
-        var w2 = m2.GetWeights();
-        print("Model 2 Weights:");
-        foreach (var t in w2) {
-            print(t);
-        }
-        print("");
-        print("Copy model 1 weights to model 2");
+        print($"Copy Output: {copy.Compute(input)}");
 
-        m2.SetWeights(w);
+        //foreach (var o in copy.forward.GetOperations()) {
+        //    print(o.GetType());
+        //}
 
-        print("Model 2 Output:");
-        print(m2.Compute(input));
-
-         w2 = m2.GetWeights();
-        print("Model 2 Weights:");
-        foreach (var t in w2) {
-            print(t);
-        }
     }
 
     Model CreateNewModel() {
         Operation op = new Placeholder(10);
-        op = new FullyConnected(10).Build(op);
+        var a = op = new FullyConnected(10, ActivationFunction.LeakyRelu).Build(op);
+        op = new FullyConnected(10, ActivationFunction.Sigmoid).Build(op);
 
-        return new Model(op);
+        return new Model(op + a);
     }
+
 }

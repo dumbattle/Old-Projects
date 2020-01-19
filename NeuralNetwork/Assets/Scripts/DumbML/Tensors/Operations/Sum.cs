@@ -1,4 +1,5 @@
 ﻿using Unity.Profiling;
+using System.Collections.Generic;
 
 namespace DumbML {
     public class Sum : Operation {
@@ -27,6 +28,9 @@ namespace DumbML {
             profileBackwards.End();
 
             return new[] { error };
+        }
+        public override Operation Copy(Dictionary<Operation, Operation> track) {
+            return new Sum(inner[0]._Copy(track));
         }
         public override string ToString(bool requireParanthesis) {
             return $"sum({inner[0].ToString(false)})";

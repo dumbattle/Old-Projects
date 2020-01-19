@@ -1,4 +1,6 @@
-﻿namespace DumbML {
+﻿using System.Collections.Generic;
+
+namespace DumbML {
     public class Append : Operation {
         Tensor[] errors;
         public Append(params Operation[] ops) : base(null, ops) {
@@ -47,6 +49,9 @@
                 }
             }
             return errors;
+        }
+        public override Operation Copy(Dictionary<Operation, Operation> track) {
+            return new Append(CopyInner(track));
         }
     }
 }

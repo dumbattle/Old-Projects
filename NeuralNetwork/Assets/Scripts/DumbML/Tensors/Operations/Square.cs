@@ -1,4 +1,5 @@
 ﻿using Unity.Profiling;
+using System.Collections.Generic;
 
 namespace DumbML {
     public class Square : Operation {
@@ -28,6 +29,9 @@ namespace DumbML {
 
             backwardsArray[0] = error;
             return backwardsArray;
+        }
+        public override Operation Copy(Dictionary<Operation, Operation> track) {
+            return new Square(inner[0]._Copy(track));
         }
         public override string ToString(bool requireParanthesis) {
             return $"({inner[0].ToString(false)})^2";

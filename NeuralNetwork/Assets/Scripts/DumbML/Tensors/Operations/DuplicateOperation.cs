@@ -1,4 +1,6 @@
-﻿namespace DumbML {
+﻿using System.Collections.Generic;
+
+namespace DumbML {
     /// <summary>
     /// Wraps an operation that appears multiple times (except for the first instance) in a graph to prevent it from being calculated multiple times
     /// </summary>
@@ -17,7 +19,13 @@
             i.dupeError.Add(e, true);
             return new[] { e };
         }
+        public override Operation Copy(Dictionary<Operation, Operation> track) {
+            if (track.ContainsKey(i)) {
+                return new DuplicateOperation(track[i]);
+            }
 
+            return i._Copy(track);
+        }
         public override string ToString(bool requireParanthesis) {
             return "x";
         }

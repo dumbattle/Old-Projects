@@ -1,4 +1,5 @@
-﻿namespace DumbML {
+﻿using System.Collections.Generic;
+namespace DumbML {
     public class FlattenOp : Operation {
         Tensor error;
         public FlattenOp(Operation op): base(null, op) {
@@ -23,6 +24,9 @@
             }
 
             return new[] { error };
+        }
+        public override Operation Copy(Dictionary<Operation, Operation> track) {
+            return new FlattenOp(inner[0]._Copy(track));
         }
 
     }

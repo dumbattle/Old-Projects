@@ -6,7 +6,6 @@ namespace DumbML {
         public static ActivationFunction Tanh = new _Tanh();
         public static ActivationFunction Relu = new _Relu();
         public static ActivationFunction LeakyRelu = new _LeakyRelu();
-        public static ActivationFunction Step = new _Step();
 
 
         public abstract Operation Activate(Operation op);
@@ -34,11 +33,6 @@ namespace DumbML {
         private class _Relu : ActivationFunction {
             public override Operation Activate(Operation op) {
                 return new Relu(op);
-            }
-        }
-        private class _Step : ActivationFunction {
-            public override Operation Activate(Operation op) {
-                return new Step(op);
             }
         }
     }

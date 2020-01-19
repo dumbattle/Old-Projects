@@ -1,12 +1,12 @@
-﻿namespace DumbML {
+﻿using System.Collections.Generic;
+namespace DumbML {
     public class Conv2DDepth : Operation {
         Tensor le, re;
         (int, int) stride;
         bool pad;
 
         public Conv2DDepth(Operation op, Operation weight, (int x, int y) stride = default, bool pad = false) : base(null, op, weight) {
-            if (op.shape[2] != weight.shape[2]) {
-            }
+            if (op.shape[2] != weight.shape[2]) {}
             le = new Tensor(op.shape);
             re = new Tensor(weight.shape);
 
@@ -21,7 +21,6 @@
             int shapeY = (op.shape[1] - weight.shape[1] + padY) / strideY + 1;
 
             shape = new[] { shapeX, shapeY, weight.shape[2] };
-            //Debug.Log(shape.TOSTRING());
             result = new Tensor(shape);
         }
 
@@ -31,6 +30,10 @@
         public override Tensor[] BackwardsPass(Tensor e) {
             (le, re) = Blas.Parallel.Convolution2DDepthwiseBackwards(inner[0].result, e, inner[1].result, (le, re), stride, pad);
             return new[] { le, re };
+        }
+
+        public override Operation Copy(Dictionary<Operation, Operation> track) {
+            return new Conv2DDepth(inner[0]._Copy(track), inner[1]._Copy(track), stride, pad);
         }
     }
 

@@ -11,6 +11,7 @@ namespace DumbML {
         public Model() { }
         public Model(Operation op) {
             var inputs = op.GetOperations<Placeholder>().ToArray();
+            op.Optimize();
             Build(op, inputs);
         }
         public Model(Operation op, params Placeholder[] inputs) {
@@ -39,6 +40,11 @@ namespace DumbML {
             return forward.GetVariables();
         }
 
+        public Model Copy() {
+            var op = forward.Copy();
+            return new Model(op);
+        }
+
         public Tensor[] GetWeights() {
             var vars = forward.GetVariables();
             Tensor[] result = new Tensor[vars.Length];
@@ -62,6 +68,7 @@ namespace DumbML {
                 v[i].Value = weights[i].Copy();
             }
         }
+
     }
 
 }

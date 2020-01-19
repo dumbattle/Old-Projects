@@ -1,4 +1,5 @@
 ﻿using Unity.Profiling;
+using System.Collections.Generic;
 
 namespace DumbML {
     public class MatrixMult : Operation {
@@ -40,6 +41,9 @@ namespace DumbML {
             backwardsArray[0] = le;
             backwardsArray[1] = re;
             return backwardsArray;
+        }
+        public override Operation Copy(Dictionary<Operation, Operation> track) {
+            return new MatrixMult(inner[0]._Copy(track), inner[1]._Copy(track));
         }
         public override string ToString(bool requireParanthesis) {
             if (requireParanthesis) {

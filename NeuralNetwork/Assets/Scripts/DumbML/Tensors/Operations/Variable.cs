@@ -1,4 +1,5 @@
 ﻿using Unity.Profiling;
+using System.Collections.Generic;
 
 namespace DumbML {
     public class Variable : Operation {
@@ -30,6 +31,9 @@ namespace DumbML {
         public static implicit operator Variable(Tensor t) {
             return new Variable(t);
         }
+        public override Operation Copy(Dictionary<Operation, Operation> track) {
+            return new Variable(Value.Copy());
+        }
         public override string ToString(bool requireParanthesis) {
             return name ?? result.ToString();
         }
@@ -49,6 +53,9 @@ namespace DumbML {
             return null;
         }
 
+        public override Operation Copy(Dictionary<Operation, Operation> track) {
+            return new Constant(Value.Copy());
+        }
         public static implicit operator Constant(float f) {
             return new Constant(new Tensor(() => f, 1));
         }

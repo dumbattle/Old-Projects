@@ -1,4 +1,5 @@
 ﻿using Unity.Profiling;
+using System.Collections.Generic;
 
 namespace DumbML {
     public class Multiply : Operation {
@@ -27,6 +28,9 @@ namespace DumbML {
 
             return new[] { le,re};
 
+        }
+        public override Operation Copy(Dictionary<Operation, Operation> track) {
+            return new Multiply(inner[0]._Copy(track), inner[1]._Copy(track));
         }
         public override string ToString(bool requireParanthesis) {
             if (requireParanthesis) {
