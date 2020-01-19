@@ -24,6 +24,7 @@ namespace Flappy {
                 exp.reward = -1;
                 ai.AddExperience(exp);
             }
+            ai.exploration = Random.Range(-.05f, .05f);
             exp = null;
 
             velocity = 0;
