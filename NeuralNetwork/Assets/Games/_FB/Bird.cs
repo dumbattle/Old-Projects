@@ -24,7 +24,7 @@ namespace Flappy {
                 exp.reward = -1;
                 ai.AddExperience(exp);
             }
-            ai.exploration = Random.Range(-.05f, .05f);
+            //ai.exploration = Random.Range(-.05f, .05f);
             exp = null;
 
             velocity = 0;
@@ -46,7 +46,7 @@ namespace Flappy {
 
             exp = ai.GetAction(t);
 
-            Debug.Log($"{exp.output} Value: {ai.v.result} Advantage: {ai.a.result}");
+            //Debug.Log($"{exp.output} Value: {ai.v.result} Advantage: {ai.a.result}");
 
             if (exp.action == 0) {
                 Jump();
@@ -99,7 +99,7 @@ namespace Flappy {
 
             op += a;
             Build(op);
-            SetOptimizer(new SGD(.001f), Loss.MSE);
+            SetOptimizer(new SGD(.0001f), Loss.MSE);
 
         }
     }

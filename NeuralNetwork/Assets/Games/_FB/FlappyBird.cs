@@ -13,6 +13,7 @@ namespace Flappy {
         public Vector2 gameSize;
         public Vector2 blockSize;
 
+        public string output, value, advantage;
         Game game;
 
         void Start() {
@@ -29,6 +30,9 @@ namespace Flappy {
         IEnumerator Next() {
             while (true) {
                 game.Next();
+                output = game.bird.ai.Result.ToString();
+                advantage= game.bird.ai.a.result.ToString();
+                value = game.bird.ai.v.result.ToString();
                 yield return null;
             }
         }
