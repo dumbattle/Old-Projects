@@ -11,7 +11,7 @@ namespace DumbML {
         public Subtract(Operation left, Operation right) : base(left.shape, left,right) {
             rError = new Tensor(right.shape);
         }
-        public override Tensor Compute(Tensor[] operands) {
+        protected override Tensor Compute(Tensor[] operands) {
             profile.Begin();
             for (int i = 0; i < result.Size; i++) {
                 result._value[i] = operands[0]._value[i] - operands[1]._value[i];
@@ -20,7 +20,7 @@ namespace DumbML {
             profile.End();
             return result;
         }
-        public override Tensor[] BackwardsPass( Tensor e) {
+        protected override Tensor[] BackwardsPass( Tensor e) {
             profileBackwards.Begin();
             rError.PointWise(e, (_, b) => -b, true);
             profileBackwards.End();

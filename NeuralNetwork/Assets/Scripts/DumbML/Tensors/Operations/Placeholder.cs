@@ -6,15 +6,15 @@ namespace DumbML {
         public void SetVal(Tensor t) {
             result = t;
         }
-        public override Tensor Compute(Tensor[] operands) {
+        protected override Tensor Compute(Tensor[] operands) {
             return result;
+        }
+        protected override Tensor[] BackwardsPass(Tensor e) {
+            return null;
         }
 
         public override Operation Copy(Dictionary<Operation, Operation> track) {
             return new Placeholder(shape);
-        }
-        public override Tensor[] BackwardsPass(Tensor e) {
-            return null;
         }
 
     }

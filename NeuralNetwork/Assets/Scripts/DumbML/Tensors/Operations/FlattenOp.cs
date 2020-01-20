@@ -7,7 +7,7 @@ namespace DumbML {
             result = new Tensor(shape);
             error = new Tensor(op.shape);
         }
-        public override Tensor Compute(Tensor[] operands) {
+        protected override Tensor Compute(Tensor[] operands) {
             var v = operands[0]._value;
             var r = result._value; 
             for (int i = 0; i < result.Size; i++) {
@@ -15,7 +15,7 @@ namespace DumbML {
             }
             return result;
         }
-        public override Tensor[] BackwardsPass(Tensor e) {
+        protected override Tensor[] BackwardsPass(Tensor e) {
             var v = e._value;
             var r = error._value;
 

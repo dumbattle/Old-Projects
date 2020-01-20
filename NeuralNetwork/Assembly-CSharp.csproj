@@ -106,6 +106,7 @@
     <Compile Include="Assets\Scripts\DumbML\Tensors\Operations\Abs.cs" />
     <Compile Include="Assets\Scripts\DumbML\Tensors\Operations\Add.cs" />
     <Compile Include="Assets\Scripts\DumbML\Tensors\Operations\Append.cs" />
+    <Compile Include="Assets\Scripts\DumbML\Tensors\Operations\Constant.cs" />
     <Compile Include="Assets\Scripts\DumbML\Tensors\Operations\Conv2DDepth.cs" />
     <Compile Include="Assets\Scripts\DumbML\Tensors\Operations\Conv2DPoint.cs" />
     <Compile Include="Assets\Scripts\DumbML\Tensors\Operations\Divide.cs" />
@@ -113,6 +114,7 @@
     <Compile Include="Assets\Scripts\DumbML\Tensors\Operations\FlattenOp.cs" />
     <Compile Include="Assets\Scripts\DumbML\Tensors\Operations\LeakyRelu.cs" />
     <Compile Include="Assets\Scripts\DumbML\Tensors\Operations\MatrixMult.cs" />
+    <Compile Include="Assets\Scripts\DumbML\Tensors\Operations\MaxAdd.cs" />
     <Compile Include="Assets\Scripts\DumbML\Tensors\Operations\Multiply.cs" />
     <Compile Include="Assets\Scripts\DumbML\Tensors\Operations\Placeholder.cs" />
     <Compile Include="Assets\Scripts\DumbML\Tensors\Operations\Relu.cs" />
@@ -120,6 +122,7 @@
     <Compile Include="Assets\Scripts\DumbML\Tensors\Operations\Square.cs" />
     <Compile Include="Assets\Scripts\DumbML\Tensors\Operations\Subtract.cs" />
     <Compile Include="Assets\Scripts\DumbML\Tensors\Operations\Sum.cs" />
+    <Compile Include="Assets\Scripts\DumbML\Tensors\Operations\Tanh.cs" />
     <Compile Include="Assets\Scripts\DumbML\Tensors\Operations\Variable.cs" />
     <Compile Include="Assets\Scripts\DumbML\Tensors\Tensor.cs" />
     <Compile Include="Assets\SerializationTester.cs" />

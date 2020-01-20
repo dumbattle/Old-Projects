@@ -26,7 +26,7 @@ namespace DumbML {
             result = new Tensor(shape);
         }
 
-        public override Tensor Compute(Tensor[] operands) {
+        protected override Tensor Compute(Tensor[] operands) {
 
             int ind = 0;
 
@@ -39,7 +39,7 @@ namespace DumbML {
             return result;
         }
 
-        public override Tensor[] BackwardsPass(Tensor e) {
+        protected override Tensor[] BackwardsPass(Tensor e) {
             int ind = 0;
 
             foreach (var o in errors) {

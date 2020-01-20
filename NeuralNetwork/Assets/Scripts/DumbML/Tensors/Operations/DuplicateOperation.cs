@@ -11,11 +11,11 @@ namespace DumbML {
             i.dupeError = new Tensor(i.shape);
         }
 
-        public override Tensor Compute(Tensor[] operands) {
+        protected override Tensor Compute(Tensor[] operands) {
             return result = i.result;
         }
 
-        public override Tensor[] BackwardsPass(Tensor e) {
+        protected override Tensor[] BackwardsPass(Tensor e) {
             i.dupeError.Add(e, true);
             return new[] { e };
         }

@@ -24,10 +24,10 @@ namespace DumbML {
             result = new Tensor(shape);
         }
 
-        public override Tensor Compute(Tensor[] operands) {
+        protected override Tensor Compute(Tensor[] operands) {
             return result = Blas.Parallel.Convolution2DDepthwise(operands[0], operands[1], result, stride, pad);
         }
-        public override Tensor[] BackwardsPass(Tensor e) {
+        protected override Tensor[] BackwardsPass(Tensor e) {
             (le, re) = Blas.Parallel.Convolution2DDepthwiseBackwards(inner[0].result, e, inner[1].result, (le, re), stride, pad);
             return new[] { le, re };
         }

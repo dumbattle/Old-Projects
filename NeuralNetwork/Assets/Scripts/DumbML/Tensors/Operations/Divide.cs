@@ -11,7 +11,7 @@ namespace DumbML {
             ne = new Tensor(numerator.shape);
             de = new Tensor(denominator.shape);
         }
-        public override Tensor Compute(Tensor[] operands) {
+        protected override Tensor Compute(Tensor[] operands) {
             profile.Begin();
             for (int i = 0; i < result.Size; i++) {
                 result._value[i] = operands[0]._value[i] / operands[1]._value[i];
@@ -20,7 +20,7 @@ namespace DumbML {
             return result;
         }
 
-        public override Tensor[] BackwardsPass(Tensor e) {
+        protected override Tensor[] BackwardsPass(Tensor e) {
             profileBackwards.Begin();
             ne.Copy(e).PointWise(inner[1].result, (a, b) => a / b, true);
             de.Copy(e).PointWise(inner[0].result, (a, b) => -a * b, true).PointWise(inner[1].result, (a, b) => a / (b * b), true);

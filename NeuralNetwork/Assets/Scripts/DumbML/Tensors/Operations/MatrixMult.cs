@@ -24,7 +24,7 @@ namespace DumbML {
             result = new Tensor(shape);
         }
 
-        public override Tensor Compute(Tensor[] operands) {
+        protected override Tensor Compute(Tensor[] operands) {
             profile.Begin();
             Blas.MatrixMult(operands[0], operands[1], result);
             profile.End();
@@ -32,7 +32,7 @@ namespace DumbML {
             return result;
         }
 
-        public override Tensor[] BackwardsPass(Tensor e) {
+        protected override Tensor[] BackwardsPass(Tensor e) {
             profileBackwards.Begin();
 
             Blas.MatrixMultBackwards(inner[0].result, inner[1].result, e, (le, re));

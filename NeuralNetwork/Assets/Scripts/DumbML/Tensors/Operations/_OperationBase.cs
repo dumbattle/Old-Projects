@@ -69,7 +69,7 @@ namespace DumbML {
         }
 
         public bool Test;
-        public abstract Tensor Compute(Tensor[] operands);
+        protected abstract Tensor Compute(Tensor[] operands);
 
         public void Backwards(Gradients g) {
             Tensor e = new Tensor(() => 1, shape);
@@ -102,7 +102,7 @@ namespace DumbML {
 
 
 
-        public abstract Tensor[] BackwardsPass(Tensor e);
+        protected abstract Tensor[] BackwardsPass(Tensor e);
 
 
 

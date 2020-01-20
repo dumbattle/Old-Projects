@@ -10,7 +10,7 @@ namespace DumbML {
             error = new Tensor(op.shape);
         }
 
-        public override Tensor Compute(Tensor[] operands) {
+        protected override Tensor Compute(Tensor[] operands) {
             profile.Begin();
             float sum = 0;
             foreach (var f in operands[0]) {
@@ -21,7 +21,7 @@ namespace DumbML {
             return result;
         }
 
-        public override Tensor[] BackwardsPass(Tensor e) {
+        protected override Tensor[] BackwardsPass(Tensor e) {
             profileBackwards.Begin();
             float er = e[0];
             error.PointWise((a) => er, true);
