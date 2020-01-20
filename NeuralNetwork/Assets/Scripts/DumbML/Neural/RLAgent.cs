@@ -112,7 +112,7 @@ namespace DumbML {
                         reward += n.output[n.action] * discout;
                         target[e.action] = reward;
                     }
-                    e.weight = (e.output[e.action] - reward) * (e.output[e.action] - reward);
+                    e.weight = (e.output[e.action] - reward).Abs();
 
 
                     inputs[j] = new[] { e.state, mask };
