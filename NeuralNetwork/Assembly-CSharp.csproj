@@ -10,7 +10,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <RootNamespace></RootNamespace>
+    <RootNamespace>
+    </RootNamespace>
     <ProjectGuid>{9882B084-551B-F402-60A9-6ECAD97EBAA8}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -125,6 +126,7 @@
     <Compile Include="Assets\Scripts\DumbML\Tensors\Operations\Variable.cs" />
     <Compile Include="Assets\Scripts\DumbML\Tensors\Tensor.cs" />
     <Compile Include="Assets\Scripts\DumbML\TrainableModel.cs" />
+    <Compile Include="Assets\Scripts\DumbML\Trainer.cs" />
     <Compile Include="Assets\SerializationTester.cs" />
     <Compile Include="Assets\UnsafeTester.cs" />
     <None Include="Assets\Scripts\Resources\Pointwise.compute" />
