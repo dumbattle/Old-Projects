@@ -148,13 +148,13 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 425939402}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a9f28d8dd799bb949ad6ecafdab95216, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  count: 1
-  batchSize: 1
+  count: 32
+  batchSize: 32
   delay: 47
   loss: 0
 --- !u!4 &425939404
@@ -214,7 +214,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 425939402}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 90202765e4e917f41bb4d60f3d044b44, type: 3}
   m_Name: 

@@ -12,10 +12,8 @@ public class Main : MonoBehaviour {
     public float loss = 0;
     Stopwatch sw = new Stopwatch();
 
-    TrainableModel nn;
-    Gradients grad;
-    Optimizer opt;
-    Placeholder input, target;
+    Model nn;
+    Trainer trainer;
 
     Tensor[] inputs, labels;
     int inputSize = 28 * 28;
@@ -33,50 +31,49 @@ public class Main : MonoBehaviour {
 
         for (int i = 0; i < count; i++) {
             inputs[i] = new Tensor(() => Random.Range(-1f, 1f), 20);
-            labels[i] = new Tensor(() => Random.Range(0f, 1f), nn.outputShape);
+            labels[i] = new Tensor(() => Random.Range(.5f, 1f), nn.outputShape);
         }
 
 
     }
 
 
-    TrainableModel CreateModel() {
+    Model CreateModel() {
         Operation op = new InputLayer(20).Build();
 
-        op = new FullyConnected(100, ActivationFunction.LeakyRelu, bias: true).Build(op);
-        op = new FullyConnected(100, ActivationFunction.LeakyRelu, bias: true).Build(op);
+        op = new FullyConnected(100, ActivationFunction.LeakyRelu, bias: false).Build(op);
+        op = new FullyConnected(100, ActivationFunction.LeakyRelu, bias: false).Build(op);
 
-        var a = new FullyConnected(100, ActivationFunction.LeakyRelu, bias: true).Build(op);
-        a = new FullyConnected(2, bias: true).Build(a);
+        var a = new FullyConnected(100, ActivationFunction.LeakyRelu, bias: false).Build(op);
+        a = new FullyConnected(2, bias: false).Build(a);
 
-        var v = new FullyConnected(100, ActivationFunction.LeakyRelu, bias: true).Build(op);
-        v = new FullyConnected(1, bias: true).Build(v);
+        var v = new FullyConnected(100, ActivationFunction.Sigmoid).Build(op);
+        v = new FullyConnected(1, bias: false).Build(v);
 
         v = v - new Sum(a) / 2;
         v = new Append(v, v);
 
         op = a + v;
+
         op.Optimize();
-        var r = new TrainableModel(op);
 
-        r.SetOptimizer(new SGD(), Loss.MSE);
-        return r;
+        var m = new Model(op);
+        trainer = new Trainer(m, new SGD(.01f), Loss.MSE);
+        return m;
 
 
-        var nn = new NeuralNetwork(10);
-        nn.Add(new FullyConnected(100, af: ActivationFunction.LeakyRelu));
-        nn.Add(new FullyConnected(10, af: ActivationFunction.LeakyRelu));
-        nn.Build();
-        nn.SetOptimizer(new SGD (), Loss.MSE);
-        return nn;
 
     }
 
     void Update() {
         sw.Start();
-        c.Feed(loss = nn.Train(inputs, labels, batchSize)[0]);
+        c.Feed(loss = trainer.Train(inputs, labels, batchSize)[0]);
         sw.Stop();
 
+        print("--------------------------------------");
+        print(nn.inputs.Length);
+        print(nn.Compute(inputs[0]));
+        print(nn.Compute(inputs[1]));
         if (delay > 0) {
             delay *= .99f;
             delay += .01f * sw.ElapsedMilliseconds;

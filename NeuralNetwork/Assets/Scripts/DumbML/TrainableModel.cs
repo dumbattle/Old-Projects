@@ -43,6 +43,7 @@ namespace DumbML {
                 if (count >= batchSize) {
                     opt.Update();
                     opt.ZeroGrad();
+                    count = 0;
                 }
             }
 

@@ -51,7 +51,7 @@ namespace DumbML {
 
         public static Tensor Random (params int[] shape) {
             var rng = new System.Random();
-            return new Tensor(() => ((float)rng.NextDouble() * 2 - 1) / 100f, shape);
+            return new Tensor(() => ((float)rng.NextDouble() * 2 - 1) / 10f, shape);
         }
         public Tensor SameShape() {
             return new Tensor(Shape);
