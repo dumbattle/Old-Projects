@@ -24,21 +24,9 @@ public class Main : MonoBehaviour {
 
     Channel c;
     void Start() {
-        //var a = new Tensor(() => Random.value, 10);
-        //var b = new Tensor(() => Random.value, 10);
-
-        //var op = new MaxAdd(a, b);
-        //print(a);
-        //print(b);
-        //print(op.Eval());
-        //return;
         c = Graph.GetChannel("loss");
         c.autoYRange = true;
         nn = CreateModel();
-
-        //foreach (var o in nn.forward.GetOperations()) {
-        //    print(o.GetType());
-        //}
 
         inputs = new Tensor[count];
         labels= new Tensor[count];
@@ -75,16 +63,6 @@ public class Main : MonoBehaviour {
         return r;
 
 
-        //var nn = new NeuralNetwork(28 * 28);
-        //nn.Add(new Convolution2D(4, stride: (2, 2), af: ActivationFunction.LeakyRelu, pad: true));
-        //nn.Add(new Convolution2D(16, stride: (2, 2), af: ActivationFunction.LeakyRelu, pad: true));
-        //nn.Add(new Flatten());
-
-        //nn.Add(new FullyConnected(intermediate, ActivationFunction.Sigmoid, true));
-        //nn.Add(new FullyConnected(outputSize, ActivationFunction.Sigmoid, true));
-
-        //nn.Add(new TestNet());
-
         var nn = new NeuralNetwork(10);
         nn.Add(new FullyConnected(100, af: ActivationFunction.LeakyRelu));
         nn.Add(new FullyConnected(10, af: ActivationFunction.LeakyRelu));
@@ -107,6 +85,5 @@ public class Main : MonoBehaviour {
             delay =  sw.ElapsedMilliseconds;
         }
         sw.Reset();
-        //print($"{t} ");
     }
 }

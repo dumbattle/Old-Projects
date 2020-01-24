@@ -99,7 +99,7 @@ namespace Flappy {
 
             op += a;
             Build(op);
-            SetOptimizer(new SGD(.0001f), Loss.MSE);
+            SetOptimizer(new SGD(.001f), Loss.MSE);
 
         }
     }

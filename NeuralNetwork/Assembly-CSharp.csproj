@@ -89,13 +89,12 @@
     <Compile Include="Assets\Scripts\DumbML\Blas\Conv2DP.cs" />
     <Compile Include="Assets\Scripts\DumbML\Blas\MatMultP.cs" />
     <Compile Include="Assets\Scripts\DumbML\Extensions.cs" />
+    <Compile Include="Assets\Scripts\DumbML\Model.cs" />
     <Compile Include="Assets\Scripts\DumbML\Neural\Layers\ActivationFunction.cs" />
     <Compile Include="Assets\Scripts\DumbML\Neural\Layers\Convolution2D.cs" />
     <Compile Include="Assets\Scripts\DumbML\Neural\Layers\Flatten.cs" />
     <Compile Include="Assets\Scripts\DumbML\Neural\Layers\FullyConnected.cs" />
     <Compile Include="Assets\Scripts\DumbML\Neural\Layers\Layer.cs" />
-    <Compile Include="Assets\Scripts\DumbML\Neural\Layers\Model.cs" />
-    <Compile Include="Assets\Scripts\DumbML\Neural\Layers\TrainableModel.cs" />
     <Compile Include="Assets\Scripts\DumbML\Neural\NeuralNetwork.cs" />
     <Compile Include="Assets\Scripts\DumbML\Neural\ParallelNetwork.cs" />
     <Compile Include="Assets\Scripts\DumbML\Neural\RLAgent.cs" />
@@ -125,6 +124,7 @@
     <Compile Include="Assets\Scripts\DumbML\Tensors\Operations\Tanh.cs" />
     <Compile Include="Assets\Scripts\DumbML\Tensors\Operations\Variable.cs" />
     <Compile Include="Assets\Scripts\DumbML\Tensors\Tensor.cs" />
+    <Compile Include="Assets\Scripts\DumbML\TrainableModel.cs" />
     <Compile Include="Assets\SerializationTester.cs" />
     <Compile Include="Assets\UnsafeTester.cs" />
     <None Include="Assets\Scripts\Resources\Pointwise.compute" />
