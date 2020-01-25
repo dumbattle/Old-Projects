@@ -12,7 +12,10 @@ public class Main : MonoBehaviour {
     public float loss = 0;
     Stopwatch sw = new Stopwatch();
 
+<<<<<<< HEAD
     Trainer trainer;
+=======
+>>>>>>> 434858b329c9201d284dc3f8a0300afb069104fe
     Model nn;
 
     Tensor[] inputs, labels;
@@ -58,7 +61,7 @@ public class Main : MonoBehaviour {
         op.Optimize();
 
         var m = new Model(op);
-        trainer = new Trainer(m, new SGD(.01f), Loss.MSE);
+        m.SetTrainer(new SGD(.01f), Loss.MSE);
         return m;
 
 
@@ -67,7 +70,7 @@ public class Main : MonoBehaviour {
 
     void Update() {
         sw.Start();
-        c.Feed(loss = trainer.Train(inputs, labels, batchSize)[0]);
+        c.Feed(loss = nn.Train(inputs, labels, batchSize)[0]);
         sw.Stop();
 
         print("--------------------------------------");
