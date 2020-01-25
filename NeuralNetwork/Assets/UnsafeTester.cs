@@ -6,6 +6,7 @@ using DumbML;
 
 
 public class UnsafeTester : MonoBehaviour {
+    Trainer trainer;
     NeuralNetwork nn;
     Tensor[] inputs, labels;
 
@@ -15,7 +16,7 @@ public class UnsafeTester : MonoBehaviour {
         nn.Add(new FullyConnected(1, ActivationFunction.Tanh,false));
         nn.Build();
 
-        nn.SetOptimizer(new SGD(), Loss.MSE);
+        trainer = new Trainer(nn, new SGD(), Loss.MSE);
 
         Tensor t = Tensor.Random(100);
         inputs = new[] { t, t ,t};
@@ -26,7 +27,7 @@ public class UnsafeTester : MonoBehaviour {
         };
     }
     private void Update() {
-        print(nn.Train(inputs, labels,3));
+        print(trainer.Train(inputs, labels,3));
         print(nn.Compute(inputs[0]));
     }
 

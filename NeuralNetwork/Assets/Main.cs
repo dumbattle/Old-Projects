@@ -12,8 +12,8 @@ public class Main : MonoBehaviour {
     public float loss = 0;
     Stopwatch sw = new Stopwatch();
 
-    Model nn;
     Trainer trainer;
+    Model nn;
 
     Tensor[] inputs, labels;
     int inputSize = 28 * 28;
@@ -71,7 +71,6 @@ public class Main : MonoBehaviour {
         sw.Stop();
 
         print("--------------------------------------");
-        print(nn.inputs.Length);
         print(nn.Compute(inputs[0]));
         print(nn.Compute(inputs[1]));
         if (delay > 0) {
