@@ -47,7 +47,7 @@ namespace Chess {
                 }
             }
 
-            return model.main.Train(inputs, labels, count)[0];
+            return model.trainer.Train(inputs, labels, count)[0];
         }
         public static Tensor[] GetUniqueStates() {
             List<Tensor> states = new List<Tensor>();

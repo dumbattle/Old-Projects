@@ -9,7 +9,8 @@ namespace DumbML {
         public float discout = .9f;
         public int updateInterval = 1000;
         int updateTimer = 0;
-        TrainableModel trainModel;
+
+        Trainer trainer;
         Model futureModel;
 
         public RLAgent(int expBufferSize) {
@@ -79,8 +80,9 @@ namespace DumbML {
             //addMask
             op *= new Placeholder(op.shape);
 
-            trainModel = new TrainableModel(op);
-            trainModel.SetOptimizer(o, l);
+            trainer = new Trainer(op, o, l);
+            //trainModel = new TrainableModel(op);
+            //trainModel.SetOptimizer(o, l);
         }
 
         public float Train(int batchSize, int numBatches) {
@@ -118,7 +120,7 @@ namespace DumbML {
                     inputs[j] = new[] { e.state, mask };
                     labels[j] = target;
                 }
-                loss += trainModel.Train(inputs, labels, batchSize)[0];
+                loss += trainer.Train(inputs, labels, batchSize)[0];
 
                 updateTimer++;
                 if (updateTimer >= updateInterval) {

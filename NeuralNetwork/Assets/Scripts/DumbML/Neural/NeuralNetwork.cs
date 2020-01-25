@@ -3,7 +3,7 @@ using System.Linq;
 
 
 namespace DumbML {
-    public class NeuralNetwork : TrainableModel, ILayer {
+    public class NeuralNetwork : Model, ILayer {
         public List<ILayer> layers = new List<ILayer>();
         public int[] inputShape;
 
@@ -25,6 +25,7 @@ namespace DumbML {
                 }
             }
         }
+
 
         public NeuralNetwork(params int[] inputShape) {
             this.inputShape = inputShape;
@@ -60,5 +61,6 @@ namespace DumbML {
             x.Optimize();
             return x;
         }
+
     }
 }

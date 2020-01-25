@@ -25,7 +25,7 @@ namespace DumbML {
             this.inputs = inputs;
         }
 
-        public virtual Tensor Compute(params Tensor[] input) {
+        public Tensor Compute(params Tensor[] input) {
             SetInputs(input);
 
             return forward.Eval();
@@ -68,7 +68,6 @@ namespace DumbML {
                 v[i].Value = weights[i].Copy();
             }
         }
-
     }
 
 }
