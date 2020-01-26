@@ -24,7 +24,7 @@ namespace Flappy {
                 exp.reward = -1;
                 ai.AddExperience(exp);
             }
-            //ai.exploration = Random.Range(-.05f, .05f);
+
             exp = null;
 
             velocity = 0;
@@ -45,8 +45,6 @@ namespace Flappy {
             }
 
             exp = ai.GetAction(t);
-
-            //Debug.Log($"{exp.output} Value: {ai.v.result} Advantage: {ai.a.result}");
 
             if (exp.action == 0) {
                 Jump();
@@ -74,24 +72,15 @@ namespace Flappy {
 
     public class FlappyAgent : RLAgent {
         public Operation a, v;
-        public FlappyAgent(int expBufferSize = 1000) : base(expBufferSize) {
-            //NeuralNetwork result = new NeuralNetwork(4);
-            //result.Add(new FullyConnected(10, ActivationFunction.Tanh));
-            //result.Add(new FullyConnected(10, ActivationFunction.Tanh));
-            //result.Add(new FullyConnected(10, ActivationFunction.Tanh));
-            //result.Add(new FullyConnected(10, ActivationFunction.Tanh));
-            //result.Add(new FullyConnected(2));
-
-            //var op = result.Build();
-
+        public FlappyAgent(int expBufferSize = 10000) : base(expBufferSize) {
             Operation op = new InputLayer(4).Build();
-            op = new FullyConnected(100, ActivationFunction.LeakyRelu).Build(op);
-            op = new FullyConnected(100, ActivationFunction.LeakyRelu).Build(op);
+            op = new FullyConnected(10, ActivationFunction.LeakyRelu).Build(op);
+            op = new FullyConnected(10, ActivationFunction.LeakyRelu).Build(op);
 
-            a = new FullyConnected(100, ActivationFunction.LeakyRelu).Build(op);
+            a = new FullyConnected(10, ActivationFunction.LeakyRelu).Build(op);
             a = new FullyConnected(2,null).Build(op);
 
-            v = new FullyConnected(100, ActivationFunction.LeakyRelu).Build(op);
+            v = new FullyConnected(10, ActivationFunction.LeakyRelu).Build(op);
             v = new FullyConnected(1,null).Build(op);
 
             op = v - new Sum(a) / 2;
