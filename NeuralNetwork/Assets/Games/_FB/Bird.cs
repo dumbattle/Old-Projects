@@ -74,13 +74,15 @@ namespace Flappy {
         public Operation a, v;
         public FlappyAgent(int expBufferSize = 10000) : base(expBufferSize) {
             Operation op = new InputLayer(4).Build();
-            op = new FullyConnected(10, ActivationFunction.LeakyRelu).Build(op);
-            op = new FullyConnected(10, ActivationFunction.LeakyRelu).Build(op);
+            op = new FullyConnected(10, ActivationFunction.Relu).Build(op);
+            op = new FullyConnected(10, ActivationFunction.Relu).Build(op);
+            //op = new Max(GetInner(op), GetInner(op), GetInner(op));
 
-            a = new FullyConnected(10, ActivationFunction.LeakyRelu).Build(op);
+
+            a = new FullyConnected(10, ActivationFunction.Relu).Build(op);
             a = new FullyConnected(2,null).Build(op);
 
-            v = new FullyConnected(10, ActivationFunction.LeakyRelu).Build(op);
+            v = new FullyConnected(10, ActivationFunction.Relu).Build(op);
             v = new FullyConnected(1,null).Build(op);
 
             op = v - new Sum(a) / 2;
@@ -88,8 +90,14 @@ namespace Flappy {
 
             op += a;
             Build(op);
-            SetOptimizer(new SGD(.001f), Loss.MSE);
+            SetOptimizer(new Adam(), Loss.MSE);            
+        }
 
+        Operation GetInner(Operation input) {
+            var op = new FullyConnected(10, ActivationFunction.Sigmoid).Build(input);
+            op = new FullyConnected(10, ActivationFunction.Sigmoid).Build(op);
+
+            return op;
         }
     }
 }

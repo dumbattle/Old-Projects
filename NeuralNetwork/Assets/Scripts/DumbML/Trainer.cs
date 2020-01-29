@@ -25,7 +25,7 @@ namespace DumbML {
 
             targetPH = new Placeholder(m.outputShape);
             loss = l.Compute(m.forward, targetPH);
-
+            loss.Optimize();
             this.l = new Tensor(loss.shape);
         }
         public Trainer(Operation op, Optimizer o, Loss l) : this(new Model(op), o,l) {}

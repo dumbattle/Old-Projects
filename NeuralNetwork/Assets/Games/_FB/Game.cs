@@ -18,8 +18,10 @@ namespace Flappy {
         float spawnTimer = 0;
         public float score = 0;
 
+        Channel scoreChannel;
 
         public Game(Vector2 offset) {
+            scoreChannel = Channel.New("Score");
             this.offset = offset;
             var bg = FlappyBird.GetBackground();
             bg.transform.position = offset + gameSize / 2;
@@ -63,6 +65,7 @@ namespace Flappy {
         }
         public void Reset() {
             OnReset?.Invoke();
+            scoreChannel.Feed(score);
             score = 0;
             spawnTimer = 0;
             bird.Reset();

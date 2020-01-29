@@ -154,7 +154,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   count: 32
-  batchSize: 32
+  batchSize: 1
   delay: 47
   loss: 0
 --- !u!4 &425939404

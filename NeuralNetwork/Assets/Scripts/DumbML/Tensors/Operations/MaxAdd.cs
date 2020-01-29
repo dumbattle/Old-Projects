@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 
 namespace DumbML {
-    public class MaxAdd : Operation {
+    public class Max : Operation {
         Tensor[] backwardsArray;
         int[] selected;
 
-        public MaxAdd(params Operation[] ops) : base(ops[0].shape, ops) {
+        public Max(params Operation[] ops) : base(ops[0].shape, ops) {
             int count = 1;
             foreach (var i in ops[0].shape) {
                 count *= i;
@@ -24,6 +24,7 @@ namespace DumbML {
             for (int i = 0; i < length; i++) {
                 int ind = 0;
                 var val = operands[0]._value[i];
+
                 for (int j = 1; j < operands.Length; j++) {
                     if (operands[j]._value[i] > val) {
                         ind = j;
@@ -33,6 +34,8 @@ namespace DumbML {
                 selected[i] = ind;
                 result[i] = val;
             }
+
+
             return result;
         }
 
@@ -40,13 +43,28 @@ namespace DumbML {
         protected override Tensor[] BackwardsPass(Tensor e) {
             var length = result.Size;
 
-            for (int i = 0; i < length; i++) {
-                for (int j = 0; j < backwardsArray.Length; j++) {
+            //for (int i = 0; i < length; i++) {
+            //    var s = selected[i];
+            //    var err = e[i];
+
+            //    for (int j = 0; j < backwardsArray.Length; j++) {
+            //        if (j == s) {
+            //            backwardsArray[j][i] = err;
+            //        }
+            //        else {
+            //            backwardsArray[j][i] = 0;
+            //        }
+            //    }
+            //}
+
+            for (int j = 0; j < backwardsArray.Length; j++) {
+                var ba = backwardsArray[j];
+                for (int i = 0; i < length; i++) {
                     if (j == selected[i]) {
-                        backwardsArray[j][i] = e[i];
+                        ba._value[i] = e[i];
                     }
                     else {
-                        backwardsArray[j][i] = 0;
+                        ba._value[i] = 0;
                     }
                 }
             }
@@ -54,7 +72,7 @@ namespace DumbML {
             return backwardsArray;
         }
         public override Operation Copy(Dictionary<Operation, Operation> track) {
-            return new MaxAdd(CopyInner(track));
+            return new Max(CopyInner(track));
         }
     }
 }

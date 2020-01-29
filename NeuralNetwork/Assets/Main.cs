@@ -39,15 +39,16 @@ public class Main : MonoBehaviour {
 
 
     Model CreateModel() {
+        Operation h1, h2, h3, h4;
         Operation op = new InputLayer(20).Build();
 
-        op = new FullyConnected(100, ActivationFunction.LeakyRelu, bias: false).Build(op);
-        op = new FullyConnected(100, ActivationFunction.LeakyRelu, bias: false).Build(op);
+        h1 = op = new FullyConnected(100, ActivationFunction.LeakyRelu, bias: false).Build(op);
+        h2 = op = new FullyConnected(100, ActivationFunction.LeakyRelu, bias: false).Build(op);
 
-        var a = new FullyConnected(100, ActivationFunction.LeakyRelu, bias: false).Build(op);
+        var a = h3 = new FullyConnected(100, ActivationFunction.LeakyRelu, bias: false).Build(op);
         a = new FullyConnected(2, bias: false).Build(a);
 
-        var v = new FullyConnected(100, ActivationFunction.Sigmoid).Build(op);
+        var v = h4 = new FullyConnected(100, ActivationFunction.Sigmoid).Build(op);
         v = new FullyConnected(1, bias: false).Build(v);
 
         v = v - new Sum(a) / 2;
@@ -58,11 +59,32 @@ public class Main : MonoBehaviour {
         op.Optimize();
 
         var m = new Model(op);
-        trainer = new Trainer(m,new SGD(.01f), Loss.MSE);
+        trainer = new Trainer(m, new SGD(.01f), new CustomLoss(h1, h2, h3, h4));
         return m;
 
 
 
+    }
+    class CustomLoss : Loss {
+        Operation[] hidden;
+        public CustomLoss(params Operation[] ops) {
+            hidden = ops;
+        }
+        public override Operation Compute(Operation op, Placeholder labels) {
+            var l = MSE.Compute(op, labels);
+
+            foreach (var h in hidden) {
+                int size = 1;
+                foreach (var d in h.shape) {
+                    size *= d;
+                }
+
+
+                var s = new Sum(new Square(h)) / (size * 100);
+                l += s;
+            }
+            return l;
+        }
     }
 
     void Update() {
@@ -70,9 +92,9 @@ public class Main : MonoBehaviour {
         c.Feed(loss = trainer.Train(inputs, labels, batchSize)[0]);
         sw.Stop();
 
-        print("--------------------------------------");
-        print(nn.Compute(inputs[0]));
-        print(nn.Compute(inputs[1]));
+        //print("--------------------------------------");
+        //print(nn.Compute(inputs[0]));
+        //print(nn.Compute(inputs[1]));
         if (delay > 0) {
             delay *= .99f;
             delay += .01f * sw.ElapsedMilliseconds;

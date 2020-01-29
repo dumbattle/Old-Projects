@@ -15,7 +15,7 @@
                 outputs[i] = inner[i].Build(input);
             }
 
-            return forward = new MaxAdd(outputs);
+            return forward = new Max(outputs);
         }
     }
 }

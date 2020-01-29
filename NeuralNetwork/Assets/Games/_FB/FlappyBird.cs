@@ -16,6 +16,7 @@ namespace Flappy {
         public string output, value, advantage;
         Game game;
 
+
         void Start() {
             main = this;
             Game.gameSize = gameSize;

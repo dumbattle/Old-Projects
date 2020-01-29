@@ -57,4 +57,7 @@ public class Channel {
         yMin = min;
         yMax = max;
     }
+    public static Channel New (string name) {
+        return Graph.GetChannel(name);
+    }
 }
