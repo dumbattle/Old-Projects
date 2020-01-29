@@ -101,17 +101,31 @@ namespace DumbML {
                 var rv = r._value;
                 var dv = dest._value;
 
-                System.Threading.Tasks.Parallel.For(0, ry, (y) => {
-                    int rind = y;
-                    float v = 0;
+                if (ly > 50) {
+                    System.Threading.Tasks.Parallel.For(0, ry, (y) => {
+                        int rind = y;
+                        float v = 0;
 
-                    for (int i = 0; i < ly; i++) {
-                        v += lv[i] * rv[rind];
-                        rind += ry;
+                        for (int i = 0; i < ly; i++) {
+                            v += lv[i] * rv[rind];
+                            rind += ry;
+                        }
+
+                        dv[y] = v;
+                    });
+                }else {
+                    for (int y = 0; y < ry; y++) {
+                        int rind = y;
+                        float v = 0;
+
+                        for (int i = 0; i < ly; i++) {
+                            v += lv[i] * rv[rind];
+                            rind += ry;
+                        }
+
+                        dv[y] = v;
                     }
-
-                    dv[y] = v;
-                });
+                }
 
                 return dest;
             }
