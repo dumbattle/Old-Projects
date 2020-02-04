@@ -24,6 +24,8 @@ namespace DumbML {
             inputs = (Placeholder[])m.inputs.Clone();
 
             targetPH = new Placeholder(m.outputShape);
+            targetPH.SetName("Target Placeholder");
+
             loss = l.Compute(m.forward, targetPH);
             loss.Optimize();
             this.l = new Tensor(loss.shape);
@@ -72,7 +74,7 @@ namespace DumbML {
 
         public Tensor Train(Tensor[] inputs, Tensor[] targets, int batchSize = 32, bool shuffle = true) {
             Tensor totalLoss = new Tensor(loss.shape);
-            l.PointWise((a) => 1f / batchSize, true);
+            //l.PointWise((a) => 1f / batchSize, true);
             opt.ZeroGrad();
             int count = 0;
 
@@ -93,9 +95,7 @@ namespace DumbML {
                 targetPH.SetVal(target);
 
                 totalLoss.Add(loss.Eval(), true);
-                loss.Backwards(opt, l);
-
-
+                loss.Backwards(opt);
                 count++;
                 if (count >= batchSize) {
                     opt.Update();

@@ -10,7 +10,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <RootNamespace></RootNamespace>
+    <RootNamespace>
+    </RootNamespace>
     <ProjectGuid>{9882B084-551B-F402-60A9-6ECAD97EBAA8}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -101,6 +102,9 @@
     <Compile Include="Assets\Scripts\DumbML\Optimizers\Gradients.cs" />
     <Compile Include="Assets\Scripts\DumbML\Optimizers\Loss.cs" />
     <Compile Include="Assets\Scripts\DumbML\Optimizers\Optimizer.cs" />
+    <Compile Include="Assets\Scripts\DumbML\Tensors\Operations\BroadcastScalar.cs" />
+    <Compile Include="Assets\Scripts\DumbML\Tensors\Operations\Log.cs" />
+    <Compile Include="Assets\Scripts\DumbML\Tensors\Operations\OperationExtensions.cs" />
     <Compile Include="Assets\Scripts\DumbML\Tensors\Operations\_OperationBase.cs" />
     <Compile Include="Assets\Scripts\DumbML\Tensors\Operations\Abs.cs" />
     <Compile Include="Assets\Scripts\DumbML\Tensors\Operations\Add.cs" />
@@ -110,6 +114,7 @@
     <Compile Include="Assets\Scripts\DumbML\Tensors\Operations\Conv2DPoint.cs" />
     <Compile Include="Assets\Scripts\DumbML\Tensors\Operations\Divide.cs" />
     <Compile Include="Assets\Scripts\DumbML\Tensors\Operations\DuplicateOperation.cs" />
+    <Compile Include="Assets\Scripts\DumbML\Tensors\Operations\Exp.cs" />
     <Compile Include="Assets\Scripts\DumbML\Tensors\Operations\FlattenOp.cs" />
     <Compile Include="Assets\Scripts\DumbML\Tensors\Operations\LeakyRelu.cs" />
     <Compile Include="Assets\Scripts\DumbML\Tensors\Operations\MatrixMult.cs" />
@@ -128,6 +133,7 @@
     <Compile Include="Assets\Scripts\DumbML\Trainer.cs" />
     <Compile Include="Assets\SerializationTester.cs" />
     <Compile Include="Assets\UnsafeTester.cs" />
+    <Compile Include="Assets\WeightTester.cs" />
     <None Include="Assets\Scripts\Resources\Pointwise.compute" />
     <None Include="Assets\Scripts\Resources\MatrixMult.compute" />
     <Reference Include="Unity.Timeline.Editor">

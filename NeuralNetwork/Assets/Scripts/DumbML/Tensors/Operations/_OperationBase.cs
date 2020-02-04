@@ -1,13 +1,14 @@
 ﻿using System.Collections.Generic;
 using System;
 using System.Linq;
-using System.Reflection;
+
 
 namespace DumbML {
     public abstract class Operation {
         public Tensor result { get; protected set; }
         public int[] shape;
         public Operation[] inner;
+        public string Name;
 
         Tensor[] operands;
         public Tensor dupeError;
@@ -36,6 +37,7 @@ namespace DumbML {
 
                 operands[i] = new Tensor(inner[i].shape);
             }
+            Name = GetType().ToString();
         }
 
         public void Optimize() {
@@ -71,16 +73,7 @@ namespace DumbML {
         public bool Test;
         protected abstract Tensor Compute(Tensor[] operands);
 
-        public void Backwards(Gradients g) {
-            Tensor e = new Tensor(() => 1, shape);
-            Backwards(g, e);
-        }
-        public void Backwards(Optimizer o) {
-            Tensor e = new Tensor(() => 1, shape);
-            Backwards(o.grad, e);
-        }
         public void Backwards(Gradients g, Tensor e) {
-
             if (g.Contains(this)) {
                 g[this].Add(e, true);
             }
@@ -89,13 +82,22 @@ namespace DumbML {
             for (int i = inner.Length - 1; i >= 0; i--) {
                 if (inner[i].dupeError != null) {
                     inputErrors[i].Add(inner[i].dupeError, true);
-                    inner[i].dupeError.Multiply(0, true);
+                    inner[i].dupeError.SetValuesToZero();
                 }
 
                 inner[i].Backwards(g, inputErrors[i]);
             }
-
         }
+        public void Backwards(Gradients g) {
+            Tensor e = new Tensor(() => 1, shape);
+            Backwards(g, e);
+        }
+        public void Backwards(Optimizer o) {
+            Tensor e = new Tensor(() => 1, shape);
+            Backwards(o.grad, e);
+        }
+
+
         public void Backwards(Optimizer o,Tensor e) {
             Backwards(o.grad, e);
         }
@@ -186,7 +188,10 @@ namespace DumbML {
         }
 
 
-
+        public Operation SetName(string name) {
+            Name = name;
+            return this;
+        }
         public virtual string ToString(bool requireParanthesis) {
             return "";
         }
@@ -194,5 +199,4 @@ namespace DumbML {
             return ToString(false);
         }
     }
-
 }

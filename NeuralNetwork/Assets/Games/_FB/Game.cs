@@ -26,7 +26,7 @@ namespace Flappy {
             var bg = FlappyBird.GetBackground();
             bg.transform.position = offset + gameSize / 2;
             bg.transform.localScale = gameSize;
-            bird = new Bird(this);
+            bird = new BirdPG(this);
             bird.Reset();
         }
 
@@ -84,7 +84,7 @@ namespace Flappy {
         }
 
 
-        public Tensor GetTensor() {
+        public Tensor GetState() {
             /// bird height
             /// bird velocity
             /// closest block

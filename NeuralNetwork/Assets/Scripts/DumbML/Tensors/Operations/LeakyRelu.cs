@@ -6,7 +6,7 @@ namespace DumbML {
         static ProfilerMarker profile = new ProfilerMarker("LeakyRelu.Eval");
         static ProfilerMarker profileBackwards = new ProfilerMarker("LeakyRelu.Backwards");
         Tensor error;
-        float leakyness = .05f;
+        float leakyness = .001f;
         public LeakyRelu(Operation op) : base(op.shape, op) {
             error = new Tensor(shape);
         }

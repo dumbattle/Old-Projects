@@ -4,7 +4,7 @@ namespace DumbML {
         public Placeholder(params int[] shape) : base(shape) { }
 
         public void SetVal(Tensor t) {
-            result = t;
+            result.Copy(t);
         }
         protected override Tensor Compute(Tensor[] operands) {
             return result;

@@ -12,11 +12,8 @@ namespace DumbML {
 
 
         public static Tensor MatrixMult(this Tensor l, Tensor r, Tensor dest) {
-            if (l.Rank == 1 && r.Rank == 2) {
                 return Parallel.MatrixMult1x2(l, r, dest);
-            }
 
-            return Parallel.MatrixMult2x2(l, r, dest);  //needs to be fixed before use
 
         }
 
@@ -25,7 +22,6 @@ namespace DumbML {
                 return Parallel.MatrixMult1x2Backwards(l, r, e, dest);
             //}
 
-            return Parallel.MatrixMultBackwards(l, r, e, dest);        //needs to be fixed before use
         }
 
         public static Tensor Sigmoid(this Tensor t) {

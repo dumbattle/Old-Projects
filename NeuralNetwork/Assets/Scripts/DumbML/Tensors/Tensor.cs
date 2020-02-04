@@ -489,19 +489,19 @@ namespace DumbML {
         public Tensor Multiply(float val, bool self = false) {
             int length = _value.Length;
             if (self) {
-                unsafe {
-                    fixed (float* pv = _value) {
-                        for (int i = 0; i < length; i++) {
-                            pv[i] *= val;
-                        }
-                    }
-                }
-
-                return this;
-                //for (int i = 0; i < Size; i++) {
-                //    _value[i] *= val;
+                //unsafe {
+                //    fixed (float* pv = _value) {
+                //        for (int i = 0; i < length; i++) {
+                //            pv[i] *= val;
+                //        }
+                //    }
                 //}
+
                 //return this;
+                for (int i = 0; i < Size; i++) {
+                    _value[i] *= val;
+                }
+                return this;
             }
 
             Tensor result = SameShape();
@@ -535,13 +535,19 @@ namespace DumbML {
             int length = _value.Length;
 
             if (self) {
-                unsafe {
-                    fixed (float* pv = _value, pt = t._value) {
-                        for (int i = 0; i < length; i++) {
-                            pv[i] += pt[i];
-                        }
-                    }
+                var tv = t._value;
+
+                for (int i = 0; i < length; i++) {
+                    _value[i] += tv[i];
                 }
+
+                //unsafe {
+                //    fixed (float* pv = _value, pt = t._value) {
+                //        for (int i = 0; i < length; i++) {
+                //            pv[i] += pt[i];
+                //        }
+                //    }
+                //}
                 return this;
             }
 

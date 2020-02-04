@@ -20,6 +20,11 @@ namespace DumbML {
 
 
 
+        public void Build(Operation op) {
+            var inputs = op.GetOperations<Placeholder>();
+            Build(op, inputs.ToArray());
+        }
+
         public void Build(Operation op, params Placeholder[] inputs) {
             forward = op;
             this.inputs = inputs;
@@ -28,7 +33,7 @@ namespace DumbML {
         public Tensor Compute(params Tensor[] input) {
             SetInputs(input);
 
-            return forward.Eval();
+            return forward.Eval().Copy();
         }
 
         public void SetInputs(params Tensor[] input) {

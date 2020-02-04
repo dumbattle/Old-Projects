@@ -6,13 +6,13 @@ using Unity.Profiling;
 namespace DumbML {
     public class Gradients {
         static ProfilerMarker profile = new ProfilerMarker("Gradients.Reset");
-        public Dictionary<Operation, Tensor> grad = new Dictionary<Operation, Tensor>();
+        Dictionary<Operation, Tensor> grad = new Dictionary<Operation, Tensor>();
         public readonly Operation[] keys;
 
         public Tensor this[Operation key] {
             get {
                 return grad[key];
-            }
+            } 
         }
 
 

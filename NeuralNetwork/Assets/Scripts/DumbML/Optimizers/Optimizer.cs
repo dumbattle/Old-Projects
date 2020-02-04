@@ -20,14 +20,17 @@ namespace DumbML {
             IsBuilt = true;
         }
 
-        public virtual void Update(int batchCount = 1) {
+        public virtual void Update() {
             p.Begin();
             int ind = 0;
 
             for (int i = 0; i < grad.keys.Length; i++) {
                 var v = grad.keys[i] as Variable;
 
-                if (v == null || !v.Trainable) {
+                if (v == null) {
+                    continue;
+                }
+                if (!v.Trainable) {
                     ind += grad[v].Size;
                     continue;
                 }
@@ -42,7 +45,6 @@ namespace DumbML {
                     ind++;
                 }
             }
-
             p.End();
         }
 
@@ -88,7 +90,6 @@ namespace DumbML {
             base.InitializeGradients(g);
             m = NewContainer();
         }
-
         public override float UnpdateSingle(float g, int i) {            
             return m[i] = m[i] * momentum + g * (1 - momentum) * lr; 
         }

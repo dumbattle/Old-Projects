@@ -28,8 +28,8 @@ namespace DumbML {
         }
 
         protected override Tensor[] BackwardsPass(Tensor e) {
-            backwardsArray[0] = e;
-            backwardsArray[1] = e;
+            backwardsArray[0] = e.Copy();
+            backwardsArray[1] = e.Copy();
             return backwardsArray;
         }
         public override Operation Copy(Dictionary<Operation, Operation> track) {

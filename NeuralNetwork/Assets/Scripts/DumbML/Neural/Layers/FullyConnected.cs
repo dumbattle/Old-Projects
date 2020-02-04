@@ -1,4 +1,5 @@
-﻿
+﻿using System;
+
 namespace DumbML {
     public class InputLayer : Layer {
         public Placeholder ph;
@@ -26,7 +27,11 @@ namespace DumbML {
         }
 
         public override Operation Build(Operation input) {
-            weights = Tensor.Random(input.shape[0], outputSize);
+            //weights = Tensor.Random(input.shape[0], outputSize);
+            var n = new Normal(-1, 1);
+
+            weights = new Tensor(() => n.Next(),input.shape[0], outputSize);
+            weights.SetName("FC weight");
             if (useBias) {
                 bias = new Tensor(outputSize);
                 return forward = af.Activate(new MatrixMult(input, weights) + bias);
@@ -36,7 +41,27 @@ namespace DumbML {
             }
         }
     }
+    public class Normal {
+        static Random rng = new Random();
 
+        float stdDev;
+        float mean;
+        public Normal(float min, float max) {
+            mean = (max + min) / 2;
+            stdDev = (max - min) / 4;
+        }
+
+        public float Next() {
+            double u1 = 1.0 - rng.NextDouble(); //uniform(0,1] random doubles
+            double u2 = 1.0 - rng.NextDouble();
+            double randStdNormal =
+                Math.Sqrt(-2.0 * Math.Log(u1)) *
+                Math.Sin(2.0 * Math.PI * u2); //random normal(0,1)
+
+            double result = mean + stdDev * randStdNormal; //random normal(mean,stdDev^2)
+            return (float)result;
+        }
+    }
     public class TestLayer : Layer {
         FullyConnected a, b, c;
         bool useBias;

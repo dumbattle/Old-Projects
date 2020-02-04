@@ -4,7 +4,7 @@ using UnityEngine;
 using DumbML;
 namespace Flappy {
     public class FlappyBird : MonoBehaviour {
-        static FlappyBird main;
+        public static FlappyBird main;
         public GameObject bird;
         public GameObject background;
         public GameObject block;
@@ -31,9 +31,6 @@ namespace Flappy {
         IEnumerator Next() {
             while (true) {
                 game.Next();
-                output = game.bird.ai.Result.ToString();
-                advantage= game.bird.ai.a.result.ToString();
-                value = game.bird.ai.v.result.ToString();
                 yield return null;
             }
         }
