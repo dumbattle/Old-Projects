@@ -2,8 +2,8 @@
 namespace DumbML {
     public class Conv2DDepth : Operation {
         Tensor le, re;
-        (int, int) stride;
-        bool pad;
+        public (int, int) stride;
+        public bool pad;
 
         public Conv2DDepth(Operation op, Operation weight, (int x, int y) stride = default, bool pad = false) : base(null, op, weight) {
             if (op.shape[2] != weight.shape[2]) {}
