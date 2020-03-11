@@ -87,6 +87,7 @@
     <Compile Include="Assets\Games\Snake\Scripts\SnakePG.cs" />
     <Compile Include="Assets\Main.cs" />
     <Compile Include="Assets\MLModelAsset.cs" />
+    <Compile Include="Assets\ModelWeightsAsset.cs" />
     <Compile Include="Assets\SerializationTester.cs" />
     <Compile Include="Assets\UnsafeTester.cs" />
     <Compile Include="Assets\WeightTester.cs" />

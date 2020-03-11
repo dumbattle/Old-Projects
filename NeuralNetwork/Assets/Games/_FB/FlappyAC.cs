@@ -5,6 +5,17 @@ namespace Flappy {
     public class FlappyAC : ActorCritic {
         public FlappyAC() : base() {
             Build();
+            var asset = FlappyBird.AiAsset;
+            if (asset == null) {
+                return;
+            }
+
+            var weights = asset.Load();
+            if (weights == null) {
+                return;
+            }
+
+            combinedAC.SetWeights(weights);
         }
 
         protected override Operation Input() {
@@ -18,11 +29,16 @@ namespace Flappy {
             a = a.Softmax();
             return a;
         }
-
         protected override Operation Critic(Operation input) {
             Operation c = new FullyConnected(1).Build(input);
 
             return c;
+        }
+
+        public override void EndTrajectory() {
+            base.EndTrajectory();
+            FlappyBird.AiAsset.Save(combinedAC.GetWeights());
+
         }
 
         protected override Optimizer Optimizer() {

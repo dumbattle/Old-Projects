@@ -386,6 +386,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cf21017f5f57a5f49ba9976142a107c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  aiAsset: {fileID: 11400000, guid: 8d33a21815f04894ca8a2e27583f607c, type: 2}
   bird: {fileID: 783222056}
   background: {fileID: 413763995}
   block: {fileID: 1042011301}

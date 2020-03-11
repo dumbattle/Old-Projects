@@ -5,7 +5,7 @@ using DumbML;
 
 public class SerializationTester : MonoBehaviour {
     public Model model;
-    public MLModelAsset modelAsset;
+    public ModelAsset modelAsset;
 
     void Start() {
         Tensor input = Tensor.FromArray(new float[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 });

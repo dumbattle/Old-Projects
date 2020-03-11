@@ -69,6 +69,8 @@ namespace DumbML {
                 if (!weights[i].CheckShape(v[i].shape)) {
                     throw new ArgumentException($"Cannot set weight, wrong shape. Got: {weights[i].Shape} Expected: {v[i].shape} Index: {i}");
                 }
+            }
+            for (int i = 0; i < v.Length; i++) {
                 v[i].Value = weights[i].Copy();
             }
         }
@@ -81,6 +83,7 @@ namespace DumbML {
 
         public Model actorModel { get; private set; }
         public Model criticModel { get; private set; }
+        protected Model combinedAC;
 
         Operation loss;
         Placeholder inputPH, actionMask, rewardPH;
@@ -96,6 +99,9 @@ namespace DumbML {
             Operation input = Input();
             Operation a = Actor(input);
             Operation c = Critic(input);
+            combinedAC = new Model(a + c);
+            a.SetName("__ACTOR__");
+            a.SetName("__CRITIC__");
 
             actorModel = new Model(a);
             criticModel = new Model(c);
@@ -127,10 +133,10 @@ namespace DumbML {
         }
 
 
-        public void AddExperience(RLExperience exp) {
+        public virtual void AddExperience(RLExperience exp) {
             trajectory.Add(exp);
         }
-        public void EndTrajectory() {
+        public virtual void EndTrajectory() {
             float score = 0;
 
             for (int i = trajectory.Count - 1; i >= 0; i--) {
@@ -187,6 +193,13 @@ namespace DumbML {
 
             o.Update();
             o.ZeroGrad();
+        }
+
+        public Tensor[] GetWeights() {
+            return combinedAC.GetWeights();
+        }
+        public void SetWeights(Tensor[] weights) {
+            combinedAC.SetWeights(weights);
         }
     }
 

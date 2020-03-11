@@ -5,6 +5,8 @@ using DumbML;
 namespace Flappy {
     public class FlappyBird : MonoBehaviour {
         public static FlappyBird main;
+        public static ModelWeightsAsset AiAsset => main.aiAsset;
+        public ModelWeightsAsset aiAsset;
         public GameObject bird;
         public GameObject background;
         public GameObject block;
