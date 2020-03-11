@@ -12,7 +12,7 @@ namespace DumbML {
         }
 
         protected override Tensor Compute(Tensor[] operands) {
-            return result = i.result;
+            return value = i.value;
         }
 
         protected override Tensor[] BackwardsPass(Tensor e) {

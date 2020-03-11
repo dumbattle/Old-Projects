@@ -14,19 +14,19 @@ namespace DumbML {
 
         protected override Tensor Compute(Tensor[] operands) {
             profile.Begin();
-            operands[0].Sigmoid(result);
+            operands[0].Sigmoid(value);
             profile.End();
 
       
 
-            return result;
+            return value;
         }
 
         protected override Tensor[] BackwardsPass(Tensor e) {
             profileBackwards.Begin();
             int s = error.Size;
             for (int i = 0; i < s; i++) {
-                error._value[i] = e._value[i] * result._value[i] * (1 - result._value[i]);
+                error._value[i] = e._value[i] * value._value[i] * (1 - value._value[i]);
             }
             profileBackwards.End();
             backwardsArray[0] = error;

@@ -23,7 +23,7 @@ namespace DumbML {
                     shape[j] = o.shape[j];
                 }
             }
-            result = new Tensor(shape);
+            value = new Tensor(shape);
         }
 
         protected override Tensor Compute(Tensor[] operands) {
@@ -32,11 +32,11 @@ namespace DumbML {
 
             foreach (var o in operands) {
                 for (int i = 0; i < o._value.Length; i++) {
-                    result._value[ind] = o._value[i];
+                    value._value[ind] = o._value[i];
                     ind++;
                 }
             }
-            return result;
+            return value;
         }
 
         protected override Tensor[] BackwardsPass(Tensor e) {

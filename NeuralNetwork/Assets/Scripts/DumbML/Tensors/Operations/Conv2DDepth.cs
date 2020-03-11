@@ -21,14 +21,14 @@ namespace DumbML {
             int shapeY = (op.shape[1] - weight.shape[1] + padY) / strideY + 1;
 
             shape = new[] { shapeX, shapeY, weight.shape[2] };
-            result = new Tensor(shape);
+            value = new Tensor(shape);
         }
 
         protected override Tensor Compute(Tensor[] operands) {
-            return result = Blas.Parallel.Convolution2DDepthwise(operands[0], operands[1], result, stride, pad);
+            return value = Blas.Parallel.Convolution2DDepthwise(operands[0], operands[1], value, stride, pad);
         }
         protected override Tensor[] BackwardsPass(Tensor e) {
-            (le, re) = Blas.Parallel.Convolution2DDepthwiseBackwards(inner[0].result, e, inner[1].result, (le, re), stride, pad);
+            (le, re) = Blas.Parallel.Convolution2DDepthwiseBackwards(inner[0].value, e, inner[1].value, (le, re), stride, pad);
             return new[] { le, re };
         }
 

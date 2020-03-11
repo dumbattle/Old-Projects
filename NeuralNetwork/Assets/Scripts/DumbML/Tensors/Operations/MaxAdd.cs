@@ -19,7 +19,7 @@ namespace DumbML {
 
 
         protected override Tensor Compute(Tensor[] operands) {
-            var length = result.Size;
+            var length = value.Size;
 
             for (int i = 0; i < length; i++) {
                 int ind = 0;
@@ -32,16 +32,16 @@ namespace DumbML {
                     }
                 }
                 selected[i] = ind;
-                result[i] = val;
+                value[i] = val;
             }
 
 
-            return result;
+            return value;
         }
 
 
         protected override Tensor[] BackwardsPass(Tensor e) {
-            var length = result.Size;
+            var length = value.Size;
 
             //for (int i = 0; i < length; i++) {
             //    var s = selected[i];

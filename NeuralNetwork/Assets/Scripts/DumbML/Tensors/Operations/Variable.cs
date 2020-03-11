@@ -7,19 +7,19 @@ namespace DumbML {
         public string name;
         public bool Trainable = true;
 
-        public Tensor Value { get { return result; } set { result = value; } }
+        public Tensor Value { get { return value; } set { base.value = value; } }
 
         public Variable(Tensor value) : base(value.Shape) {
-            result = value;
+            base.value = value;
         }
         public Variable(Tensor value, string name) : base(value.Shape){
-            result = value;
+            base.value = value;
             this.name = name;
         }
 
         protected override Tensor Compute(Tensor[] operands) {
           
-            return result;
+            return value;
         }
 
 
@@ -35,7 +35,7 @@ namespace DumbML {
             return new Variable(Value.Copy());
         }
         public override string ToString(bool requireParanthesis) {
-            return name ?? result.ToString();
+            return name ?? value.ToString();
         }
     }
     

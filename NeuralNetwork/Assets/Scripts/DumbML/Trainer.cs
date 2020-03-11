@@ -71,10 +71,9 @@ namespace DumbML {
 
             return totalLoss / inputs.Length;
         }
-
         public Tensor Train(Tensor[] inputs, Tensor[] targets, int batchSize = 32, bool shuffle = true) {
             Tensor totalLoss = new Tensor(loss.shape);
-            //l.PointWise((a) => 1f / batchSize, true);
+
             opt.ZeroGrad();
             int count = 0;
 
@@ -106,8 +105,6 @@ namespace DumbML {
 
             return totalLoss / inputs.Length;
         }
-
-
 
         void SetInputs(params Tensor[] input) {
             for (int i = 0; i < input.Length; i++) {

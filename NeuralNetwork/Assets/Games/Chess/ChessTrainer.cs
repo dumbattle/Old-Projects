@@ -13,9 +13,9 @@ namespace Chess {
         static Tensor l = new Tensor(() => -1, 1);
         
         public static void ClearMemory() {
-            draws.Reset();
-            wins.Reset();
-            losses.Reset();
+            draws.Clear();
+            wins.Clear();
+            losses.Clear();
         }
 
         public static float Train(ChessModel model, int count) {

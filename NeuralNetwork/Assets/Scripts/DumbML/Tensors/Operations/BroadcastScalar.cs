@@ -11,10 +11,10 @@ namespace DumbML {
 
         protected override Tensor Compute(Tensor[] operands) {
             var s = operands[0][0];
-            for (int i = 0; i < result.Size; i++) {
-                result._value[i] = s;
+            for (int i = 0; i < value.Size; i++) {
+                value._value[i] = s;
             }
-            return result;
+            return value;
         }
         protected override Tensor[] BackwardsPass(Tensor e) {
             t[0] = 0;

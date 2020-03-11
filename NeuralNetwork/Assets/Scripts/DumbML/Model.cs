@@ -6,7 +6,7 @@ namespace DumbML {
         public Operation forward { get; set; }
 
         public Placeholder[] inputs;
-        public Tensor Result => forward.result;
+        public Tensor Result => forward.value;
 
         public Model() { }
         public Model(Operation op) {
@@ -20,12 +20,11 @@ namespace DumbML {
 
 
 
-        public void Build(Operation op) {
+        protected void Build(Operation op) {
             var inputs = op.GetOperations<Placeholder>();
             Build(op, inputs.ToArray());
         }
-
-        public void Build(Operation op, params Placeholder[] inputs) {
+        protected void Build(Operation op, params Placeholder[] inputs) {
             forward = op;
             this.inputs = inputs;
         }
@@ -36,7 +35,7 @@ namespace DumbML {
             return forward.Eval().Copy();
         }
 
-        public void SetInputs(params Tensor[] input) {
+        protected void SetInputs(params Tensor[] input) {
             for (int i = 0; i < input.Length; i++) {
                 inputs[i].SetVal(input[i]);
             }
@@ -72,6 +71,122 @@ namespace DumbML {
                 }
                 v[i].Value = weights[i].Copy();
             }
+        }
+    }
+
+
+    public abstract class ActorCritic {
+        RingBuffer<RLExperience> trajectory;
+        float discount = .9f;
+
+        public Model actorModel { get; private set; }
+        public Model criticModel { get; private set; }
+
+        Operation loss;
+        Placeholder inputPH, actionMask, rewardPH;
+
+        Optimizer o;
+        Gradients g;
+
+        public ActorCritic(int maxTrajectorySize = 1000) {
+            trajectory = new RingBuffer<RLExperience>(maxTrajectorySize);
+        }
+
+        public void Build() {
+            Operation input = Input();
+            Operation a = Actor(input);
+            Operation c = Critic(input);
+
+            actorModel = new Model(a);
+            criticModel = new Model(c);
+
+
+            rewardPH = new Placeholder(1);
+
+            var adv = rewardPH - c;
+            actionMask = new Placeholder(a.shape);
+
+
+            var aloss = new Log(a * actionMask) * new BroadcastScalar(-1 * adv.Detach(), a.shape);
+            var cLoss = Loss.MSE.Compute(rewardPH, c);
+
+            loss = new Sum(aloss) + cLoss;
+
+            g = new Gradients(loss.GetOperations<Variable>());
+            o = Optimizer();
+            o.InitializeGradients(g);
+            inputPH = loss.GetOperations<Placeholder>()[0];
+        }
+
+        protected abstract Operation Input();
+        protected abstract Operation Actor(Operation input);
+        protected abstract Operation Critic(Operation input);
+
+        protected virtual Optimizer Optimizer() {
+            return new SGD();
+        }
+
+
+        public void AddExperience(RLExperience exp) {
+            trajectory.Add(exp);
+        }
+        public void EndTrajectory() {
+            float score = 0;
+
+            for (int i = trajectory.Count - 1; i >= 0; i--) {
+                var exp = trajectory[i];
+
+                score *= discount;
+                score += exp.reward;
+                exp.reward = score;
+            }
+
+            TrainAll();
+            trajectory.Clear();
+        }
+
+        public RLExperience SampleAction(Tensor state) {
+            Tensor output = actorModel.Compute(state);
+
+            int action = output.Sample();
+            RLExperience result = new RLExperience(state, output, action);
+            return result;
+        }
+
+        void TrainAll() {
+            int size = trajectory.Count;
+            int batchSize = 32;
+
+            var inputs = new Tensor[size];
+            var masks = new Tensor[size];
+
+            for (int i = 0; i < size; i++) {
+                inputs[i] = trajectory[i].state;
+
+                masks[i] = new Tensor(actorModel.outputShape);
+                masks[i][trajectory[i].action] = 1;
+            }
+
+            int batchCount = 0;
+            for (int i = 0; i < size; i++) {
+                batchCount++;
+                var r = trajectory[i].reward;
+
+                inputPH.SetVal(inputs[i]);
+                rewardPH.value[0] = r;
+                actionMask.SetVal(masks[i]);
+
+                loss.Eval();
+                loss.Backwards(o);
+                if (batchCount >= batchSize) {
+                    o.Update();
+                    o.ZeroGrad();
+                    batchCount = 0;
+                }
+            }
+
+            o.Update();
+            o.ZeroGrad();
         }
     }
 

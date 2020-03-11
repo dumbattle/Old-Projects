@@ -4,10 +4,10 @@ namespace DumbML {
         public Placeholder(params int[] shape) : base(shape) { }
 
         public void SetVal(Tensor t) {
-            result.Copy(t);
+            value.Copy(t);
         }
         protected override Tensor Compute(Tensor[] operands) {
-            return result;
+            return value;
         }
         protected override Tensor[] BackwardsPass(Tensor e) {
             return null;

@@ -6,10 +6,10 @@ namespace DumbML {
         public static Loss CrossEntropy = new _XEntropy();
 
 
-        public abstract Operation Compute(Operation op, Placeholder labels);
+        public abstract Operation Compute(Operation op, Operation labels);
 
         private class _MSE : Loss {
-            public override Operation Compute(Operation op, Placeholder labels) {
+            public override Operation Compute(Operation op, Operation labels) {
                 int size = 2;
 
                 foreach (var i in op.shape) {
@@ -20,7 +20,7 @@ namespace DumbML {
             }
         }
         private class _XEntropy : Loss {
-            public override Operation Compute(Operation op, Placeholder labels) {
+            public override Operation Compute(Operation op, Operation labels) {
                 return new Log(op) * labels * new BroadcastScalar(-1, op.shape);
             }
         }

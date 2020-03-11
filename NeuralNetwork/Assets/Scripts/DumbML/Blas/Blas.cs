@@ -3,26 +3,14 @@ using System.Threading.Tasks;
 
 namespace DumbML {
     public static partial class Blas {
-        static bool supportComputShaders;
-        static Blas() {
-            supportComputShaders = SystemInfo.supportsComputeShaders;
-        }
-
-
-
-
         public static Tensor MatrixMult(this Tensor l, Tensor r, Tensor dest) {
-                return Parallel.MatrixMult1x2(l, r, dest);
-
-
+            return Parallel.MatrixMult1x2(l, r, dest);
         }
 
         public static (Tensor, Tensor) MatrixMultBackwards(this Tensor l, Tensor r, Tensor e, (Tensor le, Tensor re) dest) {
-            //if (l.Rank == 1 && r.Rank == 2) {
-                return Parallel.MatrixMult1x2Backwards(l, r, e, dest);
-            //}
-
+            return Parallel.MatrixMult1x2Backwards(l, r, e, dest);
         }
+
 
         public static Tensor Sigmoid(this Tensor t) {
             return t.PointWise((a) => 1 / (1 + (float)System.Math.Exp(-a)));

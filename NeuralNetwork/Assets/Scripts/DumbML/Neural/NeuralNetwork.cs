@@ -61,6 +61,5 @@ namespace DumbML {
             x.Optimize();
             return x;
         }
-
     }
 }

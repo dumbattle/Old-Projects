@@ -391,7 +391,11 @@ MonoBehaviour:
   block: {fileID: 1042011301}
   height: 10
   gameSize: {x: 20, y: 15}
-  blockSize: {x: 2, y: 4}
+  blockSize: {x: 2, y: 6}
+  output: 
+  value: 
+  advantage: 
+  score: 0
 --- !u!4 &1169792543
 Transform:
   m_ObjectHideFlags: 0

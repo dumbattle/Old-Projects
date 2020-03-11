@@ -4,49 +4,45 @@ using UnityEngine;
 using DumbML;
 
 public class ConvTester : MonoBehaviour {
-    Operation op;
-    Optimizer opt;
+    public int batchSize = 32;
+
+    Model m;
+    Trainer t;
+    Operation testOP;
     Channel channel;
+    Tensor[] inputs, labels;
+
     void Start() {
         channel = Graph.GetChannel("Loss");
         channel.autoYRange = true;
 
-        Placeholder inputPH = new Placeholder(10, 10, 3);
-        Variable weightD = new Tensor(() => Random.value, 3, 3,3);
-        Variable weightP = new Tensor(() => Random.value, 3,2);
+        Placeholder inputPH = new Placeholder(25, 25, 3);
 
-        op = new Conv2DDepth(inputPH, weightD);
-        op = new Conv2DPoint(op, weightP);
-        op = new Sigmoid(op);
+
+        Operation op =  new Convolution2D(10,stride: (2,2), af: ActivationFunction.Sigmoid).Build(inputPH);
+        op = new Convolution2D(3, stride: (2, 2), af: ActivationFunction.Sigmoid).Build(op);
         op = new FlattenOp(op);
-
-        //Variable bias = new Tensor(op.shape);
-
-        //op += bias;
-
-        Placeholder targetPH = new Placeholder(op.shape);
-
-        op = Loss.MSE.Compute(op, targetPH);
-
-        Tensor i = Tensor.Random(inputPH.shape);
-        Tensor o = Tensor.Random(targetPH.shape);
-
-        inputPH.SetVal(i);
-        targetPH.SetVal(o);
-
-        opt = new Adam(op.GetNewGradients());
+        op = new FullyConnected(10, af: ActivationFunction.Sigmoid, bias: true).Build(op);
+        testOP = op = new FullyConnected(1, af: ActivationFunction.Sigmoid, bias: true).Build(op);
 
 
+        m = new Model(op);
 
+        t = new Trainer(m, new Adam(), Loss.MSE);
+
+        inputs = new Tensor[batchSize];
+        labels = new Tensor[batchSize];
+
+        for (int i = 0; i < batchSize; i++) {
+            inputs[i] = new Tensor(() => Random.Range(-1f, 1f), inputPH.shape);
+            print(inputs[i]);
+            labels[i] = new Tensor(() => Random.Range(0f, 1f), op.shape);
+        }
     }
     private void Update() {
-        var loss = op.Eval();
-        print(loss);
+        var loss = t.Train(inputs, labels, batchSize);
         channel.Feed(loss[0]);
-        op.Backwards(opt);
-
-        opt.Update();
-        opt.ZeroGrad();
+        print(loss);    
     }
 
 }

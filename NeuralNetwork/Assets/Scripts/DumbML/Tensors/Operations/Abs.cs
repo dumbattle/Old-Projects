@@ -10,20 +10,19 @@ namespace DumbML {
 
         public Abs(Operation op) : base(op.shape, op) {
             error= new Tensor(shape);
-
         }
 
         protected override Tensor Compute(Tensor[] operands) {
             profile.Begin();
-            result.PointWise(operands[0], (a, b) => b >= 0 ? b : -b, true);
+            value.PointWise(operands[0], (a, b) => b >= 0 ? b : -b, true);
             profile.End();
-            return result; 
+            return value; 
         }
         protected override Tensor[] BackwardsPass(Tensor e) {
             profileBackwards.Begin();
             int s = error.Size;
             for (int i = 0; i < s; i++) {
-                error._value[i] = inner[0].result._value[i] >= 0 ? e._value[i] : -e._value[i];
+                error._value[i] = inner[0].value._value[i] >= 0 ? e._value[i] : -e._value[i];
             }
             profileBackwards.End();
             return new[] { error};

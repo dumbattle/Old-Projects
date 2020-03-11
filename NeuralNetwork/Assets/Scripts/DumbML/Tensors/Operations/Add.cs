@@ -13,10 +13,10 @@ namespace DumbML {
 
         protected override Tensor Compute(Tensor[] operands) {
             profile.Begin();
-            var length = result.Size;
+            var length = value.Size;
 
             unsafe {
-                fixed (float* pd = result._value, pl = operands[0]._value, pr = operands[1]._value) {
+                fixed (float* pd = value._value, pl = operands[0]._value, pr = operands[1]._value) {
                     for (int i = 0; i < length; i++) {
                         pd[i] = pl[i] + pr[i];
                     }
@@ -24,7 +24,7 @@ namespace DumbML {
             }
             profile.End();
 
-            return result;
+            return value;
         }
 
         protected override Tensor[] BackwardsPass(Tensor e) {

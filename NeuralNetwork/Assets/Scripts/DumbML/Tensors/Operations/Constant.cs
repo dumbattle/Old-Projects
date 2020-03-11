@@ -2,14 +2,14 @@
 
 namespace DumbML {
     public class Constant : Operation {
-        public Tensor Value { get { return result; } set { result = value; } }
+        public Tensor Value { get { return value; } set { base.value = value; } }
 
         public Constant(Tensor value) : base(value.Shape) {
-            result = value;
+            base.value = value;
         }
 
         protected override Tensor Compute(Tensor[] operands) {
-            return result;
+            return value;
         }
 
         protected override Tensor[] BackwardsPass(Tensor e) {

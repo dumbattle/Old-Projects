@@ -15,16 +15,16 @@ namespace DumbML {
 
         protected override Tensor Compute(Tensor[] operands) {
             profile.Begin();
-            result = operands[0].Tanh(result);
+            value = operands[0].Tanh(value);
             profile.End();
-            return result;
+            return value;
         }
 
         protected override Tensor[] BackwardsPass(Tensor e) {
             profileBackwards.Begin();
             int s = error.Size;
             for (int i = 0; i < s; i++) {
-                error._value[i] = e._value[i] * (result._value[i] + 1) * (.5f - result._value[i] / 2);
+                error._value[i] = e._value[i] * (value._value[i] + 1) * (.5f - value._value[i] / 2);
             }
             profileBackwards.End();
 

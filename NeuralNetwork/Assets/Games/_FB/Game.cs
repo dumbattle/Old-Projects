@@ -22,6 +22,7 @@ namespace Flappy {
 
         public Game(Vector2 offset) {
             scoreChannel = Channel.New("Score");
+            scoreChannel.autoYRange = true;
             this.offset = offset;
             var bg = FlappyBird.GetBackground();
             bg.transform.position = offset + gameSize / 2;
@@ -92,10 +93,10 @@ namespace Flappy {
             Tensor result = new Tensor(4);
             var closest = GetClosestBlocks();
 
-            result[0] = bird.height;
-            result[1] = bird.velocity;
-            result[2] = closest.top.x;
-            result[3] = closest.bottom.top;
+            result[0] = bird.height / gameSize.y;
+            result[1] = bird.velocity / 10;
+            result[2] = closest.top.x / gameSize.x;
+            result[3] = closest.bottom.top / gameSize.y;
             return result;
         }
     }

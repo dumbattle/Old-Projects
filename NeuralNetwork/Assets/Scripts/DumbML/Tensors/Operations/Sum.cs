@@ -16,9 +16,9 @@ namespace DumbML {
             foreach (var f in operands[0]) {
                 sum += f;
             }
-            result[0] = sum;
+            value[0] = sum;
             profile.End();
-            return result;
+            return value;
         }
 
         protected override Tensor[] BackwardsPass(Tensor e) {

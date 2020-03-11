@@ -14,6 +14,7 @@ namespace Flappy {
         public Vector2 blockSize;
 
         public string output, value, advantage;
+        public float score;
         Game game;
 
 
@@ -31,6 +32,7 @@ namespace Flappy {
         IEnumerator Next() {
             while (true) {
                 game.Next();
+                score = game.score;
                 yield return null;
             }
         }

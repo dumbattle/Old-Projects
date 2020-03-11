@@ -22,7 +22,7 @@ namespace DumbML {
         }
         private class _Tanh : ActivationFunction {
             public override Operation Activate(Operation op) {
-                return new Tanh(op);
+                return new Sigmoid(op) * new BroadcastScalar(2, op.shape) - new BroadcastScalar(1, op.shape);
             }
         }
         private class _LeakyRelu : ActivationFunction {

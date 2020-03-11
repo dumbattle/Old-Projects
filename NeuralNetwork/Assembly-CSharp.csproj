@@ -10,8 +10,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <RootNamespace>
-    </RootNamespace>
+    <RootNamespace></RootNamespace>
     <ProjectGuid>{9882B084-551B-F402-60A9-6ECAD97EBAA8}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -63,13 +62,16 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Channel.cs" />
     <Compile Include="Assets\ConvTester.cs" />
     <Compile Include="Assets\DupeTest.cs" />
-    <Compile Include="Assets\EditorGraph.cs" />
     <Compile Include="Assets\Games\_FB\Bird.cs" />
+    <Compile Include="Assets\Games\_FB\BirdPG.cs" />
+    <Compile Include="Assets\Games\_FB\BirdRL.cs" />
     <Compile Include="Assets\Games\_FB\Block.cs" />
+    <Compile Include="Assets\Games\_FB\FlappyAC.cs" />
+    <Compile Include="Assets\Games\_FB\FlappyAgent.cs" />
     <Compile Include="Assets\Games\_FB\FlappyBird.cs" />
+    <Compile Include="Assets\Games\_FB\FlappyPG.cs" />
     <Compile Include="Assets\Games\_FB\Game.cs" />
     <Compile Include="Assets\Games\Astroids\Astroids.cs" />
     <Compile Include="Assets\Games\Chess\Board.cs" />
@@ -82,60 +84,12 @@
     <Compile Include="Assets\Games\Chess\Piece.cs" />
     <Compile Include="Assets\Games\MCTS\TTT.cs" />
     <Compile Include="Assets\Games\Snake\Scripts\SnakeGA.cs" />
-    <Compile Include="Assets\Graph.cs" />
+    <Compile Include="Assets\Games\Snake\Scripts\SnakePG.cs" />
     <Compile Include="Assets\Main.cs" />
-    <Compile Include="Assets\RingBuffer.cs" />
-    <Compile Include="Assets\Scripts\DumbML\Blas\Blas.Compute.cs" />
-    <Compile Include="Assets\Scripts\DumbML\Blas\Blas.cs" />
-    <Compile Include="Assets\Scripts\DumbML\Blas\Conv2DP.cs" />
-    <Compile Include="Assets\Scripts\DumbML\Blas\MatMultP.cs" />
-    <Compile Include="Assets\Scripts\DumbML\Extensions.cs" />
-    <Compile Include="Assets\Scripts\DumbML\Model.cs" />
-    <Compile Include="Assets\Scripts\DumbML\Neural\Layers\ActivationFunction.cs" />
-    <Compile Include="Assets\Scripts\DumbML\Neural\Layers\Convolution2D.cs" />
-    <Compile Include="Assets\Scripts\DumbML\Neural\Layers\Flatten.cs" />
-    <Compile Include="Assets\Scripts\DumbML\Neural\Layers\FullyConnected.cs" />
-    <Compile Include="Assets\Scripts\DumbML\Neural\Layers\Layer.cs" />
-    <Compile Include="Assets\Scripts\DumbML\Neural\NeuralNetwork.cs" />
-    <Compile Include="Assets\Scripts\DumbML\Neural\ParallelNetwork.cs" />
-    <Compile Include="Assets\Scripts\DumbML\Neural\RLAgent.cs" />
-    <Compile Include="Assets\Scripts\DumbML\Optimizers\Gradients.cs" />
-    <Compile Include="Assets\Scripts\DumbML\Optimizers\Loss.cs" />
-    <Compile Include="Assets\Scripts\DumbML\Optimizers\Optimizer.cs" />
-    <Compile Include="Assets\Scripts\DumbML\Tensors\Operations\BroadcastScalar.cs" />
-    <Compile Include="Assets\Scripts\DumbML\Tensors\Operations\Log.cs" />
-    <Compile Include="Assets\Scripts\DumbML\Tensors\Operations\OperationExtensions.cs" />
-    <Compile Include="Assets\Scripts\DumbML\Tensors\Operations\_OperationBase.cs" />
-    <Compile Include="Assets\Scripts\DumbML\Tensors\Operations\Abs.cs" />
-    <Compile Include="Assets\Scripts\DumbML\Tensors\Operations\Add.cs" />
-    <Compile Include="Assets\Scripts\DumbML\Tensors\Operations\Append.cs" />
-    <Compile Include="Assets\Scripts\DumbML\Tensors\Operations\Constant.cs" />
-    <Compile Include="Assets\Scripts\DumbML\Tensors\Operations\Conv2DDepth.cs" />
-    <Compile Include="Assets\Scripts\DumbML\Tensors\Operations\Conv2DPoint.cs" />
-    <Compile Include="Assets\Scripts\DumbML\Tensors\Operations\Divide.cs" />
-    <Compile Include="Assets\Scripts\DumbML\Tensors\Operations\DuplicateOperation.cs" />
-    <Compile Include="Assets\Scripts\DumbML\Tensors\Operations\Exp.cs" />
-    <Compile Include="Assets\Scripts\DumbML\Tensors\Operations\FlattenOp.cs" />
-    <Compile Include="Assets\Scripts\DumbML\Tensors\Operations\LeakyRelu.cs" />
-    <Compile Include="Assets\Scripts\DumbML\Tensors\Operations\MatrixMult.cs" />
-    <Compile Include="Assets\Scripts\DumbML\Tensors\Operations\MaxAdd.cs" />
-    <Compile Include="Assets\Scripts\DumbML\Tensors\Operations\Multiply.cs" />
-    <Compile Include="Assets\Scripts\DumbML\Tensors\Operations\Placeholder.cs" />
-    <Compile Include="Assets\Scripts\DumbML\Tensors\Operations\Relu.cs" />
-    <Compile Include="Assets\Scripts\DumbML\Tensors\Operations\Sigmoid.cs" />
-    <Compile Include="Assets\Scripts\DumbML\Tensors\Operations\Square.cs" />
-    <Compile Include="Assets\Scripts\DumbML\Tensors\Operations\Subtract.cs" />
-    <Compile Include="Assets\Scripts\DumbML\Tensors\Operations\Sum.cs" />
-    <Compile Include="Assets\Scripts\DumbML\Tensors\Operations\Tanh.cs" />
-    <Compile Include="Assets\Scripts\DumbML\Tensors\Operations\Variable.cs" />
-    <Compile Include="Assets\Scripts\DumbML\Tensors\Tensor.cs" />
-    <Compile Include="Assets\Scripts\DumbML\TrainableModel.cs" />
-    <Compile Include="Assets\Scripts\DumbML\Trainer.cs" />
+    <Compile Include="Assets\MLModelAsset.cs" />
     <Compile Include="Assets\SerializationTester.cs" />
     <Compile Include="Assets\UnsafeTester.cs" />
     <Compile Include="Assets\WeightTester.cs" />
-    <None Include="Assets\Scripts\Resources\Pointwise.compute" />
-    <None Include="Assets\Scripts\Resources\MatrixMult.compute" />
     <Reference Include="Unity.Timeline.Editor">
       <HintPath>C:/Users/Austin/Documents/Git/NeuralNetwork/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
     </Reference>
@@ -694,6 +648,16 @@
     <Reference Include="System.Xml.Serialization">
       <HintPath>C:/Users/Austin/Documents/2019.1.6f1/Editor/Data/NetStandard/compat/2.0.0/shims/netfx/System.Xml.Serialization.dll</HintPath>
     </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="Utility.csproj">
+      <Project>{599F5ECA-FFEC-5141-FF58-7FED81A4BE01}</Project>
+      <Name>Utility</Name>
+    </ProjectReference>
+    <ProjectReference Include="DumbML.csproj">
+      <Project>{D7E3E392-542A-1F3F-2367-FBCF755811B0}</Project>
+      <Name>DumbML</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />

@@ -13,12 +13,12 @@ namespace DumbML {
         }
         protected override Tensor Compute(Tensor[] operands) {
             profile.Begin();
-            for (int i = 0; i < result.Size; i++) {
-                result._value[i] = operands[0]._value[i] - operands[1]._value[i];
+            for (int i = 0; i < value.Size; i++) {
+                value._value[i] = operands[0]._value[i] - operands[1]._value[i];
             }
 
             profile.End();
-            return result;
+            return value;
         }
         protected override Tensor[] BackwardsPass( Tensor e) {
             profileBackwards.Begin();

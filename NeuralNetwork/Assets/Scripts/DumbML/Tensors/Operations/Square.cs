@@ -14,16 +14,16 @@ namespace DumbML {
         }
         protected override Tensor Compute(Tensor[] operands) {
             profile.Begin();
-            result.PointWise(operands[0], (_, b) => b * b, true);
+            value.PointWise(operands[0], (_, b) => b * b, true);
             profile.End();
-            return result; 
+            return value; 
         }
 
         protected override Tensor[] BackwardsPass(Tensor e) {
             profileBackwards.Begin();
             int s = error.Size;
             for (int i = 0; i < s; i++) {
-                error._value[i] = 2 * e._value[i] * inner[0].result._value[i];
+                error._value[i] = 2 * e._value[i] * inner[0].value._value[i];
             }
             profileBackwards.End();
 

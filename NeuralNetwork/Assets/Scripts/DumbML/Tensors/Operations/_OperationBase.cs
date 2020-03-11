@@ -5,7 +5,8 @@ using System.Linq;
 
 namespace DumbML {
     public abstract class Operation {
-        public Tensor result { get; protected set; }
+        public const float EPSILON = 1e-12f;
+        public Tensor value { get; protected set; }
         public int[] shape;
         public Operation[] inner;
         public string Name;
@@ -15,7 +16,7 @@ namespace DumbML {
 
         public Operation(int[] shape, params Operation[] inner) {
             if (shape != null) {
-                result = new Tensor(shape);
+                value = new Tensor(shape);
                 this.shape = (int[])shape.Clone();
             }
             this.inner = (Operation[])inner.Clone();
@@ -67,10 +68,9 @@ namespace DumbML {
                 operands[i] = inner[i].Eval();
             }
 
-            return result = Compute(operands);
+            return value = Compute(operands);
         }
 
-        public bool Test;
         protected abstract Tensor Compute(Tensor[] operands);
 
         public void Backwards(Gradients g, Tensor e) {
@@ -197,6 +197,26 @@ namespace DumbML {
         }
         public override string ToString() {
             return ToString(false);
+        }
+    }
+
+    public class Detached : Operation {
+        Tensor[] er;
+
+        public Detached(Operation op) : base(op.shape, op) {
+            er = new[] { new Tensor(op.shape) };
+        }
+
+        protected override Tensor Compute(Tensor[] operands) {
+            return value.Copy(operands[0]);
+        }
+
+        protected override Tensor[] BackwardsPass(Tensor e) {
+            return er;
+        }
+
+        public override Operation Copy(Dictionary<Operation, Operation> track) {
+            return new Detached(inner[0]._Copy(track));
         }
     }
 }

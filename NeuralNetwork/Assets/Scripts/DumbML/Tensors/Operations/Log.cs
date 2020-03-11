@@ -7,19 +7,19 @@ namespace DumbML {
         Tensor[] error;
         Tensor t;
         public Log(Operation op) : base(op.shape, op) {
-            error = new Tensor[1] { t = result.SameShape() };
+            error = new Tensor[1] { t = value.SameShape() };
         }
 
         protected override Tensor Compute(Tensor[] operands) {
             for (int i = 0; i < operands[0].Size; i++) {
-                result._value[i] = (float)Math.Log(operands[0]._value[i]);
+                value._value[i] = (float)Math.Log(operands[0]._value[i] + EPSILON);
             }
 
-            return result;
+            return value;
         }
         protected override Tensor[] BackwardsPass(Tensor e) {
             for (int i = 0; i < e.Size; i++) {
-                t._value[i] = e._value[i] / (inner[0].result._value[i]);
+                t._value[i] = e._value[i] / (inner[0].value._value[i] + EPSILON);
             }
             return error;
         }

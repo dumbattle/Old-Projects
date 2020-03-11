@@ -13,16 +13,16 @@ namespace DumbML {
 
         protected override Tensor Compute(Tensor[] operands) {
             profile.Begin();
-            result.PointWise(operands[0], (a, b) => (b > 0 ? b : b * leakyness), true);
+            value.PointWise(operands[0], (a, b) => (b > 0 ? b : b * leakyness), true);
             profile.End();
-            return result; 
+            return value; 
         }
 
         protected override Tensor[] BackwardsPass(Tensor e) {
             profileBackwards.Begin();
             int s = error.Size;
             for (int i = 0; i < s; i++) {
-                error._value[i] = e._value[i] * (result._value[i] > 0 ? 1 :  leakyness);
+                error._value[i] = e._value[i] * (value._value[i] > 0 ? 1 :  leakyness);
             }
             profileBackwards.End();
             return new[] { error };

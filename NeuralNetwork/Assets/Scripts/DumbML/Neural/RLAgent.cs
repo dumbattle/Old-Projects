@@ -135,10 +135,11 @@ namespace DumbML {
 
     public class RLExperience {
         public Tensor state;
-        public Tensor output;
         public int action;
         public float reward;
         public Tensor nextState;
+
+        public Tensor output;
         public float weight;
 
         public RLExperience(Tensor state, Tensor output, int action) {
@@ -176,25 +177,7 @@ namespace DumbML {
                     }
                 }
             }
-
             return result;
-            //T[] result = new T[count];
-            //int i = -1;
-
-            //foreach (var item in src) {
-            //    i++;
-
-            //    if (i < count) {
-            //        result[i] = item;
-            //    }else {
-            //        var v = rng.Next(0, i);
-            //        if (v < count) {
-            //            result[v] = item;
-            //        }
-            //    }
-            //}
-
-            //return result;
         }
 
 

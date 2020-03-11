@@ -21,21 +21,21 @@ namespace DumbML {
                 shape = new[] { right.shape[1] };
             }
 
-            result = new Tensor(shape);
+            value = new Tensor(shape);
         }
 
         protected override Tensor Compute(Tensor[] operands) {
             profile.Begin();
-            Blas.MatrixMult(operands[0], operands[1], result);
+            Blas.MatrixMult(operands[0], operands[1], value);
             profile.End();
 
-            return result;
+            return value;
         }
 
         protected override Tensor[] BackwardsPass(Tensor e) {
             profileBackwards.Begin();
 
-            Blas.MatrixMultBackwards(inner[0].result, inner[1].result, e, (le, re));
+            Blas.MatrixMultBackwards(inner[0].value, inner[1].value, e, (le, re));
 
             profileBackwards.End();
             backwardsArray[0] = le;
