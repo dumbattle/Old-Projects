@@ -8,10 +8,6 @@ namespace Flappy {
 
         public BirdPG(Game g) : base(g) {
             ai = new FlappyAC();
-            foreach (var item in ai.GetWeights()) {
-
-                UnityEngine.Debug.Log(item);
-            }
         }
 
         public override void Next() {

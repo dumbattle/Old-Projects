@@ -4,6 +4,7 @@ using UnityEngine;
 using DumbML;
 
 public class SnakePG : MonoBehaviour {
+    public ModelWeightsAsset modelWeights;
     public int mapSize = 10;
     public string output;
 
@@ -12,8 +13,13 @@ public class SnakePG : MonoBehaviour {
 
     Vector2Int pos;
     Vector2Int food;
+
     void Start() {
-        agent = new SnakeAC(new Vector2Int(mapSize, mapSize));
+        if (modelWeights.HasData) {
+            agent = new SnakeAC(new Vector2Int(mapSize, mapSize), modelWeights.Load());
+        }else {
+            agent = new SnakeAC(new Vector2Int(mapSize, mapSize));
+        }
         StartCoroutine(Next());
         isPlaying = true;
     }
@@ -126,6 +132,12 @@ public class SnakeAC : ActorCritic {
         Build();
     }
 
+    public SnakeAC(Vector2Int mapShape, Tensor[] weights) : base() {
+        _mapShape = mapShape;
+        Build();
+        combinedAC.SetWeights(weights);
+    }
+
     protected override Operation Input() {
         Operation x = new InputLayer(_mapShape.x, _mapShape.y, 3).Build();
         x = new Convolution2D(10, af: ActivationFunction.Tanh, pad: true).Build(x);
@@ -152,6 +164,6 @@ public class SnakeAC : ActorCritic {
     }
 
     protected override Optimizer Optimizer() {
-        return new Adam();
+        return new RMSProp();
     }
 }

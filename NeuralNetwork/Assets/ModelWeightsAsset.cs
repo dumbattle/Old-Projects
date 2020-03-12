@@ -7,6 +7,7 @@ namespace DumbML {
     public class ModelWeightsAsset : ScriptableObject {
         [SerializeField]
         TensorData[] _data;
+        public bool HasData => _data.Length != 0;
 
         public void Save(Tensor[] data) {
             _data = new TensorData[data.Length];
@@ -32,6 +33,7 @@ namespace DumbML {
             }
             return result;
         }
+
         [Serializable]
         struct TensorData {
             public float[] val;
