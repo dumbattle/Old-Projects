@@ -15,7 +15,7 @@ namespace Flappy {
         public Vector2 gameSize;
         public Vector2 blockSize;
 
-        public string output, value, advantage;
+        public string output, value, advantage, actor, critic;
         public float score;
         Game game;
 

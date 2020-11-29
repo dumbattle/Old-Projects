@@ -12,17 +12,17 @@ namespace DumbML {
             error= new Tensor(shape);
         }
 
-        protected override Tensor Compute(Tensor[] operands) {
+        protected override Tensor _Compute(Tensor[] operands) {
             profile.Begin();
             value.PointWise(operands[0], (a, b) => b >= 0 ? b : -b, true);
             profile.End();
             return value; 
         }
-        protected override Tensor[] BackwardsPass(Tensor e) {
+        protected override Tensor[] _BackwardsPass(Tensor e) {
             profileBackwards.Begin();
             int s = error.Size;
             for (int i = 0; i < s; i++) {
-                error._value[i] = inner[0].value._value[i] >= 0 ? e._value[i] : -e._value[i];
+                error.value[i] = inner[0].value.value[i] >= 0 ? e.value[i] : -e.value[i];
             }
             profileBackwards.End();
             return new[] { error};
@@ -33,8 +33,8 @@ namespace DumbML {
         }
 
 
-        public override string ToString(bool requireParanthesis) {
-            return $"|{inner[0].ToString(false)}|";
+        public override string ExprString(bool requireParanthesis) {
+            return $"|{inner[0].ExprString(false)}|";
         }
     }
 

@@ -1,4 +1,4 @@
-﻿using System.Collections;
+﻿Ousing System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -129,7 +129,5 @@ public class MeshGenerator : MonoBehaviour {
         GetComponent<MeshRenderer>().material.SetTexture("_MainTex", t);
         GetComponent<MeshRenderer>().material.SetVector("_LightDirection", ld.normalized);
         //GetComponent<MeshRenderer>().material.SetTextureScale("_MainTex", Vector2.one /  mapSize / tileSize);
-    }
-
-    
+    }    
 }

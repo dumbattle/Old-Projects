@@ -62,13 +62,16 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Scripts\DumbML\Blas\Blas.cs" />
+    <Compile Include="Assets\Scripts\DumbML\Blas\_Blas.cs" />
     <Compile Include="Assets\Scripts\DumbML\Blas\Conv2DP.cs" />
+    <Compile Include="Assets\Scripts\DumbML\Blas\FullConv2D.cs" />
     <Compile Include="Assets\Scripts\DumbML\Blas\MatMultP.cs" />
     <Compile Include="Assets\Scripts\DumbML\Extensions.cs" />
+    <Compile Include="Assets\Scripts\DumbML\Graph\Graph.cs" />
     <Compile Include="Assets\Scripts\DumbML\Model.cs" />
     <Compile Include="Assets\Scripts\DumbML\Neural\Layers\ActivationFunction.cs" />
     <Compile Include="Assets\Scripts\DumbML\Neural\Layers\Convolution2D.cs" />
+    <Compile Include="Assets\Scripts\DumbML\Neural\Layers\Convolution2DDepSep.cs" />
     <Compile Include="Assets\Scripts\DumbML\Neural\Layers\Flatten.cs" />
     <Compile Include="Assets\Scripts\DumbML\Neural\Layers\FullyConnected.cs" />
     <Compile Include="Assets\Scripts\DumbML\Neural\Layers\Layer.cs" />
@@ -87,10 +90,13 @@
     <Compile Include="Assets\Scripts\DumbML\Tensors\Operations\Constant.cs" />
     <Compile Include="Assets\Scripts\DumbML\Tensors\Operations\Conv2DDepth.cs" />
     <Compile Include="Assets\Scripts\DumbML\Tensors\Operations\Conv2DPoint.cs" />
+    <Compile Include="Assets\Scripts\DumbML\Tensors\Operations\Detached.cs" />
     <Compile Include="Assets\Scripts\DumbML\Tensors\Operations\Divide.cs" />
     <Compile Include="Assets\Scripts\DumbML\Tensors\Operations\DuplicateOperation.cs" />
     <Compile Include="Assets\Scripts\DumbML\Tensors\Operations\Exp.cs" />
     <Compile Include="Assets\Scripts\DumbML\Tensors\Operations\FlattenOp.cs" />
+    <Compile Include="Assets\Scripts\DumbML\Tensors\Operations\FullConv2DOp.cs" />
+    <Compile Include="Assets\Scripts\DumbML\Tensors\Operations\GlobalAveragePooling.cs" />
     <Compile Include="Assets\Scripts\DumbML\Tensors\Operations\LeakyRelu.cs" />
     <Compile Include="Assets\Scripts\DumbML\Tensors\Operations\Log.cs" />
     <Compile Include="Assets\Scripts\DumbML\Tensors\Operations\MatrixMult.cs" />

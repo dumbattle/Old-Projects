@@ -16,12 +16,12 @@ public class ConvTester : MonoBehaviour {
         channel = Graph.GetChannel("Loss");
         channel.autoYRange = true;
 
-        Placeholder inputPH = new Placeholder(25, 25, 3);
+        Placeholder inputPH = new Placeholder("Input", 25, 25, 3);
 
 
-        Operation op =  new Convolution2D(10,stride: (2,2), af: ActivationFunction.Sigmoid).Build(inputPH);
-        op = new Convolution2D(3, stride: (2, 2), af: ActivationFunction.Sigmoid).Build(op);
-        op = new FlattenOp(op);
+        Operation op =  new Convolution2D(10, af: ActivationFunction.Sigmoid).Build(inputPH);
+        op = new Convolution2D(10, af: ActivationFunction.Sigmoid).Build(op);
+        op = new GlobalAveragePooling(op);
         op = new FullyConnected(10, af: ActivationFunction.Sigmoid, bias: true).Build(op);
         testOP = op = new FullyConnected(1, af: ActivationFunction.Sigmoid, bias: true).Build(op);
 
@@ -35,7 +35,6 @@ public class ConvTester : MonoBehaviour {
 
         for (int i = 0; i < batchSize; i++) {
             inputs[i] = new Tensor(() => Random.Range(-1f, 1f), inputPH.shape);
-            print(inputs[i]);
             labels[i] = new Tensor(() => Random.Range(0f, 1f), op.shape);
         }
     }

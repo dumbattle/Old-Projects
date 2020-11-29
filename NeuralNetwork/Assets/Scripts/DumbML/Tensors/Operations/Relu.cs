@@ -11,18 +11,18 @@ namespace DumbML {
             error = new Tensor(shape);
         }
 
-        protected override Tensor Compute(Tensor[] operands) {
+        protected override Tensor _Compute(Tensor[] operands) {
             profile.Begin();
             value.PointWise(operands[0], (a, b) => (b > 0 ? b : 0), true);
             profile.End();
             return value; 
         }
 
-        protected override Tensor[] BackwardsPass(Tensor e) {
+        protected override Tensor[] _BackwardsPass(Tensor e) {
             profileBackwards.Begin();
             int s = error.Size;
             for (int i = 0; i < s; i++) {
-                error._value[i] = e._value[i] * (value._value[i] > 0 ? 1 : 0);
+                error.value[i] = e.value[i] * (value.value[i] > 0 ? 1 : 0);
             }
             profileBackwards.End();
             return new[] { error };
@@ -30,8 +30,8 @@ namespace DumbML {
         public override Operation Copy(Dictionary<Operation, Operation> track) {
             return new Relu(inner[0]._Copy(track));
         }
-        public override string ToString(bool requireParanthesis) {
-            return $"Relu({inner[0].ToString(false)})";
+        public override string ExprString(bool requireParanthesis) {
+            return $"Relu({inner[0].ExprString(false)})";
         }
     }
 

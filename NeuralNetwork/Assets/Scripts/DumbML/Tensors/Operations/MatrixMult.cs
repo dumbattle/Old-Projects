@@ -24,7 +24,7 @@ namespace DumbML {
             value = new Tensor(shape);
         }
 
-        protected override Tensor Compute(Tensor[] operands) {
+        protected override Tensor _Compute(Tensor[] operands) {
             profile.Begin();
             Blas.MatrixMult(operands[0], operands[1], value);
             profile.End();
@@ -32,7 +32,7 @@ namespace DumbML {
             return value;
         }
 
-        protected override Tensor[] BackwardsPass(Tensor e) {
+        protected override Tensor[] _BackwardsPass(Tensor e) {
             profileBackwards.Begin();
 
             Blas.MatrixMultBackwards(inner[0].value, inner[1].value, e, (le, re));
@@ -45,11 +45,11 @@ namespace DumbML {
         public override Operation Copy(Dictionary<Operation, Operation> track) {
             return new MatrixMult(inner[0]._Copy(track), inner[1]._Copy(track));
         }
-        public override string ToString(bool requireParanthesis) {
+        public override string ExprString(bool requireParanthesis) {
             if (requireParanthesis) {
-                return $"({inner[0].ToString(false)} x {inner[1].ToString(false)})";
+                return $"({inner[0].ExprString(false)} x {inner[1].ExprString(false)})";
             }
-            return $"{inner[0].ToString(false)} x {inner[1].ToString(false)}";
+            return $"{inner[0].ExprString(false)} x {inner[1].ExprString(false)}";
         }
     }
 

@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace DumbML {
     
-    [CreateAssetMenu(fileName = "New Model", menuName = "DumbML/New Model")]
+    [CreateAssetMenu(fileName = "New Model", menuName = "DumbMl/New Model")]
     public class ModelAsset : ScriptableObject {
         [SerializeField]
         SerializedModel sModel;
@@ -49,13 +49,13 @@ namespace DumbML {
             for (int i = 0; i < ops.Count; i++) {
                 if (ops[i] is Variable v) {
                     parameters[i] = new Parameters() {
-                        val = (float[])v.Value._value.Clone(),
+                        val = (float[])v.Value.value.Clone(),
                         shape = v.Value.Shape,
                     };
                 }
                 else if (ops[i] is Constant c) {
                     parameters[i] = new Parameters() {
-                        val = (float[])c.Value._value.Clone(),
+                        val = (float[])c.Value.value.Clone(),
                         shape = c.Value.Shape,
                     };
                 }
@@ -165,7 +165,7 @@ namespace DumbML {
                         res = new Multiply(children[0], children[1]);
                         break;
                     case "Placeholder":
-                        res = new Placeholder(parameters[ind].shape);
+                        res = new Placeholder(_names[ind], parameters[ind].shape);
                         break;
                     case "Relu":
                         res = new Relu(children[0]);

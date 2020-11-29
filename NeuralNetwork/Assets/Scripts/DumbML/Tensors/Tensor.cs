@@ -8,28 +8,51 @@ using System.Collections.Concurrent;
 
 
 namespace DumbML {
-    public class Tensor {
-        public ComputeBuffer buffer { get; private set; }
-        public static readonly Tensor Empty = new Tensor(0);
+    public class ReadOnlyTensor {
+        Tensor val;
+        public ReadOnlyTensor(Tensor t) {
+            val = t;
+        }
 
-        public float[] _value;
+        public float this[params int[] index] {
+            get => val[index];
+        }
+
+        public Tensor Copy() {
+            return val.Copy();
+        }
+
+        public IEnumerator<float> GetEnumerator() {
+            return val.GetEnumerator();
+        }
+        public override string ToString() {
+            return val.ToString();
+        }
+        public Tensor GetTensor() {
+            return val;
+        }
+    }
+
+    public class Tensor {
+        public static readonly Tensor Empty = new Tensor(0);
+        public float[] value { get; private set; }
 
         public float this[params int[] index] {
             get {
                 CheckIndex(index);
                 int i = GetIndex(index);
 
-                return _value[i];
+                return value[i];
             }
             set {
                 CheckIndex(index);
                 int i = GetIndex(index);
-                _value[i] = value;
+                this.value[i] = value;
             }
         }
 
         public int[] Shape { get; private set; }
-        public int Size { get => _value.Length; }
+        public int Size { get => value.Length; }
         public int Rank { get => Shape.Length; }
 
         public Tensor(params int[] shape) {
@@ -40,12 +63,11 @@ namespace DumbML {
                 size *= i;
             }
 
-            _value = new float[size];
-            //UnityEngine.Debug.Log($"New tensor of shape {shape.TOSTRING()}");
+            value = new float[size];
         }
         public Tensor(Func<float> initializer, params int[] shape) : this(shape) {
-            for (int i = 0; i < _value.Length; i++) {
-                _value[i] = initializer();
+            for (int i = 0; i < value.Length; i++) {
+                value[i] = initializer();
             }
         }
 
@@ -136,7 +158,7 @@ namespace DumbML {
 
             indices[Rank - 1] = -1;
 
-            for (int i = 0; i < result._value.Length; i++) {
+            for (int i = 0; i < result.value.Length; i++) {
                 indices[Rank - 1]++;
                 int j = Rank - 1;
                 for (; j >= 0; j--) {
@@ -156,7 +178,7 @@ namespace DumbML {
                     continue;
                 }
 
-                result._value[i] = _value[tind];
+                result.value[i] = value[tind];
                 tind++;
             }
             return result;
@@ -178,8 +200,8 @@ namespace DumbML {
             scales[b] = s;
 
 
-            for (int i = 0; i < result._value.Length; i++) {
-                result._value[i] = _value[swap];
+            for (int i = 0; i < result.value.Length; i++) {
+                result.value[i] = value[swap];
 
                 index[Rank - 1]++;
 
@@ -224,8 +246,8 @@ namespace DumbML {
             scales[b] = s;
 
 
-            for (int i = 0; i < dest._value.Length; i++) {
-                dest._value[i] = _value[swap];
+            for (int i = 0; i < dest.value.Length; i++) {
+                dest.value[i] = value[swap];
 
                 index[Rank - 1]++;
                 
@@ -298,8 +320,8 @@ namespace DumbML {
 
 
         public IEnumerator<float> GetEnumerator() {
-            for (int i = 0; i < _value.Length; i++) {
-                yield return _value[i];
+            for (int i = 0; i < value.Length; i++) {
+                yield return value[i];
             }
         }
 
@@ -319,7 +341,7 @@ namespace DumbML {
                 return defaultVal;
             }
 
-            return _value[index];
+            return value[index];
         }
         public float CheckVal(params int[] index) {
             int ind = GetIndex(index);
@@ -333,7 +355,7 @@ namespace DumbML {
 
 
 
-            for (int i = 0; i < _value.Length; i++) {
+            for (int i = 0; i < value.Length; i++) {
                 for (int d = Shape.Length - 1; d >= 0; d--) {
                     if (index[d] == 0) {
                         sb.Append("[");
@@ -343,7 +365,7 @@ namespace DumbML {
                     }
                 }
 
-                sb.Append(_value[i].ToString(/*"N2"*/));
+                sb.Append(value[i].ToString(/*"N2"*/));
 
                 //up index
                 bool brace = false;
@@ -374,21 +396,10 @@ namespace DumbML {
             return sb.ToString();
         }
 
-        public ComputeBuffer GetBuffer(bool setData = true) {
-            if (buffer == null) {
-                buffer = new ComputeBuffer(Size, 4);
-            }
-            if(setData) {
-                buffer.SetData(_value);
-            }
-
-            return buffer;
-        }
-
         public Tensor PointWise(Func<float, float> operation, bool self = false) {
             if (self) {
                 for (int i = 0; i < Size; i++) {
-                    _value[i] = operation(_value[i]);
+                    value[i] = operation(value[i]);
                 }
                 return this;
             }
@@ -396,7 +407,7 @@ namespace DumbML {
 
             Tensor result = SameShape();
             for (int i = 0; i < Size; i++) {
-                result._value[i] = operation(_value[i]);
+                result.value[i] = operation(value[i]);
             }
 
             return result;
@@ -412,14 +423,14 @@ namespace DumbML {
 
             if (self) {
                 for (int i = 0; i < left.Size; i++) {
-                    left._value[i] = operation(left._value[i], right._value[i]);
+                    left.value[i] = operation(left.value[i], right.value[i]);
                 }
                 return left;
             }
 
             Tensor result = left.SameShape();
             for (int i = 0; i < left.Size; i++) {
-                result._value[i] = operation(left._value[i], right._value[i]);
+                result.value[i] = operation(left.value[i], right.value[i]);
             }
             return result;
         }
@@ -439,7 +450,7 @@ namespace DumbML {
                 }
             }
             for (int i = 0; i < Size; i++) {
-                if (_value[i] != t._value[i]) {
+                if (value[i] != t.value[i]) {
                     return false;
                 }
             }
@@ -447,10 +458,10 @@ namespace DumbML {
         }
 
         public void SetValuesToZero() {
-            int length = _value.Length;
+            int length = value.Length;
 
             unsafe {
-                fixed (float* pv = _value) {
+                fixed (float* pv = value) {
                     for (int i = 0; i < length; i++) {
                         pv[i] = 0;
                     }
@@ -461,33 +472,33 @@ namespace DumbML {
         public Tensor Add(float val, bool self = false) {
             if (self) {
                 for (int i = 0; i < Size; i++) {
-                    _value[i] += val;
+                    value[i] += val;
                 }
                 return this;
             }
 
             Tensor result = SameShape();
             for (int i = 0; i < Size; i++) {
-                result._value[i] = _value[i] + val;
+                result.value[i] = value[i] + val;
             }
             return result;
         }
         public Tensor Subtract(float val, bool self = false) {
             if (self) {
                 for (int i = 0; i < Size; i++) {
-                    _value[i] -= val;
+                    value[i] -= val;
                 }
                 return this;
             }
 
             Tensor result = SameShape();
             for (int i = 0; i < Size; i++) {
-                result._value[i] = _value[i] - val;
+                result.value[i] = value[i] - val;
             }
             return result;
         }
         public Tensor Multiply(float val, bool self = false) {
-            int length = _value.Length;
+            int length = value.Length;
             if (self) {
                 //unsafe {
                 //    fixed (float* pv = _value) {
@@ -499,14 +510,14 @@ namespace DumbML {
 
                 //return this;
                 for (int i = 0; i < Size; i++) {
-                    _value[i] *= val;
+                    value[i] *= val;
                 }
                 return this;
             }
 
             Tensor result = SameShape();
             for (int i = 0; i < Size; i++) {
-                result._value[i] = _value[i] * val;
+                result.value[i] = value[i] * val;
             }
 
             return result;
@@ -514,14 +525,14 @@ namespace DumbML {
         public Tensor Divide(float val, bool self = false) {
             if (self) {
                 for (int i = 0; i < Size; i++) {
-                    _value[i] /= val;
+                    value[i] /= val;
                 }
                 return this;
             }
 
             Tensor result = SameShape();
             for (int i = 0; i < Size; i++) {
-                result._value[i] = _value[i] / val;
+                result.value[i] = value[i] / val;
             }
             return result;
         }
@@ -532,13 +543,13 @@ namespace DumbML {
                 throw new ArgumentException($"Tensors need to be the same size to perform point-wise operation." +
                     $"  Left: {Shape.TOSTRING()}  Right: {t.Shape.TOSTRING()}");
             }
-            int length = _value.Length;
+            int length = value.Length;
 
             if (self) {
-                var tv = t._value;
+                var tv = t.value;
 
                 for (int i = 0; i < length; i++) {
-                    _value[i] += tv[i];
+                    value[i] += tv[i];
                 }
 
                 //unsafe {
@@ -554,7 +565,7 @@ namespace DumbML {
             Tensor result = t.SameShape();
 
             unsafe {
-                fixed (float* pv = _value, pt = t._value, pr = result._value) {
+                fixed (float* pv = value, pt = t.value, pr = result.value) {
                     for (int i = 0; i < length; i++) {
                         pr[i] = pv[i] + pt[i];
                     }
@@ -569,10 +580,10 @@ namespace DumbML {
                 throw new ArgumentException($"Tensors need to be the same size to perform point-wise operation." +
                     $"  Left: {Shape.TOSTRING()}  Right: {t.Shape.TOSTRING()}");
             }
-            int length = _value.Length;
+            int length = value.Length;
             if (self) {
                 unsafe {
-                    fixed (float* pv = _value, pt = t._value) {
+                    fixed (float* pv = value, pt = t.value) {
                         for (int i = 0; i < length; i++) {
                             pv[i] -= pt[i];
                         }
@@ -585,7 +596,7 @@ namespace DumbML {
             Tensor result = t.SameShape();
 
             unsafe {
-                fixed (float* pv = _value, pt = t._value, pr = result._value) {
+                fixed (float* pv = value, pt = t.value, pr = result.value) {
                     for (int i = 0; i < length; i++) {
                         pr[i] = pv[i] - pt[i];
                     }
@@ -599,10 +610,10 @@ namespace DumbML {
                     $"  Left: {Shape.TOSTRING()}  Right: {t.Shape.TOSTRING()}");
             }
 
-            int length = _value.Length;
+            int length = value.Length;
             if (self) {
                 unsafe {
-                    fixed (float* pv = _value, pt = t._value) {
+                    fixed (float* pv = value, pt = t.value) {
                         for (int i = 0; i < length; i++) {
                             pv[i] *= pt[i];
                         }
@@ -615,7 +626,7 @@ namespace DumbML {
             Tensor result = t.SameShape();
 
             unsafe {
-                fixed (float* pv = _value, pt = t._value, pr = result._value) {
+                fixed (float* pv = value, pt = t.value, pr = result.value) {
                     for (int i = 0; i < length; i++) {
                         pr[i] = pv[i] * pt[i];
                     }
@@ -631,8 +642,8 @@ namespace DumbML {
 
              if (self) {
                 unsafe {
-                    fixed (float* pv = _value, pt = t._value) {
-                        for (int i = 0; i < _value.Length; i++) {
+                    fixed (float* pv = value, pt = t.value) {
+                        for (int i = 0; i < value.Length; i++) {
                             pv[i] /= pt[i];
                         }
                     }
@@ -644,8 +655,8 @@ namespace DumbML {
             Tensor result = t.SameShape();
 
             unsafe {
-                fixed (float* pv = _value, pt = t._value, pr = result._value) {
-                    for (int i = 0; i < _value.Length; i++) {
+                fixed (float* pv = value, pt = t.value, pr = result.value) {
+                    for (int i = 0; i < value.Length; i++) {
                         pr[i] = pv[i] / pt[i];
                     }
                 }
@@ -653,6 +664,9 @@ namespace DumbML {
             return result;
         }
 
+        public ReadOnlyTensor AsReadOnly() {
+            return new ReadOnlyTensor(this);
+        }
 
 
         public static Tensor operator +(Tensor left, Tensor right) {

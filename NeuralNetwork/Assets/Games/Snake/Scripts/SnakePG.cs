@@ -15,11 +15,7 @@ public class SnakePG : MonoBehaviour {
     Vector2Int food;
 
     void Start() {
-        if (modelWeights.HasData) {
-            agent = new SnakeAC(new Vector2Int(mapSize, mapSize), modelWeights.Load());
-        }else {
-            agent = new SnakeAC(new Vector2Int(mapSize, mapSize));
-        }
+            agent = new SnakeAC(new Vector2Int(mapSize, mapSize), modelWeights);
         StartCoroutine(Next());
         isPlaying = true;
     }
@@ -49,13 +45,15 @@ public class SnakePG : MonoBehaviour {
     IEnumerator Next() {
         pos = new Vector2Int(mapSize / 2, mapSize / 2);
         food = RandomPos(pos);
-
+        int step = 0;
         while (true) {
+            step++;
             var mt = MapTensor();
 
             var exp = agent.SampleAction(mt);
             output = exp.output.ToString();
-            //print(agent.testOP.value);
+            //agent.criticModel.forward.Eval();
+            print(agent.testOP.value);
             Vector2Int dir = new Vector2Int(0, 0);
             switch (exp.action) {
                 case 0:
@@ -75,12 +73,13 @@ public class SnakePG : MonoBehaviour {
             Vector2Int newPos = pos + dir;
             float reward = 0;
 
-            if (newPos.x < 0 || newPos.x >= mapSize || newPos.y < 0 || newPos.y >= mapSize) {
-                reward = -.01f;
+            if (newPos.x < 0 || newPos.x >= mapSize || newPos.y < 0 || newPos.y >= mapSize || step > 100) {
+                reward = -1;
             }
             else if (newPos == food) {
                 reward = 1;
                 food = RandomPos(newPos);
+                step = 0;
             }
 
             exp.reward = reward;
@@ -89,9 +88,9 @@ public class SnakePG : MonoBehaviour {
             pos = newPos;
             if (reward < 0) {
                 agent.EndTrajectory();
-
                 pos = new Vector2Int(mapSize / 2, mapSize / 2);
                 food = RandomPos(pos);
+                step = 0;
             }
 
 
@@ -99,14 +98,9 @@ public class SnakePG : MonoBehaviour {
         }
 
         Tensor MapTensor() {
-            Tensor result = new Tensor(mapSize, mapSize, 3);
+            Tensor result = new Tensor(mapSize, mapSize, 2);
             result[pos.x, pos.y, 0] = 1;
             result[food.x, food.y, 1] = 1;
-            for (int x = 0; x < mapSize; x++) {
-                for (int y = 0; y < mapSize; y++) {
-                    result[x, y, 2] = 1;
-                }
-            }
             return result;
         }
     }
@@ -124,42 +118,45 @@ public class SnakePG : MonoBehaviour {
 }
 
 public class SnakeAC : ActorCritic {
-    public Operation testOP;
     Vector2Int _mapShape;
-
-    public SnakeAC(Vector2Int mapShape) : base() {
+    ModelWeightsAsset _asset;
+    public Operation testOP;
+    public SnakeAC(Vector2Int mapShape, ModelWeightsAsset savedData) : base() {
+        //normalizeRewards = false;
         _mapShape = mapShape;
         Build();
-    }
-
-    public SnakeAC(Vector2Int mapShape, Tensor[] weights) : base() {
-        _mapShape = mapShape;
-        Build();
-        combinedAC.SetWeights(weights);
+        _asset = savedData;
+        if (savedData == null || !savedData.HasData) {
+            return;
+        }
+        combinedAC.SetWeights(savedData.Load());
     }
 
     protected override Operation Input() {
-        Operation x = new InputLayer(_mapShape.x, _mapShape.y, 3).Build();
-        x = new Convolution2D(10, af: ActivationFunction.Tanh, pad: true).Build(x);
-        testOP = x = new Convolution2D(10, af: ActivationFunction.Tanh, pad: true).Build(x);
-        x = new Convolution2D(10, af: ActivationFunction.Tanh, pad: true).Build(x);
-        x = new Convolution2D(1, af: ActivationFunction.Tanh, pad: true).Build(x);
-        x = new FlattenOp(x);
+        Operation x = new InputLayer(_mapShape.x, _mapShape.y, 2).Build();
+        x = new Convolution2D(30, af: ActivationFunction.Tanh, pad: false).Build(x);
+        x = new Convolution2D(30, af: ActivationFunction.Tanh, pad: false).Build(x);
+        x = new Convolution2D(30, af: ActivationFunction.Tanh, pad: false).Build(x);
+         x = new Convolution2D(30, af: ActivationFunction.Tanh, pad: false).Build(x);
+        testOP = x = new GlobalAveragePooling(x);
 
-        x = new FullyConnected(50, ActivationFunction.Sigmoid, false).Build(x);
+        x = new FullyConnected(50, ActivationFunction.Tanh).Build(x);
 
         return x;
     }
-
+    public override void EndTrajectory() {
+        base.EndTrajectory();
+        _asset?.Save(GetVariables());
+    }
 
     protected override Operation Actor(Operation input) {
-        Operation x = new FullyConnected(4, bias: false).Build(input);
+        Operation x = new FullyConnected(4).Build(input);
         x = x.Softmax();
         return x;
     }
 
     protected override Operation Critic(Operation input) {
-        Operation x = new FullyConnected(1, bias: false).Build(input);
+        Operation x = new FullyConnected(1).Build(input);
         return x;
     }
 

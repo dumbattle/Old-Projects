@@ -7,17 +7,17 @@ namespace DumbML {
             value = new Tensor(shape);
             error = new Tensor(op.shape);
         }
-        protected override Tensor Compute(Tensor[] operands) {
-            var v = operands[0]._value;
-            var r = value._value; 
+        protected override Tensor _Compute(Tensor[] operands) {
+            var v = operands[0].value;
+            var r = value.value; 
             for (int i = 0; i < value.Size; i++) {
                 r[i] =v[i];
             }
             return value;
         }
-        protected override Tensor[] BackwardsPass(Tensor e) {
-            var v = e._value;
-            var r = error._value;
+        protected override Tensor[] _BackwardsPass(Tensor e) {
+            var v = e.value;
+            var r = error.value;
 
             for (int i = 0; i < value.Size; i++) {
                 r[i] = v[i];

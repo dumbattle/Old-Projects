@@ -11,11 +11,11 @@ namespace DumbML {
             i.dupeError = new Tensor(i.shape);
         }
 
-        protected override Tensor Compute(Tensor[] operands) {
+        protected override Tensor _Compute(Tensor[] operands) {
             return value = i.value;
         }
 
-        protected override Tensor[] BackwardsPass(Tensor e) {
+        protected override Tensor[] _BackwardsPass(Tensor e) {
             i.dupeError.Add(e, true);
             return new[] { e };
         }
@@ -26,7 +26,7 @@ namespace DumbML {
 
             return i._Copy(track);
         }
-        public override string ToString(bool requireParanthesis) {
+        public override string ExprString(bool requireParanthesis) {
             return "x";
         }
     }

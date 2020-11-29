@@ -8,6 +8,7 @@ namespace DumbML {
         public Placeholder[] inputs;
         public Tensor Result => forward.value;
 
+
         public Model() { }
         public Model(Operation op) {
             var inputs = op.GetOperations<Placeholder>().ToArray();
@@ -85,6 +86,8 @@ namespace DumbML {
         public Model criticModel { get; private set; }
         protected Model combinedAC;
 
+        public bool normalizeRewards = true;
+
         Operation loss;
         Placeholder inputPH, actionMask, rewardPH;
 
@@ -99,26 +102,29 @@ namespace DumbML {
             Operation input = Input();
             Operation a = Actor(input);
             Operation c = Critic(input);
-            combinedAC = new Model(a + c);
+
             a.SetName("__ACTOR__");
-            a.SetName("__CRITIC__");
+            c.SetName("__CRITIC__");
 
             actorModel = new Model(a);
             criticModel = new Model(c);
 
 
-            rewardPH = new Placeholder(1);
+            rewardPH = new Placeholder("Reward", 1);
 
             var adv = rewardPH - c;
-            actionMask = new Placeholder(a.shape);
+            actionMask = new Placeholder("Action Mask", a.shape);
 
 
             var aloss = new Log(a * actionMask) * new BroadcastScalar(-1 * adv.Detach(), a.shape);
-            var cLoss = Loss.MSE.Compute(rewardPH, c);
+            var cLoss = Loss.MSE.Compute(c, rewardPH);
 
             loss = new Sum(aloss) + cLoss;
+            //loss += loss.L2loss();
+            combinedAC = new Model(loss);
 
             g = new Gradients(loss.GetOperations<Variable>());
+            
             o = Optimizer();
             o.InitializeGradients(g);
             inputPH = loss.GetOperations<Placeholder>()[0];
@@ -137,6 +143,16 @@ namespace DumbML {
             trajectory.Add(exp);
         }
         public virtual void EndTrajectory() {
+            NormalizeRewards();
+            TrainAll();
+            trajectory.Clear();
+        }
+
+        void NormalizeRewards() {
+            if (!normalizeRewards) {
+                return;
+            }
+
             float score = 0;
 
             for (int i = trajectory.Count - 1; i >= 0; i--) {
@@ -146,9 +162,6 @@ namespace DumbML {
                 score += exp.reward;
                 exp.reward = score;
             }
-
-            TrainAll();
-            trajectory.Clear();
         }
 
         public RLExperience SampleAction(Tensor state) {
@@ -184,19 +197,21 @@ namespace DumbML {
 
                 loss.Eval();
                 loss.Backwards(o);
-                if (batchCount >= batchSize) {
-                    o.Update();
-                    o.ZeroGrad();
-                    batchCount = 0;
-                }
+                //if (batchCount >= batchSize) {
+                //    o.Update();
+                //    o.ZeroGrad();
+                //    batchCount = 0;
+                //}
             }
-
             o.Update();
             o.ZeroGrad();
         }
 
         public Tensor[] GetWeights() {
             return combinedAC.GetWeights();
+        }
+        public Variable[] GetVariables() {
+            return combinedAC.GetVariables();
         }
         public void SetWeights(Tensor[] weights) {
             combinedAC.SetWeights(weights);

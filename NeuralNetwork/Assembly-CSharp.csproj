@@ -85,6 +85,7 @@
     <Compile Include="Assets\Games\MCTS\TTT.cs" />
     <Compile Include="Assets\Games\Snake\Scripts\SnakeGA.cs" />
     <Compile Include="Assets\Games\Snake\Scripts\SnakePG.cs" />
+    <Compile Include="Assets\GraphTester.cs" />
     <Compile Include="Assets\Main.cs" />
     <Compile Include="Assets\MLModelAsset.cs" />
     <Compile Include="Assets\ModelWeightsAsset.cs" />
