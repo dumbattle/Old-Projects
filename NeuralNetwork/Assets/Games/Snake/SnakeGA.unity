@@ -178,8 +178,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 994bc51af028a324d9f3e06aba5a98f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  modelWeights: {fileID: 11400000, guid: 943e69a2032bb3d44b9f647e00f63228, type: 2}
   mapSize: 10
   output: 
+  gameSpeed: 10
 --- !u!1 &1290420037
 GameObject:
   m_ObjectHideFlags: 0

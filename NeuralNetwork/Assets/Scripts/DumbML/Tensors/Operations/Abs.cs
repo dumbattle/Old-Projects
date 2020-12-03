@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace DumbML {
     public class Abs : Operation {
         static ProfilerMarker profile = new ProfilerMarker("Abs.Eval");
-        static ProfilerMarker profileBackwards = new ProfilerMarker("Square.Backwards");
+        static ProfilerMarker profileBackwards = new ProfilerMarker("Abs.Eval");
         Tensor error;
 
 

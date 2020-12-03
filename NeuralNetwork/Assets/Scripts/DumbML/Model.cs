@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace DumbML {
     public class Model {
@@ -67,7 +68,7 @@ namespace DumbML {
 
             for (int i = 0; i < v.Length; i++) {
                 if (!weights[i].CheckShape(v[i].shape)) {
-                    throw new ArgumentException($"Cannot set weight, wrong shape. Got: {weights[i].Shape} Expected: {v[i].shape} Index: {i}");
+                    throw new ArgumentException($"Cannot set weight, wrong shape. Got: {weights[i].Shape.TOSTRING()} Expected: {v[i].shape} Index: {i}");
                 }
             }
             for (int i = 0; i < v.Length; i++) {
@@ -86,7 +87,8 @@ namespace DumbML {
         protected Model combinedAC;
 
         Operation loss;
-        Placeholder inputPH, actionMask, rewardPH;
+        List<Placeholder> inputPH;
+        Placeholder actionMask, rewardPH;
 
         Optimizer o;
         Gradients g;
@@ -121,7 +123,7 @@ namespace DumbML {
             g = new Gradients(loss.GetOperations<Variable>());
             o = Optimizer();
             o.InitializeGradients(g);
-            inputPH = loss.GetOperations<Placeholder>()[0];
+            inputPH = loss.GetOperations<Placeholder>(condition: (x) => x != rewardPH && x != actionMask);
         }
 
         protected abstract Operation Input();
@@ -151,7 +153,7 @@ namespace DumbML {
             trajectory.Clear();
         }
 
-        public RLExperience SampleAction(Tensor state) {
+        public RLExperience SampleAction(params Tensor[] state) {
             Tensor output = actorModel.Compute(state);
 
             int action = output.Sample();
@@ -163,7 +165,7 @@ namespace DumbML {
             int size = trajectory.Count;
             int batchSize = 32;
 
-            var inputs = new Tensor[size];
+            var inputs = new Tensor[size][];
             var masks = new Tensor[size];
 
             for (int i = 0; i < size; i++) {
@@ -178,7 +180,9 @@ namespace DumbML {
                 batchCount++;
                 var r = trajectory[i].reward;
 
-                inputPH.SetVal(inputs[i]);
+                for (int j = 0; j < inputPH.Count; j++) {
+                    inputPH[j].SetVal(inputs[i][j]);
+                }
                 rewardPH.value[0] = r;
                 actionMask.SetVal(masks[i]);
 

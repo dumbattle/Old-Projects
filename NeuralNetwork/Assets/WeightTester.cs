@@ -59,7 +59,7 @@ public class WeightTester : MonoBehaviour {
 
 
         for (int i = 0; i < 32; i++) {
-            inputs[i] = sample[i].state;
+            inputs[i] = sample[i].state[i];
             masks[i] = new Tensor(3);
             //masks[i][sample[i].action] = -sample[i].reward;
 

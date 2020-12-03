@@ -66,6 +66,7 @@ namespace DumbML {
                 int height = input.Shape[1];
                 int outputChannels = weights.Shape[1];
 
+                dest.ie.PointWise((a) => 0, true);
                 System.Threading.Tasks.Parallel.For(0, outputChannels, (c) => {
                     int weightIndex = c;
 
@@ -77,14 +78,8 @@ namespace DumbML {
                         float w = weights._value[weightIndex];
                         for (int x = 0; x < width; x++) {
                             for (int y = 0; y < height; y++) {
-                                if (x == 0 && y == 0) {
-                                    dest.ie._value[inputIndex] = error._value[index] * w;
-                                }else {
-                                    dest.ie._value[inputIndex] += error._value[index] * w;
-                                }
+                                dest.ie._value[inputIndex] += error._value[index] * w;
                                 v += error._value[index] * input._value[inputIndex];
-
-
                                 index += outputChannels;
                                 inputIndex += input.Shape[2];
                             }

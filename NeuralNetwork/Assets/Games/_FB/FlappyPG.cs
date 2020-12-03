@@ -73,7 +73,7 @@ namespace Flappy {
             var masks = new Tensor[batchSize];
 
             for (int i = 0; i < batchSize; i++) {
-                inputs[i] = sample[i].state;
+                inputs[i] = sample[i].state[i];
 
                 var r = sample[i].reward;
 
@@ -101,7 +101,7 @@ namespace Flappy {
             var masks = new Tensor[batchSize];
 
             for (int i = 0; i < batchSize; i++) {
-                inputs[i] = replayBuffer[i].state;
+                inputs[i] = replayBuffer[i].state[i];
 
                 var r = replayBuffer[i].reward;
 
