@@ -1,0 +1,19 @@
+{
+    "name": "UnitTests",
+    "references": [
+        "GUID:02a3d2fccb66d3b47b978f6bf4ae8cd8"
+    ],
+    "optionalUnityReferences": [
+        "TestAssemblies"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": []
+}
