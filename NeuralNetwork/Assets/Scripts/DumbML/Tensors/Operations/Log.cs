@@ -10,16 +10,16 @@ namespace DumbML {
             error = new Tensor[1] { t = value.SameShape() };
         }
 
-        protected override Tensor Compute(Tensor[] operands) {
+        protected override Tensor _Compute(Tensor[] operands) {
             for (int i = 0; i < operands[0].Size; i++) {
-                value._value[i] = (float)Math.Log(operands[0]._value[i] + EPSILON);
+                value.value[i] = (float)Math.Log(operands[0].value[i] + EPSILON);
             }
 
             return value;
         }
-        protected override Tensor[] BackwardsPass(Tensor e) {
+        protected override Tensor[] _BackwardsPass(Tensor e) {
             for (int i = 0; i < e.Size; i++) {
-                t._value[i] = e._value[i] / (inner[0].value._value[i] + EPSILON);
+                t.value[i] = e.value[i] / (inner[0].value.value[i] + EPSILON);
             }
             return error;
         }

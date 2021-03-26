@@ -18,17 +18,17 @@ namespace DumbML {
         }
 
 
-        protected override Tensor Compute(Tensor[] operands) {
+        protected override Tensor _Compute(Tensor[] operands) {
             var length = value.Size;
 
             for (int i = 0; i < length; i++) {
                 int ind = 0;
-                var val = operands[0]._value[i];
+                var val = operands[0].value[i];
 
                 for (int j = 1; j < operands.Length; j++) {
-                    if (operands[j]._value[i] > val) {
+                    if (operands[j].value[i] > val) {
                         ind = j;
-                        val = operands[j]._value[i];
+                        val = operands[j].value[i];
                     }
                 }
                 selected[i] = ind;
@@ -40,7 +40,7 @@ namespace DumbML {
         }
 
 
-        protected override Tensor[] BackwardsPass(Tensor e) {
+        protected override Tensor[] _BackwardsPass(Tensor e) {
             var length = value.Size;
 
             //for (int i = 0; i < length; i++) {
@@ -61,10 +61,10 @@ namespace DumbML {
                 var ba = backwardsArray[j];
                 for (int i = 0; i < length; i++) {
                     if (j == selected[i]) {
-                        ba._value[i] = e[i];
+                        ba.value[i] = e[i];
                     }
                     else {
-                        ba._value[i] = 0;
+                        ba.value[i] = 0;
                     }
                 }
             }

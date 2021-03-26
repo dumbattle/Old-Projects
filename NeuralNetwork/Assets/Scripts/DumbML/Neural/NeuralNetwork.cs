@@ -38,7 +38,7 @@ namespace DumbML {
         }
 
         public Operation Build() {
-            Placeholder inputPH = new Placeholder(inputShape);
+            Placeholder inputPH = new Placeholder("Input", inputShape);
             Operation x = inputPH;
 
             for (int i = 0; i < layers.Count; i++) {

@@ -26,25 +26,25 @@ namespace DumbML {
             value = new Tensor(shape);
         }
 
-        protected override Tensor Compute(Tensor[] operands) {
+        protected override Tensor _Compute(Tensor[] operands) {
 
             int ind = 0;
 
             foreach (var o in operands) {
-                for (int i = 0; i < o._value.Length; i++) {
-                    value._value[ind] = o._value[i];
+                for (int i = 0; i < o.value.Length; i++) {
+                    value.value[ind] = o.value[i];
                     ind++;
                 }
             }
             return value;
         }
 
-        protected override Tensor[] BackwardsPass(Tensor e) {
+        protected override Tensor[] _BackwardsPass(Tensor e) {
             int ind = 0;
 
             foreach (var o in errors) {
-                for (int i = 0; i < o._value.Length; i++) {
-                    o._value[i] = e._value[ind];
+                for (int i = 0; i < o.value.Length; i++) {
+                    o.value[i] = e.value[ind];
                     ind++;
                 }
             }

@@ -308,9 +308,9 @@ public class SnakeConv :Snake {
     protected override void CreateBrain() {
         input = new Tensor(mapSize, mapSize,2);
         brain = new NeuralNetwork(mapSize, mapSize,2);
-        brain.Add(new Convolution2D(2, stride: (2, 2), pad: true)); // [18,18,1]
-        brain.Add(new Convolution2D(2, stride: (2, 2), pad: true)); // [6,6,1]
-        brain.Add(new Convolution2D(2, stride: (2, 2), pad: true)); // [3,3,1]
+        brain.Add(new Convolution2DDepSep(2, stride: (2, 2), pad: true)); // [18,18,1]
+        brain.Add(new Convolution2DDepSep(2, stride: (2, 2), pad: true)); // [6,6,1]
+        brain.Add(new Convolution2DDepSep(2, stride: (2, 2), pad: true)); // [3,3,1]
         brain.Add(new Flatten());
         brain.Add(new FullyConnected(4, bias: false));
         brain.Build();

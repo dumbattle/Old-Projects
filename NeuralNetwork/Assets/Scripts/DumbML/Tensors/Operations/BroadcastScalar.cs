@@ -13,14 +13,14 @@ namespace DumbML {
             error = new Tensor[] { t = new Tensor(1) };
         }
 
-        protected override Tensor Compute(Tensor[] operands) {
+        protected override Tensor _Compute(Tensor[] operands) {
             var s = operands[0][0];
             for (int i = 0; i < value.Size; i++) {
-                value._value[i] = s;
+                value.value[i] = s;
             }
             return value;
         }
-        protected override Tensor[] BackwardsPass(Tensor e) {
+        protected override Tensor[] _BackwardsPass(Tensor e) {
             t[0] = 0;
             foreach (var f in e) {
                 t[0] += f;

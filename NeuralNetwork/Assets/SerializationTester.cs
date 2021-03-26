@@ -17,11 +17,11 @@ public class SerializationTester : MonoBehaviour {
     }
 
     Model CreateNewModel() {
-        Operation op = new Placeholder(10);
+        Operation op = new Placeholder("Input", 10);
         var a = op = new FullyConnected(10, ActivationFunction.LeakyRelu).Build(op);
         op = new FullyConnected(10, ActivationFunction.Sigmoid).Build(op);
 
         return new Model(op + op);
     }
 
-}
+}

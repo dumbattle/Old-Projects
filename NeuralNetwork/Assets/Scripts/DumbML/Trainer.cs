@@ -23,8 +23,7 @@ namespace DumbML {
 
             inputs = (Placeholder[])m.inputs.Clone();
 
-            targetPH = new Placeholder(m.outputShape);
-            targetPH.SetName("Target Placeholder");
+            targetPH = new Placeholder("Target Placeholder", m.outputShape);
 
             loss = l.Compute(m.forward, targetPH);
             loss.Optimize();

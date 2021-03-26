@@ -9,10 +9,10 @@ namespace DumbML {
             re = new Tensor(weight.shape);
         }
 
-        protected override Tensor Compute(Tensor[] operands) {
+        protected override Tensor _Compute(Tensor[] operands) {
             return Blas.Parallel.Convolution2DPointwise(operands[0], operands[1], value);
         }
-        protected override Tensor[] BackwardsPass(Tensor e) {
+        protected override Tensor[] _BackwardsPass(Tensor e) {
             (le, re) = Blas.Parallel.Convolution2DPointwiseBackwards(inner[0].value, e, inner[1].value, (le, re));
             return new[] { le, re };
         }

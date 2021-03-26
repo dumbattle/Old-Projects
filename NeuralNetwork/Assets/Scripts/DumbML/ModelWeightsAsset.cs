@@ -3,18 +3,19 @@ using System;
 using System.Collections.Generic;
 
 namespace DumbML {
-    [CreateAssetMenu(fileName = "New Weights", menuName = "DumbML/New Weights")]
+    [CreateAssetMenu(fileName = "New Weights", menuName = "DumbMl/New Weights")]
     public class ModelWeightsAsset : ScriptableObject {
         [SerializeField]
         TensorData[] _data;
         public bool HasData => _data.Length != 0;
 
-        public void Save(Tensor[] data) {
+        public void Save(Variable[] data) {
             _data = new TensorData[data.Length];
             for (int i = 0; i < data.Length; i++) {
                 _data[i] = new TensorData() {
-                    val = data[i]._value,
-                    shape = data[i].Shape
+                    val = data[i].value.value,
+                    shape = data[i].value.Shape,
+                    Name = data[i].Name
                 };
             }
         }
@@ -36,6 +37,8 @@ namespace DumbML {
 
         [Serializable]
         struct TensorData {
+            [HideInInspector]
+            public string Name;
             public float[] val;
             public int[] shape;
 

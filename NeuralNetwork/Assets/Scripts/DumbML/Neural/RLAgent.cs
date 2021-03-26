@@ -79,7 +79,7 @@ namespace DumbML {
             var op = forward;
 
             //addMask
-            op *= new Placeholder(op.shape);
+            op *= new Placeholder("Input", op.shape);
 
             trainer = new Trainer(op, o, l);
             //trainModel = new TrainableModel(op);

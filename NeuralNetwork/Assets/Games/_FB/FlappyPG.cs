@@ -20,7 +20,7 @@ namespace Flappy {
 
             op = op.Softmax();
 
-            actionMask = new Placeholder(op.shape);
+            actionMask = new Placeholder("Action Mask", op.shape);
             logProb = new Log(op) * actionMask * new BroadcastScalar(-1, actionMask.shape);
             Build(op);
 

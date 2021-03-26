@@ -8,9 +8,9 @@ namespace DumbML {
                 int lx = l.Shape[0];
                 int ry = r.Shape[1];
 
-                var lv = l._value;
-                var rv = r._value;
-                var dv = dest._value;
+                var lv = l.value;
+                var rv = r.value;
+                var dv = dest.value;
 
                 if (lx > 50) {
                     System.Threading.Tasks.Parallel.For(0, ry, (y) => {
@@ -45,11 +45,11 @@ namespace DumbML {
             public static (Tensor le, Tensor re) MatrixMult1x2Backwards(Tensor l, Tensor r, Tensor e, (Tensor le, Tensor re) dest) {
                 int ry = r.Shape[1];
 
-                float[] lv = l._value;
-                float[] rv = r._value;
-                float[] dl = dest.le._value;
-                float[] dr = dest.re._value;
-                float[] ev = e._value;
+                float[] lv = l.value;
+                float[] rv = r.value;
+                float[] dl = dest.le.value;
+                float[] dr = dest.re.value;
+                float[] ev = e.value;
 
                 System.Threading.Tasks.Parallel.For(0, l.Shape[0], (i) => {
                     int rind = i * ry;

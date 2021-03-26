@@ -20,6 +20,8 @@ namespace Flappy {
 
             exp = ai.SampleAction(state);
             FlappyBird.main.output = ai.actorModel.Result.ToString();
+            FlappyBird.main.actor = ai.actorModel.Result.ToString();
+            FlappyBird.main.critic = ai.criticModel.Result.ToString();
 
             if (exp.action == 0) {
                 Jump();

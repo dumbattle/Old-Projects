@@ -4,7 +4,6 @@ using System.Collections.Generic;
 namespace DumbML {
     public class Variable : Operation {
         static ProfilerMarker profileBackwards = new ProfilerMarker("Variable.Backwards");
-        public string name;
         public bool Trainable = true;
 
         public Tensor Value { get { return value; } set { base.value = value; } }
@@ -14,16 +13,16 @@ namespace DumbML {
         }
         public Variable(Tensor value, string name) : base(value.Shape){
             base.value = value;
-            this.name = name;
+            Name = name;
         }
 
-        protected override Tensor Compute(Tensor[] operands) {
+        protected override Tensor _Compute(Tensor[] operands) {
           
             return value;
         }
 
 
-        protected override Tensor[] BackwardsPass(Tensor e) {          
+        protected override Tensor[] _BackwardsPass(Tensor e) {          
             return null;
         }
 
@@ -34,8 +33,8 @@ namespace DumbML {
         public override Operation Copy(Dictionary<Operation, Operation> track) {
             return new Variable(Value.Copy());
         }
-        public override string ToString(bool requireParanthesis) {
-            return name ?? value.ToString();
+        public override string ExprString(bool requireParanthesis) {
+            return Name ?? value.ToString();
         }
     }
     

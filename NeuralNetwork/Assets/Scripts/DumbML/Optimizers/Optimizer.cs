@@ -9,7 +9,10 @@ namespace DumbML {
         public Optimizer(Gradients grad) {
             InitializeGradients(grad);
         }
-        public Optimizer() { }
+        public Optimizer() {
+            IsBuilt = false;
+
+        }
 
         public void ZeroGrad() {
             grad.Reset();
@@ -36,9 +39,8 @@ namespace DumbML {
                 }
 
                 int size = v.Value.Size;
-                var gradTensor = grad[v]._value;
-                var targetTensor = v.Value._value;
-
+                var gradTensor = grad[v].value;
+                var targetTensor = v.Value.value;
 
                 for (int j = 0; j < size; j++) {
                     targetTensor[j] -= UnpdateSingle(gradTensor[j], ind);

@@ -11,7 +11,7 @@ namespace DumbML {
         public Operation[] inner;
         public string Name;
 
-        Tensor[] operands;
+        public Tensor[] operands;
         public Tensor dupeError;
 
         public Operation(int[] shape, params Operation[] inner) {
@@ -24,15 +24,16 @@ namespace DumbML {
 
             for (int i = 0; i < inner.Length; i++) {
 
-                if (this as DuplicateOperation == null) {
-                    var ops = inner[i].GetOperations();
-                    for (int j = 0; j < inner.Length; j++) {
-                        if (i == j) continue;
-                        if (ops.Contains(inner[j])) {
-                            inner[j] = new DuplicateOperation(inner[j]);
-                        }
-                    }
-                }
+                //if (this as DuplicateOperation == null) {
+                //    var ops = inner[i].GetOperations();
+
+                //    for (int j = 0; j < i; j++) {
+                //        if (i == j) continue;
+                //        if (ops.Contains(inner[j])) {
+                //            inner[j] = new DuplicateOperation(inner[j]);
+                //        }
+                //    }
+                //}
 
 
 
@@ -68,16 +69,19 @@ namespace DumbML {
                 operands[i] = inner[i].Eval();
             }
 
-            return value = Compute(operands);
+            return value = _Compute(operands);
+        }
+        public Tensor Compute(Tensor[] operands) {
+            return _Compute(operands);
         }
 
-        protected abstract Tensor Compute(Tensor[] operands);
+        protected abstract Tensor _Compute(Tensor[] operands);
 
         public void Backwards(Gradients g, Tensor e) {
             if (g.Contains(this)) {
                 g[this].Add(e, true);
             }
-            Tensor[] inputErrors = BackwardsPass(e);
+            Tensor[] inputErrors = _BackwardsPass(e);
 
             for (int i = inner.Length - 1; i >= 0; i--) {
                 if (inner[i].dupeError != null) {
@@ -104,7 +108,10 @@ namespace DumbML {
 
 
 
-        protected abstract Tensor[] BackwardsPass(Tensor e);
+       public  Tensor[] BackwardsPass(Tensor e) {
+            return _BackwardsPass(e);
+        }
+        protected abstract Tensor[] _BackwardsPass(Tensor e);
 
 
 
@@ -192,31 +199,14 @@ namespace DumbML {
             Name = name;
             return this;
         }
-        public virtual string ToString(bool requireParanthesis) {
+        public virtual string ExprString(bool requireParanthesis) {
             return "";
         }
+        public string ExprString() {
+            return ExprString(false);
+        }
         public override string ToString() {
-            return ToString(false);
-        }
-    }
-
-    public class Detached : Operation {
-        Tensor[] er;
-
-        public Detached(Operation op) : base(op.shape, op) {
-            er = new[] { new Tensor(op.shape) };
-        }
-
-        protected override Tensor Compute(Tensor[] operands) {
-            return value.Copy(operands[0]);
-        }
-
-        protected override Tensor[] BackwardsPass(Tensor e) {
-            return er;
-        }
-
-        public override Operation Copy(Dictionary<Operation, Operation> track) {
-            return new Detached(inner[0]._Copy(track));
+            return Name;
         }
     }
 }

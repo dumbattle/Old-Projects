@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using UnityEngine;
+using DumbML;
 using Chess;
 
 //namespace TicTacToe {
@@ -253,7 +253,7 @@ public static class MiniMax {
     public static Move GetBest(Board board, bool player1, int depth = 1, Func<Board, float> eval = null) {
         var moves = board.GetPossibleMoves().ToList();
         float[] scores = new float[moves.Count];
-        _dict = new Dictionary<DumbML.Tensor, float>();
+        _dict = new Dictionary<Tensor, float>();
 
         Parallel.For(0, scores.Length, (i) => {
             //for (int i = 0; i < scores.Length; i++) {
@@ -318,10 +318,10 @@ public static class MiniMax {
     }
 
 
-    static Dictionary<DumbML.Tensor, float> _dict = new Dictionary<DumbML.Tensor, float>();
+    static Dictionary<Tensor, float> _dict = new Dictionary<Tensor, float>();
     static object _lock = new object();
 
-    static Dictionary<DumbML.Tensor, float> dict {
+    static Dictionary<Tensor, float> dict {
         get { lock (_lock) { return _dict; } }
     }
 }

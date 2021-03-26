@@ -4,7 +4,6 @@ using UnityEngine;
 using DumbML;
 
 public class SnakePG : MonoBehaviour {
-    public static SnakePG main;
     public ModelWeightsAsset modelWeights;
     public int mapSize = 10;
     public string output;
@@ -14,18 +13,9 @@ public class SnakePG : MonoBehaviour {
 
     Vector2Int pos;
     Vector2Int food;
-    Channel scoreChannel;
-    int noFoodCount = 0;
 
-    public int gameSpeed = 1;
     void Start() {
-        main = this;
-        scoreChannel = Channel.New("Score");
-        if (modelWeights.HasData) {
-            agent = new SnakeAC(new Vector2Int(mapSize, mapSize), modelWeights.Load());
-        }else {
-            agent = new SnakeAC(new Vector2Int(mapSize, mapSize));
-        }
+            agent = new SnakeAC(new Vector2Int(mapSize, mapSize), modelWeights);
         StartCoroutine(Next());
         isPlaying = true;
     }
@@ -55,81 +45,66 @@ public class SnakePG : MonoBehaviour {
     IEnumerator Next() {
         pos = new Vector2Int(mapSize / 2, mapSize / 2);
         food = RandomPos(pos);
-        float totalReward = 0;
+        int step = 0;
         while (true) {
-            for (int i = 0; i < gameSpeed; i++) {
-                totalReward = GameLoop(totalReward);
+            step++;
+            var mt = MapTensor();
+
+            var exp = agent.SampleAction(mt);
+            output = exp.output.ToString();
+            //agent.criticModel.forward.Eval();
+            print(agent.testOP.value);
+            Vector2Int dir = new Vector2Int(0, 0);
+            switch (exp.action) {
+                case 0:
+                    dir = new Vector2Int(0, 1);
+                    break;
+                case 1:
+                    dir = new Vector2Int(1, 0);
+                    break;
+                case 2:
+                    dir = new Vector2Int(0, -1);
+                    break;
+                case 3:
+                    dir = new Vector2Int(-1, 0);
+                    break;
             }
+
+            Vector2Int newPos = pos + dir;
+            float reward = 0;
+
+            if (newPos.x < 0 || newPos.x >= mapSize || newPos.y < 0 || newPos.y >= mapSize || step > 100) {
+                reward = -1;
+            }
+            else if (newPos == food) {
+                reward = 1;
+                food = RandomPos(newPos);
+                step = 0;
+            }
+
+            exp.reward = reward;
+
+            agent.AddExperience(exp);
+            pos = newPos;
+            if (reward < 0) {
+                agent.EndTrajectory();
+                pos = new Vector2Int(mapSize / 2, mapSize / 2);
+                food = RandomPos(pos);
+                step = 0;
+            }
+
 
             yield return null;
         }
 
+        Tensor MapTensor() {
+            Tensor result = new Tensor(mapSize, mapSize, 2);
+            result[pos.x, pos.y, 0] = 1;
+            result[food.x, food.y, 1] = 1;
+            return result;
+        }
     }
 
-    private float GameLoop(float totalReward) {
-        noFoodCount++;
-        var mt = MapTensor();
-
-        var exp = agent.SampleAction(mt);
-        output = exp.output.ToString();
-        //print(agent.testOP.value);
-        Vector2Int dir = new Vector2Int(0, 0);
-        switch (exp.action) {
-            case 0:
-                dir = new Vector2Int(0, 1);
-                break;
-            case 1:
-                dir = new Vector2Int(1, 0);
-                break;
-            case 2:
-                dir = new Vector2Int(0, -1);
-                break;
-            case 3:
-                dir = new Vector2Int(-1, 0);
-                break;
-        }
-
-        Vector2Int newPos = pos + dir;
-        float reward = 0;
-
-        if (newPos.x < 0 || newPos.x >= mapSize || newPos.y < 0 || newPos.y >= mapSize || noFoodCount >= 100) {
-            reward = -1f;
-        }
-        else if (newPos == food) {
-            reward = 1;
-            food = RandomPos(newPos);
-            noFoodCount = 0;
-        }
-        totalReward += reward;
-        exp.reward = reward;
-
-        agent.AddExperience(exp);
-        pos = newPos;
-        if (reward < 0) {
-            agent.EndTrajectory();
-
-            pos = new Vector2Int(mapSize / 2, mapSize / 2);
-            food = RandomPos(pos);
-            scoreChannel.Feed(totalReward);
-            totalReward = 0;
-            SnakePG.main.modelWeights.Save(agent.GetWeights());
-            noFoodCount = 0;
-        }
-
-        return totalReward;
-    }
-
-    Tensor MapTensor() {
-        Tensor result = new Tensor(mapSize, mapSize, 2);
-        result[pos.x, pos.y, 0] = 1;
-        result[food.x, food.y, 1] = 1;
-        //for (int x = 0; x < mapSize; x++) {
-        //    for (int y = 0; y < mapSize; y++) {
-        //        result[x, y, 2] = 1;
-        //    }
-        //}
-        return result;
-    }
     Vector2Int RandomPos(Vector2Int invalidPos) {
         var result =  new Vector2Int(Random.Range(0, mapSize), Random.Range(0, mapSize));
         if (result == invalidPos) {
@@ -143,49 +118,45 @@ public class SnakePG : MonoBehaviour {
 }
 
 public class SnakeAC : ActorCritic {
-    public Operation testOP;
     Vector2Int _mapShape;
-
-    public SnakeAC(Vector2Int mapShape) : base() {
+    ModelWeightsAsset _asset;
+    public Operation testOP;
+    public SnakeAC(Vector2Int mapShape, ModelWeightsAsset savedData) : base() {
+        //normalizeRewards = false;
         _mapShape = mapShape;
         Build();
-    }
-
-    public SnakeAC(Vector2Int mapShape, Tensor[] weights) : base() {
-        _mapShape = mapShape;
-        Build();
-        combinedAC.SetWeights(weights);
+        _asset = savedData;
+        if (savedData == null || !savedData.HasData) {
+            return;
+        }
+        combinedAC.SetWeights(savedData.Load());
     }
 
     protected override Operation Input() {
-        Operation inp = new InputLayer(_mapShape.x, _mapShape.y, 2).Build();
-        Operation x = new Convolution2D(5, af: ActivationFunction.Tanh, pad: false).Build(inp);
-        x = new Convolution2D(5, af: ActivationFunction.Tanh, pad: false).Build(x);
-        x = new Convolution2D(5, af: ActivationFunction.Tanh, pad: false).Build(x);
-        x = new Convolution2D(1, af: ActivationFunction.Tanh, pad: false).Build(x);
-        x = new FlattenOp(x);
+        Operation x = new InputLayer(_mapShape.x, _mapShape.y, 2).Build();
+        x = new Convolution2D(30, af: ActivationFunction.Tanh, pad: false).Build(x);
+        x = new Convolution2D(30, af: ActivationFunction.Tanh, pad: false).Build(x);
+        x = new Convolution2D(30, af: ActivationFunction.Tanh, pad: false).Build(x);
+         x = new Convolution2D(30, af: ActivationFunction.Tanh, pad: false).Build(x);
+        testOP = x = new GlobalAveragePooling(x);
 
-        Operation y = new Convolution2D(5, af: ActivationFunction.Tanh, pad: true).Build(inp);
-        y = new Convolution2D(5, af: ActivationFunction.Tanh, pad: true).Build(y);
-        y = new Convolution2D(5, af: ActivationFunction.Tanh, pad: true).Build(y);
-        y = new Convolution2D(1, af: ActivationFunction.Tanh, pad: true).Build(y);
-        y = new FlattenOp(y);
+        x = new FullyConnected(50, ActivationFunction.Tanh).Build(x);
 
-        Operation o = new Append(x, y);
-        o = new FullyConnected(50, ActivationFunction.Sigmoid, false).Build(o);
-
-        return o;
+        return x;
+    }
+    public override void EndTrajectory() {
+        base.EndTrajectory();
+        _asset?.Save(GetVariables());
     }
 
-
     protected override Operation Actor(Operation input) {
-        Operation x = new FullyConnected(4, bias: false).Build(input);
+        Operation x = new FullyConnected(4).Build(input);
         x = x.Softmax();
         return x;
     }
 
     protected override Operation Critic(Operation input) {
-        Operation x = new FullyConnected(1, bias: true).Build(input);
+        Operation x = new FullyConnected(1).Build(input);
         return x;
     }
 
