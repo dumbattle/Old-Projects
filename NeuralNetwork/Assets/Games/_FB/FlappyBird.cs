@@ -17,8 +17,10 @@ namespace Flappy {
 
         public string output, value, advantage, actor, critic;
         public float score;
+        [Space]
+        public int gameSpeed = 1;
         Game game;
-
+        
 
         void Start() {
             main = this;
@@ -33,7 +35,10 @@ namespace Flappy {
 
         IEnumerator Next() {
             while (true) {
-                game.Next();
+                for (int i = 0; i < gameSpeed; i++) {
+                    game.Next();
+                }
+
                 score = game.score;
                 yield return null;
             }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace DumbML {
     public class Model {
@@ -7,7 +8,6 @@ namespace DumbML {
 
         public Placeholder[] inputs;
         public Tensor Result => forward.value;
-
 
         public Model() { }
         public Model(Operation op) {
@@ -68,7 +68,7 @@ namespace DumbML {
 
             for (int i = 0; i < v.Length; i++) {
                 if (!weights[i].CheckShape(v[i].shape)) {
-                    throw new ArgumentException($"Cannot set weight, wrong shape. Got: {weights[i].Shape} Expected: {v[i].shape} Index: {i}");
+                    throw new ArgumentException($"Cannot set weight, wrong shape. Got: {weights[i].Shape.TOSTRING()} Expected: {v[i].shape} Index: {i}");
                 }
             }
             for (int i = 0; i < v.Length; i++) {
@@ -86,10 +86,9 @@ namespace DumbML {
         public Model criticModel { get; private set; }
         protected Model combinedAC;
 
-        public bool normalizeRewards = true;
-
         Operation loss;
-        Placeholder inputPH, actionMask, rewardPH;
+        List<Placeholder> inputPH;
+        Placeholder actionMask, rewardPH;
 
         Optimizer o;
         Gradients g;
@@ -102,32 +101,29 @@ namespace DumbML {
             Operation input = Input();
             Operation a = Actor(input);
             Operation c = Critic(input);
-
+            combinedAC = new Model(a + c);
             a.SetName("__ACTOR__");
-            c.SetName("__CRITIC__");
+            a.SetName("__CRITIC__");
 
             actorModel = new Model(a);
             criticModel = new Model(c);
 
 
-            rewardPH = new Placeholder("Reward", 1);
+            rewardPH = new Placeholder(1);
 
             var adv = rewardPH - c;
-            actionMask = new Placeholder("Action Mask", a.shape);
+            actionMask = new Placeholder(a.shape);
 
 
             var aloss = new Log(a * actionMask) * new BroadcastScalar(-1 * adv.Detach(), a.shape);
-            var cLoss = Loss.MSE.Compute(c, rewardPH);
+            var cLoss = Loss.MSE.Compute(rewardPH, c);
 
             loss = new Sum(aloss) + cLoss;
-            //loss += loss.L2loss();
-            combinedAC = new Model(loss);
 
             g = new Gradients(loss.GetOperations<Variable>());
-            
             o = Optimizer();
             o.InitializeGradients(g);
-            inputPH = loss.GetOperations<Placeholder>()[0];
+            inputPH = loss.GetOperations<Placeholder>(condition: (x) => x != rewardPH && x != actionMask);
         }
 
         protected abstract Operation Input();
@@ -143,16 +139,6 @@ namespace DumbML {
             trajectory.Add(exp);
         }
         public virtual void EndTrajectory() {
-            NormalizeRewards();
-            TrainAll();
-            trajectory.Clear();
-        }
-
-        void NormalizeRewards() {
-            if (!normalizeRewards) {
-                return;
-            }
-
             float score = 0;
 
             for (int i = trajectory.Count - 1; i >= 0; i--) {
@@ -162,9 +148,15 @@ namespace DumbML {
                 score += exp.reward;
                 exp.reward = score;
             }
+
+            TrainAll();
+            ClearTrajectory();
+        }
+        public void ClearTrajectory() {
+            trajectory.Clear();
         }
 
-        public RLExperience SampleAction(Tensor state) {
+        public RLExperience SampleAction(params Tensor[] state) {
             Tensor output = actorModel.Compute(state);
 
             int action = output.Sample();
@@ -176,7 +168,7 @@ namespace DumbML {
             int size = trajectory.Count;
             int batchSize = 32;
 
-            var inputs = new Tensor[size];
+            var inputs = new Tensor[size][];
             var masks = new Tensor[size];
 
             for (int i = 0; i < size; i++) {
@@ -191,27 +183,27 @@ namespace DumbML {
                 batchCount++;
                 var r = trajectory[i].reward;
 
-                inputPH.SetVal(inputs[i]);
+                for (int j = 0; j < inputPH.Count; j++) {
+                    inputPH[j].SetVal(inputs[i][j]);
+                }
                 rewardPH.value[0] = r;
                 actionMask.SetVal(masks[i]);
 
                 loss.Eval();
                 loss.Backwards(o);
-                //if (batchCount >= batchSize) {
-                //    o.Update();
-                //    o.ZeroGrad();
-                //    batchCount = 0;
-                //}
+                if (batchCount >= batchSize) {
+                    o.Update();
+                    o.ZeroGrad();
+                    batchCount = 0;
+                }
             }
+
             o.Update();
             o.ZeroGrad();
         }
 
         public Tensor[] GetWeights() {
             return combinedAC.GetWeights();
-        }
-        public Variable[] GetVariables() {
-            return combinedAC.GetVariables();
         }
         public void SetWeights(Tensor[] weights) {
             combinedAC.SetWeights(weights);

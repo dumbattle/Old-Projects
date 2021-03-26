@@ -20,31 +20,32 @@ namespace DumbML {
                 int width = input.Shape[0];
                 int height = input.Shape[1];
                 int outputChannels = weights.Shape[1];
+                int inputChannels = input.Shape[2];
 
-                //Tensor result = new Tensor(width, height, outputChannels);
-
+                float[] wVal = weights._value;
+                float[] dVal = dest._value;
+                float[] iVal = input._value;
 
                 System.Threading.Tasks.Parallel.For(0, outputChannels, (c) => {
                     int weightIndex = c;
 
-                    for (int ic = 0; ic < input.Shape[2]; ic++) {
+                    for (int ic = 0; ic < inputChannels; ic++) {
 
                         int index = c;
                         int inputIndex = ic;
-                        float wv = weights.value[weightIndex];
+                        float wv = wVal[weightIndex];
+
                         for (int x = 0; x < width; x++) {
                             for (int y = 0; y < height; y++) {
 
-                                dest.value[index] += input.value[inputIndex] * wv;
+                                dVal[index] += iVal[inputIndex] * wv;
 
                                 index += outputChannels;
-                                inputIndex += input.Shape[2];
+                                inputIndex += inputChannels;
                             }
                         }
                         weightIndex += outputChannels;
                     }
-
-
                 });
 
                 return dest;
@@ -65,32 +66,35 @@ namespace DumbML {
                 int width = input.Shape[0];
                 int height = input.Shape[1];
                 int outputChannels = weights.Shape[1];
+                int inputChannels = input.Shape[2];
+
+                float[] wVal = weights._value;
+                float[] diVal = dest.ie._value;
+                float[] dwVal = dest.we._value;
+                float[] iVal = input._value;
+                float[] eVal = error._value;
+
+                dest.ie.PointWise((a) => 0, true);
 
                 System.Threading.Tasks.Parallel.For(0, outputChannels, (c) => {
                     int weightIndex = c;
 
-                    for (int ic = 0; ic < input.Shape[2]; ic++) {
+                    for (int ic = 0; ic < inputChannels; ic++) {
 
                         int index = c;
                         int inputIndex = ic;
                         float v = 0;
-                        float w = weights.value[weightIndex];
+                        float w = wVal[weightIndex];
+
                         for (int x = 0; x < width; x++) {
                             for (int y = 0; y < height; y++) {
-                                if (x == 0 && y == 0) {
-                                    dest.ie.value[inputIndex] = error.value[index] * w;
-                                }
-                                else {
-                                    dest.ie.value[inputIndex] += error.value[index] * w;
-                                }
-                                v += error.value[index] * input.value[inputIndex];
-
-
+                                diVal[inputIndex] += eVal[index] * w;
+                                v += eVal[index] * iVal[inputIndex];
                                 index += outputChannels;
-                                inputIndex += input.Shape[2];
+                                inputIndex += inputChannels;
                             }
                         }
-                        dest.we.value[weightIndex] = v;
+                        dwVal[weightIndex] = v;
                         weightIndex += outputChannels;
                     }
 
@@ -101,7 +105,7 @@ namespace DumbML {
             }
 
 
-            public static Tensor Convolution2DDepthwise(Tensor input, Tensor filter, Tensor dest, (int x, int y) stride = default, bool pad = true) {
+            public static Tensor Convolution2DDepthwise(Tensor input, Tensor filter,Tensor dest, (int x, int y) stride = default, bool pad = true) {
                 if (input.Rank != 3) {
                     throw new InvalidOperationException("Tensors have to be 3D to perform 2D depthwise convolution");
                 }
@@ -125,11 +129,6 @@ namespace DumbML {
                 padX /= 2;
                 padY /= 2;
 
-                //Tensor dest =
-                //    new Tensor(
-                //        shape,
-                //        (input.Shape[1] - filter.Shape[1] + padY) / strideY + 1,
-                //        input.Shape[2]);
                 int findInt = channels * (input.Shape[1] - filter.Shape[1]);
 
 
@@ -148,14 +147,17 @@ namespace DumbML {
                     int i_yStart = channels * -padY;
                     int i_yInterval = channels * strideY;
 
+                    float[] iVal = input._value;
+                    float[] fVal = filter._value;
+                    float[] dVal = dest._value;
                     int i_x = i_xStart;
+
                     for (int x = 0; x < rWidth; x++) {
                         int i_y = i_yStart;
                         for (int y = 0; y < rHeight; y++) {
 
                             int fi = c;
-                            int i = i_y + i_x;
-                            int find = 0;
+                            int find = i_y + i_x;
                             float v = 0;
 
                             int ix = x * strideX - padX;
@@ -163,8 +165,8 @@ namespace DumbML {
                                 int iy = y * strideY - padY;
                                 for (int fy = 0; fy < fHeight; fy++) {
 
-                                    if (ix >= 0 && ix < iWidth && iy >= 0 && iy < iHeight) {
-                                        v += input.value[i + find] * filter.value[fi];
+                                    if (!(ix < 0 || ix >= iWidth || iy < 0 || iy >= iHeight)) {
+                                        v += iVal[find] * fVal[fi];
                                     }
 
 
@@ -172,7 +174,7 @@ namespace DumbML {
                                     find += channels;
                                     iy++;
                                 }
-                                dest.value[index] = v;
+                                dVal[index] = v;
                                 find += findInt;
                                 ix++;
                             }
@@ -223,26 +225,32 @@ namespace DumbML {
                     int i_xInterval = strideX * channels * iHeight;
                     int i_yStart = channels * -padY;
                     int i_yInterval = channels * strideY;
+                    int find_interval = channels * (iHeight - fHeight);
 
                     int i_x = i_xStart;
+                    float[] iVal = input._value;
+                    float[] fVal = filter._value;
+                    float[] eVal = error._value;
+                    float[] diVal = dest.ie._value;
+                    float[] dwVal = dest.we._value;
+
                     for (int x = 0; x < width; x++) {
                         int i_y = i_yStart;
                         for (int y = 0; y < height; y++) {
                             int fi = c;
-                            int i = i_y + i_x;
-                            int find = 0;
-                            float e = error.value[index];
+                            int find = i_y + i_x;
+                            float e = eVal[index];
                             int ix = x * strideX - padX;
 
                             for (int fx = 0; fx < fWidth; fx++) {
                                 int iy = y * strideY - padY;
                                 for (int fy = 0; fy < fHeight; fy++) {
 
-                                    if (ix >= 0 && ix < iWidth && iy >= 0 && iy < iHeight) {
-                                        dest.ie.value[i + find] += e * filter.value[fi];
+                                    if (!(ix < 0 || ix >= iWidth || iy < 0 || iy >= iHeight)) {
+                                        diVal[find] += e * fVal[fi];
                                         //dest.we._value[fi] += e * input._value[i + find];
                                         //Interlocked.Exchange(ref dest.ie._value[i + find], dest.ie._value[i + find] + e * filter._value[fi]);
-                                        Interlocked.Exchange(ref dest.we.value[fi], dest.we.value[fi] + e * input.value[i + find]);
+                                        Interlocked.Exchange(ref dwVal[fi], dwVal[fi] + e * iVal[find]);
                                     }
 
 
@@ -251,7 +259,7 @@ namespace DumbML {
                                     iy++;
                                 }
                                 ix++;
-                                find += channels * (iHeight - fHeight);
+                                find += find_interval;
                             }
                             index += channels;
                             i_y += i_yInterval;
@@ -262,9 +270,6 @@ namespace DumbML {
 
                 return dest;
             }
-
-
         }
-
     }
 }
