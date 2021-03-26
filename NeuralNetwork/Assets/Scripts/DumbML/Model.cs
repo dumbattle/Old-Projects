@@ -150,6 +150,9 @@ namespace DumbML {
             }
 
             TrainAll();
+            ClearTrajectory();
+        }
+        public void ClearTrajectory() {
             trajectory.Clear();
         }
 

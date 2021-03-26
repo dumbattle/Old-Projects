@@ -397,7 +397,7 @@ MonoBehaviour:
   value: 
   advantage: 
   score: 0
-  gameSpeed: 5000
+  gameSpeed: 100
 --- !u!4 &1169792543
 Transform:
   m_ObjectHideFlags: 0

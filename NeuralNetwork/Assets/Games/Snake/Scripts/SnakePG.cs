@@ -185,7 +185,7 @@ public class SnakeAC : ActorCritic {
     }
 
     protected override Operation Critic(Operation input) {
-        Operation x = new FullyConnected(1, bias: false).Build(input);
+        Operation x = new FullyConnected(1, bias: true).Build(input);
         return x;
     }
 

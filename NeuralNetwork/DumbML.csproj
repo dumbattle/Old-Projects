@@ -67,6 +67,7 @@
     <Compile Include="Assets\Scripts\DumbML\Blas\MatMultP.cs" />
     <Compile Include="Assets\Scripts\DumbML\Extensions.cs" />
     <Compile Include="Assets\Scripts\DumbML\Model.cs" />
+    <Compile Include="Assets\Scripts\DumbML\ModelWeightsAsset.cs" />
     <Compile Include="Assets\Scripts\DumbML\Neural\Layers\ActivationFunction.cs" />
     <Compile Include="Assets\Scripts\DumbML\Neural\Layers\Convolution2D.cs" />
     <Compile Include="Assets\Scripts\DumbML\Neural\Layers\Flatten.cs" />

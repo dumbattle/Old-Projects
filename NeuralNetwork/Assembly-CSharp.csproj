@@ -74,6 +74,7 @@
     <Compile Include="Assets\Games\_FB\FlappyPG.cs" />
     <Compile Include="Assets\Games\_FB\Game.cs" />
     <Compile Include="Assets\Games\Astroids\Astroids.cs" />
+    <Compile Include="Assets\Games\BoardShooter\ShooterMain.cs" />
     <Compile Include="Assets\Games\Chess\Board.cs" />
     <Compile Include="Assets\Games\Chess\Chess.cs" />
     <Compile Include="Assets\Games\Chess\ChessModel.cs" />
@@ -87,7 +88,6 @@
     <Compile Include="Assets\Games\Snake\Scripts\SnakePG.cs" />
     <Compile Include="Assets\Main.cs" />
     <Compile Include="Assets\MLModelAsset.cs" />
-    <Compile Include="Assets\ModelWeightsAsset.cs" />
     <Compile Include="Assets\SerializationTester.cs" />
     <Compile Include="Assets\UnsafeTester.cs" />
     <Compile Include="Assets\WeightTester.cs" />
