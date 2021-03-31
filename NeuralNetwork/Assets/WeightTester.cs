@@ -105,7 +105,7 @@ public class WeightTester : MonoBehaviour {
 
         op = op.Softmax();
 
-        actionMask = new Placeholder(op.shape);
+        actionMask = new Placeholder("t",   op.shape);
         logProb = new Log(op) * actionMask;
 
         var g = new Gradients(op.GetOperations<Variable>());

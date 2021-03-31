@@ -1,9 +1,9 @@
 {
     "name": "DumbML",
+    "rootNamespace": "",
     "references": [
         "GUID:c5b60c70d50cae64caa4e49f1bc13afa"
     ],
-    "optionalUnityReferences": [],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": true,
@@ -11,5 +11,6 @@
     "precompiledReferences": [],
     "autoReferenced": true,
     "defineConstraints": [],
-    "versionDefines": []
+    "versionDefines": [],
+    "noEngineReferences": false
 }

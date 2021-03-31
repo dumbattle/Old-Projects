@@ -22,9 +22,9 @@ namespace DumbML {
                 int outputChannels = weights.Shape[1];
                 int inputChannels = input.Shape[2];
 
-                float[] wVal = weights._value;
-                float[] dVal = dest._value;
-                float[] iVal = input._value;
+                float[] wVal = weights.value;
+                float[] dVal = dest.value;
+                float[] iVal = input.value;
 
                 System.Threading.Tasks.Parallel.For(0, outputChannels, (c) => {
                     int weightIndex = c;
@@ -68,11 +68,11 @@ namespace DumbML {
                 int outputChannels = weights.Shape[1];
                 int inputChannels = input.Shape[2];
 
-                float[] wVal = weights._value;
-                float[] diVal = dest.ie._value;
-                float[] dwVal = dest.we._value;
-                float[] iVal = input._value;
-                float[] eVal = error._value;
+                float[] wVal = weights.value;
+                float[] diVal = dest.ie.value;
+                float[] dwVal = dest.we.value;
+                float[] iVal = input.value;
+                float[] eVal = error.value;
 
                 dest.ie.PointWise((a) => 0, true);
 
@@ -147,9 +147,9 @@ namespace DumbML {
                     int i_yStart = channels * -padY;
                     int i_yInterval = channels * strideY;
 
-                    float[] iVal = input._value;
-                    float[] fVal = filter._value;
-                    float[] dVal = dest._value;
+                    float[] iVal = input.value;
+                    float[] fVal = filter.value;
+                    float[] dVal = dest.value;
                     int i_x = i_xStart;
 
                     for (int x = 0; x < rWidth; x++) {
@@ -228,11 +228,11 @@ namespace DumbML {
                     int find_interval = channels * (iHeight - fHeight);
 
                     int i_x = i_xStart;
-                    float[] iVal = input._value;
-                    float[] fVal = filter._value;
-                    float[] eVal = error._value;
-                    float[] diVal = dest.ie._value;
-                    float[] dwVal = dest.we._value;
+                    float[] iVal = input.value;
+                    float[] fVal = filter.value;
+                    float[] eVal = error.value;
+                    float[] diVal = dest.ie.value;
+                    float[] dwVal = dest.we.value;
 
                     for (int x = 0; x < width; x++) {
                         int i_y = i_yStart;

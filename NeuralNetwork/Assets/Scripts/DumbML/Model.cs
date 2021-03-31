@@ -109,10 +109,10 @@ namespace DumbML {
             criticModel = new Model(c);
 
 
-            rewardPH = new Placeholder(1);
+            rewardPH = new Placeholder("t",1);
 
             var adv = rewardPH - c;
-            actionMask = new Placeholder(a.shape);
+            actionMask = new Placeholder("tB",a.shape);
 
 
             var aloss = new Log(a * actionMask) * new BroadcastScalar(-1 * adv.Detach(), a.shape);
@@ -202,6 +202,10 @@ namespace DumbML {
             o.ZeroGrad();
         }
 
+        public Variable[] GetVariables()
+        {
+            return combinedAC.GetVariables();
+        }
         public Tensor[] GetWeights() {
             return combinedAC.GetWeights();
         }

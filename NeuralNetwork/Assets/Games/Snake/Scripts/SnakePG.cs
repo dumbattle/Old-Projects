@@ -112,7 +112,7 @@ public class SnakePG : MonoBehaviour {
             food = RandomPos(pos);
             scoreChannel.Feed(totalReward);
             totalReward = 0;
-            SnakePG.main.modelWeights.Save(agent.GetWeights());
+            SnakePG.main.modelWeights.Save(agent.GetVariables());
             noFoodCount = 0;
         }
 
@@ -160,15 +160,15 @@ public class SnakeAC : ActorCritic {
     protected override Operation Input() {
         Operation inp = new InputLayer(_mapShape.x, _mapShape.y, 2).Build();
         Operation x = new Convolution2D(5, af: ActivationFunction.Tanh, pad: false).Build(inp);
-        x = new Convolution2D(5, af: ActivationFunction.Tanh, pad: false).Build(x);
-        x = new Convolution2D(5, af: ActivationFunction.Tanh, pad: false).Build(x);
-        x = new Convolution2D(1, af: ActivationFunction.Tanh, pad: false).Build(x);
+        x = new Convolution2DDepSep(5, af: ActivationFunction.Tanh, pad: false).Build(x);
+        x = new Convolution2DDepSep(5, af: ActivationFunction.Tanh, pad: false).Build(x);
+        x = new Convolution2DDepSep(1, af: ActivationFunction.Tanh, pad: false).Build(x);
         x = new FlattenOp(x);
 
-        Operation y = new Convolution2D(5, af: ActivationFunction.Tanh, pad: true).Build(inp);
-        y = new Convolution2D(5, af: ActivationFunction.Tanh, pad: true).Build(y);
-        y = new Convolution2D(5, af: ActivationFunction.Tanh, pad: true).Build(y);
-        y = new Convolution2D(1, af: ActivationFunction.Tanh, pad: true).Build(y);
+        Operation y = new Convolution2DDepSep(5, af: ActivationFunction.Tanh, pad: true).Build(inp);
+        y = new Convolution2DDepSep(5, af: ActivationFunction.Tanh, pad: true).Build(y);
+        y = new Convolution2DDepSep(5, af: ActivationFunction.Tanh, pad: true).Build(y);
+        y = new Convolution2DDepSep(1, af: ActivationFunction.Tanh, pad: true).Build(y);
         y = new FlattenOp(y);
 
         Operation o = new Append(x, y);
