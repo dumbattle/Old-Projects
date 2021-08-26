@@ -65,6 +65,19 @@ namespace DumbML {
 
             value = new float[size];
         }
+        public Tensor(List<int> shape) {
+            Shape = new int[shape.Count];
+            for (int i = 0; i < shape.Count; i++) {
+                Shape[i] = shape[i];
+            }
+            int size = 1;
+
+            foreach (var i in shape) {
+                size *= i;
+            }
+
+            value = new float[size];
+        }
         public Tensor(Func<float> initializer, params int[] shape) : this(shape) {
             for (int i = 0; i < value.Length; i++) {
                 value[i] = initializer();
@@ -312,7 +325,7 @@ namespace DumbML {
 
             for (int i = 0; i < indexes.Length; i++) {
                 if (indexes[i] < 0 || indexes[i] >= Shape[i]) {
-                    throw new ArgumentOutOfRangeException("indexes", $"Shape: {Shape.TOSTRING()}  Index:{indexes.TOSTRING()}");
+                    throw new ArgumentOutOfRangeException("indexes", $"Shape: {Shape.ContentString()}  Index:{indexes.ContentString()}");
                 }
             }
         }
@@ -418,7 +431,7 @@ namespace DumbML {
         public static Tensor PointWise(Tensor left, Tensor right, Func<float, float, float> operation, bool self = false) {
             if (!left.CheckShape(right)) {
                 throw new ArgumentException($"Tensors need to be the same size to perform point-wise operation." +
-                    $"  Left: {left.Shape.TOSTRING()}  Right: {right.Shape.TOSTRING()}");
+                    $"  Left: {left.Shape.ContentString()}  Right: {right.Shape.ContentString()}");
             }
 
             if (self) {
@@ -541,7 +554,7 @@ namespace DumbML {
         public Tensor Add(Tensor t, bool self = false) {
             if (!CheckShape(t)) {
                 throw new ArgumentException($"Tensors need to be the same size to perform point-wise operation." +
-                    $"  Left: {Shape.TOSTRING()}  Right: {t.Shape.TOSTRING()}");
+                    $"  Left: {Shape.ContentString()}  Right: {t.Shape.ContentString()}");
             }
             int length = value.Length;
 
@@ -578,7 +591,7 @@ namespace DumbML {
         public Tensor Subtract(Tensor t, bool self = false) {
             if (!CheckShape(t)) {
                 throw new ArgumentException($"Tensors need to be the same size to perform point-wise operation." +
-                    $"  Left: {Shape.TOSTRING()}  Right: {t.Shape.TOSTRING()}");
+                    $"  Left: {Shape.ContentString()}  Right: {t.Shape.ContentString()}");
             }
             int length = value.Length;
             if (self) {
@@ -607,7 +620,7 @@ namespace DumbML {
         public Tensor Multiply(Tensor t, bool self = false) {
             if (!CheckShape(t)) {
                 throw new ArgumentException($"Tensors need to be the same size to perform point-wise operation." +
-                    $"  Left: {Shape.TOSTRING()}  Right: {t.Shape.TOSTRING()}");
+                    $"  Left: {Shape.ContentString()}  Right: {t.Shape.ContentString()}");
             }
 
             int length = value.Length;
@@ -637,7 +650,7 @@ namespace DumbML {
         public Tensor Divide(Tensor t, bool self = false) {
             if (!CheckShape(t)) {
                 throw new ArgumentException($"Tensors need to be the same size to perform point-wise operation." +
-                    $"  Left: {Shape.TOSTRING()}  Right: {t.Shape.TOSTRING()}");
+                    $"  Left: {Shape.ContentString()}  Right: {t.Shape.ContentString()}");
             }
 
              if (self) {

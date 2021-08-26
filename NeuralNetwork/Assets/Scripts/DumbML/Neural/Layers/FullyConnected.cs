@@ -33,10 +33,10 @@ namespace DumbML {
             //weights = Tensor.Random(input.shape[0], outputSize);
 
             weights = new Tensor(() => LPE.RNG.Normal(),input.shape[0], outputSize);
-            weights.SetName($"{weights.shape.TOSTRING()} FullyConnected weight");
+            weights.SetName($"{weights.shape.ContentString()} FullyConnected weight");
             if (useBias) {
                 bias = new Tensor(outputSize);
-                bias.SetName($"{bias.shape.TOSTRING()} FullyConnected bias");
+                bias.SetName($"{bias.shape.ContentString()} FullyConnected bias");
                 return forward = af.Activate(new MatrixMult(input, weights) + bias);
             }
             else {

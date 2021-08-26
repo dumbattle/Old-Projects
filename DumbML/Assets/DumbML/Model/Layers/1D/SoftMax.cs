@@ -31,7 +31,7 @@ namespace DumbML {
                 float e = error[j];
 
                 for (int k = 0; k < inputShape[0]; k++) {
-                    float derivative = j != k ? -output[j] * output[k] : output[k] * (1 - output[j]);
+                    float derivative = j == k ? -output[j] * output[k] : output[k] * (1 - output[j]);
 
                     inputError[k] += e * derivative;
                 }

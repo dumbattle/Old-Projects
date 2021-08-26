@@ -20,8 +20,8 @@ namespace DumbML {
             weightDepth = new Tensor(() => LPE.RNG.Normal(), filterSize.x, filterSize.y, input.shape[2]);
             weightPoint = new Tensor(() => LPE.RNG.Normal(), input.shape[2], outputChannels);
 
-            weightDepth.SetName($"{weightDepth.shape.TOSTRING()} Depthwise filter");
-            weightPoint.SetName($"{weightPoint.shape.TOSTRING()} Pointwise filter");
+            weightDepth.SetName($"{weightDepth.shape.ContentString()} Depthwise filter");
+            weightPoint.SetName($"{weightPoint.shape.ContentString()} Pointwise filter");
 
             Operation op = new Conv2DDepth(input, weightDepth, stride, pad);
             op = new Conv2DPoint(op, weightPoint);

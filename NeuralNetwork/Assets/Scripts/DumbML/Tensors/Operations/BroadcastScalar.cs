@@ -7,7 +7,7 @@ namespace DumbML {
         Tensor t;
         public BroadcastScalar(Operation scalar, params int[] shape) : base(shape, scalar) {
             if (scalar.shape.Length != 1 || scalar.shape[0] != 1) {
-                throw new System.ArgumentException($"Input operation needs to have a shape of [1]. Got: {scalar.shape.TOSTRING()}");
+                throw new System.ArgumentException($"Input operation needs to have a shape of [1]. Got: {scalar.shape.ContentString()}");
             }
 
             error = new Tensor[] { t = new Tensor(1) };

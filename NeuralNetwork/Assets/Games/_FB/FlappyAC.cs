@@ -37,7 +37,7 @@ namespace Flappy {
 
         public override void EndTrajectory() {
             base.EndTrajectory();
-            FlappyBird.AiAsset.Save(combinedAC.GetVariables());
+            FlappyBird.AiAsset?.Save(combinedAC.GetVariables());
 
         }
 

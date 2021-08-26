@@ -22,23 +22,7 @@ namespace DumbML {
             this.inner = (Operation[])inner.Clone();
             operands = new Tensor[inner.Length];
 
-            for (int i = 0; i < inner.Length; i++) {
-
-                //if (this as DuplicateOperation == null) {
-                //    var ops = inner[i].GetOperations();
-
-                //    for (int j = 0; j < i; j++) {
-                //        if (i == j) continue;
-                //        if (ops.Contains(inner[j])) {
-                //            inner[j] = new DuplicateOperation(inner[j]);
-                //        }
-                //    }
-                //}
-
-
-
-                operands[i] = new Tensor(inner[i].shape);
-            }
+            
             Name = GetType().ToString();
         }
 
@@ -71,9 +55,9 @@ namespace DumbML {
 
             return value = _Compute(operands);
         }
-        public Tensor Compute(Tensor[] operands) {
-            return _Compute(operands);
-        }
+        //public Tensor Compute(Tensor[] operands) {
+        //    return _Compute(operands);
+        //}
 
         protected abstract Tensor _Compute(Tensor[] operands);
 
@@ -158,6 +142,9 @@ namespace DumbML {
         }
 
         public Operation _Copy(Dictionary<Operation, Operation> track) {
+            if(track.ContainsKey(this)) {
+                return track[this];
+            }
             var c= Copy(track);
             track.Add(this, c);
             return c;

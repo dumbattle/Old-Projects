@@ -1,4 +1,5 @@
 ﻿namespace DumbML {
+
     public static class OperationExtensions {
         static System.Random rng = new System.Random();
         public static Operation Softmax(this Operation op) {
@@ -17,7 +18,6 @@
             Operation result = null;
 
             foreach (var o in op.GetVariables()) {
-                UnityEngine.Debug.Log(o.Name);
                 result = result == null ? new Sum(new Square(o)) : result + new Sum(new Square(o));
             }
 

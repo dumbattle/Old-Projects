@@ -49,13 +49,13 @@ namespace DumbML {
             for (int i = 0; i < ops.Count; i++) {
                 if (ops[i] is Variable v) {
                     parameters[i] = new Parameters() {
-                        val = (float[])v.Value.value.Clone(),
+                        val = (float[])(v.Value.value.Clone()),
                         shape = v.Value.Shape,
                     };
                 }
                 else if (ops[i] is Constant c) {
                     parameters[i] = new Parameters() {
-                        val = (float[])c.Value.value.Clone(),
+                        val = (float[])(c.Value.value.Clone()),
                         shape = c.Value.Shape,
                     };
                 }

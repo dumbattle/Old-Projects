@@ -75,11 +75,13 @@
     <Compile Include="Assets\Scripts\DumbML\Tensors\Operations\DuplicateOperation.cs" />
     <Compile Include="Assets\Scripts\DumbML\Tensors\Operations\Detached.cs" />
     <Compile Include="Assets\Scripts\DumbML\Tensors\Operations\_OperationBase.cs" />
+    <Compile Include="Assets\Scripts\DumbML\Tensors\Operations\Transpose2D.cs" />
     <Compile Include="Assets\Scripts\DumbML\Neural\Layers\ActivationFunction.cs" />
     <Compile Include="Assets\Scripts\DumbML\Tensors\Operations\Exp.cs" />
     <Compile Include="Assets\Scripts\DumbML\Neural\Layers\Layer.cs" />
     <Compile Include="Assets\Scripts\DumbML\Neural\NeuralNetwork.cs" />
     <Compile Include="Assets\Scripts\DumbML\Neural\Layers\Convolution2D.cs" />
+    <Compile Include="Assets\Scripts\DumbML\Tensors\Operations\Stack1D.cs" />
     <Compile Include="Assets\Scripts\DumbML\Blas\FullConv2D.cs" />
     <Compile Include="Assets\Scripts\DumbML\Tensors\Operations\Abs.cs" />
     <Compile Include="Assets\Scripts\DumbML\Tensors\Operations\Sigmoid.cs" />
@@ -108,6 +110,8 @@
     <Compile Include="Assets\Scripts\DumbML\Tensors\Tensor.cs" />
     <Compile Include="Assets\Scripts\DumbML\Tensors\Operations\Subtract.cs" />
     <Compile Include="Assets\Scripts\DumbML\Tensors\Operations\Log.cs" />
+    <Compile Include="Assets\Scripts\DumbML\Tensors\Operations\Transpose.cs" />
+    <Compile Include="Assets\Scripts\DumbML\Tensors\Operations\ShapeComparer.cs" />
   </ItemGroup>
   <ItemGroup>
      <None Include="Assets\Scripts\DumbML\DumbML.asmdef" />
@@ -342,6 +346,9 @@
     <Reference Include="UnityEditor.WindowsStandalone.Extensions">
       <HintPath>C:\Program Files\Unity\Hub\Editor\2020.3.1f1\Editor\Data\PlaybackEngines\WindowsStandaloneSupport\UnityEditor.WindowsStandalone.Extensions.dll</HintPath>
     </Reference>
+    <Reference Include="SyntaxTree.VisualStudio.Unity.Bridge">
+      <HintPath>C:\Program Files (x86)\Microsoft Visual Studio Tools for Unity\16.0\Editor\SyntaxTree.VisualStudio.Unity.Bridge.dll</HintPath>
+    </Reference>
     <Reference Include="Unity.Analytics.StandardEvents">
       <HintPath>Library\PackageCache\com.unity.analytics@3.5.3\AnalyticsStandardEvents\Unity.Analytics.StandardEvents.dll</HintPath>
     </Reference>
@@ -350,9 +357,6 @@
     </Reference>
     <Reference Include="Unity.Analytics.Tracker">
       <HintPath>Library\PackageCache\com.unity.analytics@3.5.3\Unity.Analytics.Tracker.dll</HintPath>
-    </Reference>
-    <Reference Include="SyntaxTree.VisualStudio.Unity.Bridge">
-      <HintPath>C:\Program Files (x86)\Microsoft Visual Studio Tools for Unity\16.0\Editor\SyntaxTree.VisualStudio.Unity.Bridge.dll</HintPath>
     </Reference>
     <Reference Include="netstandard">
       <HintPath>C:\Program Files\Unity\Hub\Editor\2020.3.1f1\Editor\Data\NetStandard\ref\2.0.0\netstandard.dll</HintPath>

@@ -4,6 +4,38 @@ using System.Threading;
 namespace DumbML {
     public static partial class Blas {
         public static partial class Parallel {
+            public static Tensor MatrixMult2x2(Tensor l, Tensor r, Tensor dest) {
+                int lx = l.Shape[0];
+                int ly = l.Shape[1];
+                int rx = r.Shape[0];
+                int ry = r.Shape[1];
+
+
+                if (ly != rx) {
+                    throw new System.InvalidOperationException($"Tensors do not have compatible dimensions: {l.Shape.ContentString()}, {r.Shape.ContentString()}");
+                }
+                var lv = l.value;
+                var rv = r.value;
+                var dv = dest.value;
+
+                for (int x = 0; x < lx; x++) {
+                    for (int y = 0; y < ry; y++) {
+                        float sum = 0;
+                        for (int i = 0; i < ly; i++) {
+                            sum += l[x, i] * r[i, y];
+                        }
+                        dest[x, y] = sum;
+                    }
+                }
+
+                return dest;
+            }
+
+            public static (Tensor le, Tensor re) MatrixMult2x2Backwards(Tensor l, Tensor r, Tensor e, (Tensor le, Tensor re) dest) {
+                throw new System.NotImplementedException();
+            }
+
+
             public static Tensor MatrixMult1x2(Tensor l, Tensor r, Tensor dest) {
                 int lx = l.Shape[0];
                 int ry = r.Shape[1];
@@ -24,7 +56,8 @@ namespace DumbML {
 
                         dv[y] = v;
                     });
-                }else {
+                }
+                else {
                     for (int y = 0; y < ry; y++) {
                         int rind = y;
                         float v = 0;

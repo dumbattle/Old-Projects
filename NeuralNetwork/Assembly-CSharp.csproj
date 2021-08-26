@@ -60,6 +60,7 @@
     <Compile Include="Assets\Games\Chess\Move.cs" />
     <Compile Include="Assets\MLModelAsset.cs" />
     <Compile Include="Assets\Games\Astroids\Astroids.cs" />
+    <Compile Include="Assets\RandomTestStuffMain.cs" />
     <Compile Include="Assets\Games\MCTS\TTT.cs" />
     <Compile Include="Assets\Games\_FB\BirdRL.cs" />
     <Compile Include="Assets\Games\_FB\Block.cs" />

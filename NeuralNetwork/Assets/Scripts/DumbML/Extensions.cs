@@ -67,7 +67,7 @@ namespace DumbML {
         }
 
 
-        public static string TOSTRING(this int[] t) {
+        public static string ContentString(this int[] t) {
             StringBuilder sb = new StringBuilder();
 
             sb.Append("[");

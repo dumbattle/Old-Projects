@@ -68,7 +68,7 @@ namespace DumbML {
 
             for (int i = 0; i < v.Length; i++) {
                 if (!weights[i].CheckShape(v[i].shape)) {
-                    throw new ArgumentException($"Cannot set weight, wrong shape. Got: {weights[i].Shape.TOSTRING()} Expected: {v[i].shape} Index: {i}");
+                    throw new ArgumentException($"Cannot set weight, wrong shape. Got: {weights[i].Shape.ContentString()} Expected: {v[i].shape} Index: {i}");
                 }
             }
             for (int i = 0; i < v.Length; i++) {

@@ -23,10 +23,11 @@ namespace DumbML {
                     int ind = x_val + c;
                     for (int y = 0; y < height; y++) {
                         //sum += input[x, y, c];
+                        //sum += input[x * channels * height + y * channels + c];
                         sum += input.value[ind];
                         ind += channels;
                     }
-                    x += channels * height;
+                    x_val += channels * height;
                 }
 
                 value[c] = sum / (width * height);
@@ -46,7 +47,7 @@ namespace DumbML {
 
                 for (int x = 0; x < width; x++) {
                     for (int y = 0; y < height; y++) {
-                        error[0][x, y, c] = err;
+                        result[x, y, c] = err;
                     }
                 }
             }

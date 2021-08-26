@@ -8,7 +8,7 @@ public class SnakePG : MonoBehaviour {
     public ModelWeightsAsset modelWeights;
     public int mapSize = 10;
     public string output;
-
+    public int generation = 0;
     SnakeAC agent;
     bool isPlaying = false;
 
@@ -21,7 +21,7 @@ public class SnakePG : MonoBehaviour {
     void Start() {
         main = this;
         scoreChannel = Channel.New("Score");
-        if (modelWeights.HasData) {
+        if (modelWeights?.HasData ?? false) {
             agent = new SnakeAC(new Vector2Int(mapSize, mapSize), modelWeights.Load());
         }else {
             agent = new SnakeAC(new Vector2Int(mapSize, mapSize));
@@ -112,8 +112,9 @@ public class SnakePG : MonoBehaviour {
             food = RandomPos(pos);
             scoreChannel.Feed(totalReward);
             totalReward = 0;
-            SnakePG.main.modelWeights.Save(agent.GetVariables());
+            SnakePG.main.modelWeights?.Save(agent.GetVariables());
             noFoodCount = 0;
+            generation++;
         }
 
         return totalReward;
@@ -162,14 +163,14 @@ public class SnakeAC : ActorCritic {
         Operation x = new Convolution2D(5, af: ActivationFunction.Tanh, pad: false).Build(inp);
         x = new Convolution2DDepSep(5, af: ActivationFunction.Tanh, pad: false).Build(x);
         x = new Convolution2DDepSep(5, af: ActivationFunction.Tanh, pad: false).Build(x);
-        x = new Convolution2DDepSep(1, af: ActivationFunction.Tanh, pad: false).Build(x);
-        x = new FlattenOp(x);
+        //x = new Convolution2DDepSep(1, af: ActivationFunction.Tanh, pad: false).Build(x);
+        x = new GlobalAveragePooling(x);
 
         Operation y = new Convolution2DDepSep(5, af: ActivationFunction.Tanh, pad: true).Build(inp);
         y = new Convolution2DDepSep(5, af: ActivationFunction.Tanh, pad: true).Build(y);
         y = new Convolution2DDepSep(5, af: ActivationFunction.Tanh, pad: true).Build(y);
-        y = new Convolution2DDepSep(1, af: ActivationFunction.Tanh, pad: true).Build(y);
-        y = new FlattenOp(y);
+        //y = new Convolution2DDepSep(1, af: ActivationFunction.Tanh, pad: true).Build(y);
+        y = new GlobalAveragePooling(y);
 
         Operation o = new Append(x, y);
         o = new FullyConnected(50, ActivationFunction.Sigmoid, false).Build(o);
@@ -190,6 +191,6 @@ public class SnakeAC : ActorCritic {
     }
 
     protected override Optimizer Optimizer() {
-        return new RMSProp();
+        return new SGD(lr: .0001f);
     }
 }

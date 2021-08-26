@@ -14,11 +14,11 @@ namespace DumbML {
                 errors[i] = new Tensor(ops[i].shape);
 
                 if (o.shape.Length != dim) {
-                    throw new System.InvalidOperationException("Cant append tensors");
+                    throw new System.InvalidOperationException("Cant append Operations");
                 }
                 for (int j = 1; j < dim; j++) {
                     if (o.shape[j] != ops[0].shape[j]) {
-                        throw new System.InvalidOperationException("Cant append tensors");
+                        throw new System.InvalidOperationException("Cant append Operations");
                     }
                     shape[j] = o.shape[j];
                 }
