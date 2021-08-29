@@ -3,8 +3,6 @@ using System.Collections.Generic;
 
 namespace DumbML {
     public class Subtract : Operation {
-        static ProfilerMarker profile = new ProfilerMarker("Subtract.Eval");
-        static ProfilerMarker profileBackwards = new ProfilerMarker("Subtract.Backwards");
         Tensor rError;
         Tensor[] backwardsArray = new Tensor[2];
 
@@ -12,18 +10,14 @@ namespace DumbML {
             rError = new Tensor(right.shape);
         }
         protected override Tensor _Compute(Tensor[] operands) {
-            profile.Begin();
             for (int i = 0; i < value.Size; i++) {
                 value.value[i] = operands[0].value[i] - operands[1].value[i];
             }
 
-            profile.End();
             return value;
         }
         protected override Tensor[] _BackwardsPass( Tensor e) {
-            profileBackwards.Begin();
             rError.PointWise(e, (_, b) => -b, true);
-            profileBackwards.End();
 
             backwardsArray[0] = e;
             backwardsArray[1] = rError;

@@ -10,7 +10,7 @@ namespace DumbML {
         }
 
         protected override Tensor _Compute(Tensor[] operands) {
-            return value.Copy(operands[0]);
+            return value.CopyFrom(operands[0]);
         }
 
         protected override Tensor[] _BackwardsPass(Tensor e) {

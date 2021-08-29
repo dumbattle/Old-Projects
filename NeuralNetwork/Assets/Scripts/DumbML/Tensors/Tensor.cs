@@ -50,6 +50,58 @@ namespace DumbML {
                 this.value[i] = value;
             }
         }
+        public float this[int a] {
+            get {
+                CheckIndex(a);
+                int i = GetIndex(a);
+
+                return value[i];
+            }
+            set {
+                CheckIndex(a);
+                int i = GetIndex(a);
+                this.value[i] = value;
+            }
+        }
+        public float this[int a, int b] {
+            get {
+                CheckIndex(a, b);
+                int i = GetIndex(a, b);
+
+                return value[i];
+            }
+            set {
+                CheckIndex(a, b);
+                int i = GetIndex(a, b);
+                this.value[i] = value;
+            }
+        }
+        public float this[int a, int b, int c] {
+            get {
+                CheckIndex(a, b, c);
+                int i = GetIndex(a, b, c);
+
+                return value[i];
+            }
+            set {
+                CheckIndex(a, b, c);
+                int i = GetIndex(a, b, c);
+                this.value[i] = value;
+            }
+        }
+        public float this[int a, int b, int c, int d] {
+            get {
+                CheckIndex(a, b, c, d);
+                int i = GetIndex(a, b, c, d);
+
+                return value[i];
+            }
+            set {
+                CheckIndex(a, b, c, d);
+                int i = GetIndex(a, b, c, d);
+                this.value[i] = value;
+            }
+        }
 
         public int[] Shape { get; private set; }
         public int Size { get => value.Length; }
@@ -98,7 +150,7 @@ namespace DumbML {
             return new Tensor(() => { ie.MoveNext(); return ie.Current; }, this.Shape);
         }
 
-        public Tensor Copy(Tensor other) {
+        public Tensor CopyFrom(Tensor other) {
             return PointWise(other, (a, b) => b,true);
         }
 
@@ -330,6 +382,59 @@ namespace DumbML {
             }
         }
 
+        public void CheckIndex(int a) {
+            if (1 != Shape.Length) {
+                throw new ArgumentException($"Index has invalid number of parameters. Got {1} Expected {Shape.Length}");
+            }
+
+            if (a < 0 || a >= Shape[0]) {
+                throw new ArgumentOutOfRangeException("indexes", $"Shape: {Shape.ContentString()}  Index:[{a}]");
+            }
+        }
+        public void CheckIndex(int a, int b) {
+            if (2 != Shape.Length) {
+                throw new ArgumentException($"Index has invalid number of parameters. Got {2} Expected {Shape.Length}");
+            }
+
+            bool invalid =
+                a < 0 || a >= Shape[0] ||
+                b < 0 || b >= Shape[1]
+            ;
+            if (invalid) {
+                throw new ArgumentOutOfRangeException("indexes", $"Shape: {Shape.ContentString()}  Index:[{a}, {b}]");
+            }
+        }
+        public void CheckIndex(int a, int b, int c) {
+            if (3 != Shape.Length) {
+                throw new ArgumentException($"Index has invalid number of parameters. Got {3} Expected {Shape.Length}");
+            }
+
+            bool invalid =
+                a < 0 || a >= Shape[0] ||
+                b < 0 || b >= Shape[1] ||
+                c < 0 || c >= Shape[2]
+            ;
+            if (invalid) {
+                throw new ArgumentOutOfRangeException("indexes", $"Shape: {Shape.ContentString()}  Index:[{a}, {b}, {c}]");
+            }
+        }
+
+        public void CheckIndex(int a, int b, int c, int d) {
+            if (4 != Shape.Length) {
+                throw new ArgumentException($"Index has invalid number of parameters. Got {3} Expected {Shape.Length}");
+            }
+
+            bool invalid =
+                a < 0 || a >= Shape[0] ||
+                b < 0 || b >= Shape[1] ||
+                c < 0 || c >= Shape[2] ||
+                d < 0 || d >= Shape[3]
+            ;
+            if (invalid) {
+                throw new ArgumentOutOfRangeException("indexes", $"Shape: {Shape.ContentString()}  Index:[{a}, {b}, {c}, {d}]");
+            }
+        }
+
 
 
         public IEnumerator<float> GetEnumerator() {
@@ -348,6 +453,18 @@ namespace DumbML {
             }
 
             return result;
+        }
+        int GetIndex(int a) {
+            return a;
+        }
+        int GetIndex(int a, int b) {
+            return a * Shape[1] + b;
+        }
+        int GetIndex(int a, int b, int c) {
+            return (a * Shape[1] + b) * Shape[2] + c;
+        }
+        int GetIndex(int a, int b, int c, int d) {
+            return ((a * Shape[1] + b) * Shape[2] + c) * Shape[3] + d;
         }
         protected float GetVal(int index, float defaultVal = 0) {
             if (index < 0 || index >= Size) {

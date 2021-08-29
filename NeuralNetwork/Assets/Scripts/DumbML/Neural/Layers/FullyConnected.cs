@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace DumbML {
+﻿namespace DumbML {
     public class InputLayer : Layer {
         public Placeholder ph;
 
@@ -30,36 +28,29 @@ namespace DumbML {
         }
 
         public override Operation Build(Operation input) {
-            //weights = Tensor.Random(input.shape[0], outputSize);
+            int x = 0;
+            if (input.shape.Length == 1) {
+                x = input.shape[0];
+            }
+            else {
+                x = input.shape[1];
+            }
 
-            weights = new Tensor(() => LPE.RNG.Normal(),input.shape[0], outputSize);
+
+            weights = new Tensor(() => RNG.Normal(), x, outputSize);
             weights.SetName($"{weights.shape.ContentString()} FullyConnected weight");
+
+
             if (useBias) {
-                bias = new Tensor(outputSize);
+
+                var mm = new MatrixMult(input, weights);
+                bias = new Tensor(mm.shape);
                 bias.SetName($"{bias.shape.ContentString()} FullyConnected bias");
-                return forward = af.Activate(new MatrixMult(input, weights) + bias);
+                return forward = af.Activate(mm + bias);
             }
             else {
                 return forward = af.Activate(new MatrixMult(input, weights));
             }
-        }
-    }
-}
-
-namespace LPE {    
-    public static class RNG {
-        static Random rng = new Random();
-
-        public static float Normal() { return Normal(0, 1); }
-        public static float Normal(float mean, float stdDev) {
-            double u1 = 1.0 - rng.NextDouble(); // uniform(0,1] random doubles
-            double u2 = 1.0 - rng.NextDouble();
-            double randStdNormal =
-                Math.Sqrt(-2.0 * Math.Log(u1)) *
-                Math.Sin(2.0 * Math.PI * u2); // random normal(0,1)
-
-            double result = mean + stdDev * randStdNormal; // random normal(mean,stdDev^2)
-            return (float)result;
         }
     }
 }

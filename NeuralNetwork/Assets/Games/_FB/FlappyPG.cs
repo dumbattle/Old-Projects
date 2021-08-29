@@ -55,10 +55,12 @@ namespace Flappy {
 
             avg /= trajectory.Count;
 
-            foreach (var exp in trajectory) {
+            for (int i = 0; i < trajectory.Count; i++) {
+                var exp = trajectory[i];
                 exp.reward -= avg;
+                trajectory[i] = exp;
             }
-
+        
             trajectory.Clear();
         }
 

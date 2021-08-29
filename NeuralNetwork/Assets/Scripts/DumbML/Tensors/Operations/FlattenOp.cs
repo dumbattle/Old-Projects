@@ -2,8 +2,13 @@
 namespace DumbML {
     public class FlattenOp : Operation {
         Tensor error;
+        Tensor[] err = new Tensor[1];
         public FlattenOp(Operation op): base(null, op) {
-            shape = new int[] { op.value.Size };
+            int s = 1;
+            foreach (var i in op.shape) {
+                s *= i;
+            }
+            shape = new int[] { s };
             value = new Tensor(shape);
             error = new Tensor(op.shape);
         }
@@ -19,11 +24,12 @@ namespace DumbML {
             var v = e.value;
             var r = error.value;
 
-            for (int i = 0; i < value.Size; i++) {
+            for (int i = 0; i < value.value.Length; i++) {
                 r[i] = v[i];
             }
 
-            return new[] { error };
+            err[0] = error;
+            return err;
         }
         public override Operation Copy(Dictionary<Operation, Operation> track) {
             return new FlattenOp(inner[0]._Copy(track));

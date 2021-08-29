@@ -100,7 +100,7 @@ namespace DumbML {
 
                 for (int j = 0; j < batchSize; j++) {
                     var e = batch[j];
-                    if(e == null) {
+                    if(e.state == null) {
                         continue;
                     }
                     Tensor target = new Tensor(e.output.Shape);
@@ -131,33 +131,6 @@ namespace DumbML {
             }
 
             return loss / numBatches;
-        }
-    }
-
-    public class RLExperience {
-        public Tensor[] state;
-        public int action;
-        public float reward;
-        public Tensor nextState;
-
-        public Tensor output;
-        public float weight;
-
-        public RLExperience(Tensor[] state, Tensor output, int action) {
-            this.state = state;
-            this.output = output;
-            this.action = action;
-            weight = 1;
-            reward = 0;
-            nextState = null;
-        }
-        public RLExperience(Tensor state, Tensor output, int action) {
-            this.state = new[] { state };
-            this.output = output;
-            this.action = action;
-            weight = 1;
-            reward = 0;
-            nextState = null;
         }
     }
 

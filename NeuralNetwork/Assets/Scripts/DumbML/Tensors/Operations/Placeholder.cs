@@ -1,12 +1,28 @@
 ﻿using System.Collections.Generic;
 namespace DumbML {
     public class Placeholder : Operation {
+        Dictionary<List<int>, Tensor> dict = new Dictionary<List<int>, Tensor>(new ShapeComparer());
+        List<int> shapeCache = new List<int>();
+
+
         public Placeholder(string name, params int[] shape) : base(shape) {
             SetName(name);
         }
 
         public void SetVal(Tensor t) {
-            value.Copy(t);
+            var s = t.Shape;
+
+            shapeCache.Clear();
+            shapeCache.AddRange(s);
+
+            if (dict.ContainsKey(shapeCache)) {
+                value = dict[shapeCache];
+            }
+            else {
+                value = new Tensor(shapeCache);
+                dict.Add(shapeCache, value);
+            }
+            value.CopyFrom(t);
         }
         protected override Tensor _Compute(Tensor[] operands) {
             return value;

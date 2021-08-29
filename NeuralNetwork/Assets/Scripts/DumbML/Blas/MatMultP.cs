@@ -22,17 +22,39 @@ namespace DumbML {
                     for (int y = 0; y < ry; y++) {
                         float sum = 0;
                         for (int i = 0; i < ly; i++) {
-                            sum += l[x, i] * r[i, y];
+                            //sum += l[x, i] * r[i, y];
+                            sum += lv[x * ly + i] * rv[i * ry + y];
                         }
-                        dest[x, y] = sum;
+                        //dest[x, y] = sum;
+                        dv[x * ry + y] = sum;
                     }
                 }
-
                 return dest;
             }
 
             public static (Tensor le, Tensor re) MatrixMult2x2Backwards(Tensor l, Tensor r, Tensor e, (Tensor le, Tensor re) dest) {
-                throw new System.NotImplementedException();
+                int lx = l.Shape[0];
+                int ly = l.Shape[1];
+                int rx = r.Shape[0];
+                int ry = r.Shape[1];
+                if(e.value.Length == 0) {
+                    return dest;
+                }
+
+                dest.le.SetValuesToZero();
+                dest.re.SetValuesToZero();
+
+            
+
+                for (int x = 0; x < lx; x++) {
+                    for (int y = 0; y < ry; y++) {
+                        for (int i = 0; i < ly; i++) {
+                            dest.le[x, i] += r[i, y] * e[x,y];
+                            dest.re[i, y] += l[x, i] * e[x,y];
+                        }
+                    }
+                }
+                return dest;
             }
 
 
@@ -44,20 +66,20 @@ namespace DumbML {
                 var rv = r.value;
                 var dv = dest.value;
 
-                if (lx > 50) {
-                    System.Threading.Tasks.Parallel.For(0, ry, (y) => {
-                        int rind = y;
-                        float v = 0;
+                //if (l.value.Length > 10000) {
+                //    System.Threading.Tasks.Parallel.For(0, ry, (y) => {
+                //        int rind = y;
+                //        float v = 0;
 
-                        for (int i = 0; i < lx; i++) {
-                            v += lv[i] * rv[rind];
-                            rind += ry;
-                        }
+                //        for (int i = 0; i < lx; i++) {
+                //            v += lv[i] * rv[rind];
+                //            rind += ry;
+                //        }
 
-                        dv[y] = v;
-                    });
-                }
-                else {
+                //        dv[y] = v;
+                //    });
+                //}
+                //else {
                     for (int y = 0; y < ry; y++) {
                         int rind = y;
                         float v = 0;
@@ -69,13 +91,14 @@ namespace DumbML {
 
                         dv[y] = v;
                     }
-                }
+                //}
 
                 return dest;
             }
 
 
             public static (Tensor le, Tensor re) MatrixMult1x2Backwards(Tensor l, Tensor r, Tensor e, (Tensor le, Tensor re) dest) {
+                int lx = l.Shape[0];
                 int ry = r.Shape[1];
 
                 float[] lv = l.value;
@@ -84,7 +107,22 @@ namespace DumbML {
                 float[] dr = dest.re.value;
                 float[] ev = e.value;
 
-                System.Threading.Tasks.Parallel.For(0, l.Shape[0], (i) => {
+                //System.Threading.Tasks.Parallel.For(0, l.Shape[0], (i) => {
+                //    int rind = i * ry;
+                //    float v = 0;
+
+                //    for (int y = 0; y < ry; y++) {
+                //        float err = ev[y];
+                //        v += err * rv[rind];
+                //        dr[rind] = err * lv[i];
+                //        rind++;
+
+                //    }
+                //    dl[i] = v;
+                //});
+
+                for (int i = 0; i < l.Shape[0]; i++) {
+
                     int rind = i * ry;
                     float v = 0;
 
@@ -96,7 +134,11 @@ namespace DumbML {
 
                     }
                     dl[i] = v;
-                });
+                };
+
+
+
+
 
                 return dest;
             }

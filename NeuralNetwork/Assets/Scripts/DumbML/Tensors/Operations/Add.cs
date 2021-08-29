@@ -4,7 +4,6 @@ using System.Collections.Generic;
 namespace DumbML {
 
     public class Add : Operation {
-        static ProfilerMarker profile = new ProfilerMarker("Add.Eval");
         Tensor[] backwardsArray = new Tensor[2];
 
 
@@ -12,7 +11,6 @@ namespace DumbML {
 
 
         protected override Tensor _Compute(Tensor[] operands) {
-            profile.Begin();
             var length = value.Size;
 
             unsafe {
@@ -22,14 +20,13 @@ namespace DumbML {
                     }
                 }
             }
-            profile.End();
 
             return value;
         }
 
         protected override Tensor[] _BackwardsPass(Tensor e) {
-            backwardsArray[0] = e.Copy();
-            backwardsArray[1] = e.Copy();
+            backwardsArray[0] = e;
+            backwardsArray[1] = e;
             return backwardsArray;
         }
 

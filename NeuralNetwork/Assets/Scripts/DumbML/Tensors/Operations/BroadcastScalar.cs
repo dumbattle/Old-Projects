@@ -21,10 +21,12 @@ namespace DumbML {
             return value;
         }
         protected override Tensor[] _BackwardsPass(Tensor e) {
-            t[0] = 0;
-            foreach (var f in e) {
-                t[0] += f;
+            float v = 0;
+            t.value[0] = 0;
+            for (int i = 0; i < e.value.Length; i++) {
+                v += e.value[i];
             }
+            t.value[0] = v;
             return error;
         }
         public override Operation Copy(Dictionary<Operation, Operation> track) {

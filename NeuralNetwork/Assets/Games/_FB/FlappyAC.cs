@@ -27,6 +27,7 @@ namespace Flappy {
             Operation a = new FullyConnected(2).Build(input);
 
             a = a.Softmax();
+            //a = new Softmax(a);
             return a;
         }
         protected override Operation Critic(Operation input) {

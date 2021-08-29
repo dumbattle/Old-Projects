@@ -3,7 +3,6 @@ using System.Collections.Generic;
 
 namespace DumbML {
     public class Variable : Operation {
-        static ProfilerMarker profileBackwards = new ProfilerMarker("Variable.Backwards");
         public bool Trainable = true;
 
         public Tensor Value { get { return value; } set { base.value = value; } }

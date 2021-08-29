@@ -16,8 +16,17 @@ namespace DumbML {
 
         public Operation(int[] shape, params Operation[] inner) {
             if (shape != null) {
-                value = new Tensor(shape);
                 this.shape = (int[])shape.Clone();
+                bool validShape = true;
+                foreach (var i in shape) {
+                    if (i < 0) {
+                        validShape = false;
+                        break;
+                    }
+                }
+                if (validShape) {
+                    value = new Tensor(shape);
+                }
             }
             this.inner = (Operation[])inner.Clone();
             operands = new Tensor[inner.Length];
@@ -49,6 +58,7 @@ namespace DumbML {
         }
 
         public Tensor Eval() {
+            dupeError = null;
             for (int i = 0; i < inner.Length; i++) {
                 operands[i] = inner[i].Eval();
             }
@@ -66,7 +76,6 @@ namespace DumbML {
                 g[this].Add(e, true);
             }
             Tensor[] inputErrors = _BackwardsPass(e);
-
             for (int i = inner.Length - 1; i >= 0; i--) {
                 if (inner[i].dupeError != null) {
                     inputErrors[i].Add(inner[i].dupeError, true);
@@ -77,12 +86,13 @@ namespace DumbML {
             }
         }
         public void Backwards(Gradients g) {
-            Tensor e = new Tensor(() => 1, shape);
-            Backwards(g, e);
+            errorCache ??= new Tensor(() => 1, shape);
+            Backwards(g, errorCache);
         }
+        Tensor errorCache;
         public void Backwards(Optimizer o) {
-            Tensor e = new Tensor(() => 1, shape);
-            Backwards(o.grad, e);
+            errorCache ??= new Tensor(() => 1, shape);
+            Backwards(o.grad, errorCache);
         }
 
 
@@ -142,9 +152,6 @@ namespace DumbML {
         }
 
         public Operation _Copy(Dictionary<Operation, Operation> track) {
-            if(track.ContainsKey(this)) {
-                return track[this];
-            }
             var c= Copy(track);
             track.Add(this, c);
             return c;

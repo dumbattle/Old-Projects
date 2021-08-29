@@ -2,31 +2,28 @@
 using System.Collections.Generic;
 
 namespace DumbML {
-    public class Divide : Operation {
-        static ProfilerMarker profile = new ProfilerMarker("Divide.Eval");
-        static ProfilerMarker profileBackwards = new ProfilerMarker("Divide.Backwards");
-        Tensor ne, de;
 
+
+    public class Divide : Operation {
+        Tensor ne, de;
+        Tensor[] err = new Tensor[2];
         public Divide(Operation numerator, Operation denominator) : base(numerator.shape, numerator, denominator) {
             ne = new Tensor(numerator.shape);
             de = new Tensor(denominator.shape);
         }
         protected override Tensor _Compute(Tensor[] operands) {
-            profile.Begin();
             for (int i = 0; i < value.Size; i++) {
                 value.value[i] = operands[0].value[i] / operands[1].value[i];
             }
-            profile.End();
             return value;
         }
 
         protected override Tensor[] _BackwardsPass(Tensor e) {
-            profileBackwards.Begin();
-            ne.Copy(e).PointWise(inner[1].value, (a, b) => a / b, true);
-            de.Copy(e).PointWise(inner[0].value, (a, b) => -a * b, true).PointWise(inner[1].value, (ea, b) => ea / (b * b), true);
-            profileBackwards.End();
-
-            return new[] { ne,de };
+            ne.CopyFrom(e).PointWise(inner[1].value, (a, b) => a / b, true);
+            de.CopyFrom(e).PointWise(inner[0].value, (a, b) => -a * b, true).PointWise(inner[1].value, (ea, b) => ea / (b * b), true);
+            err[0] = ne;
+            err[1] = de;
+            return err;
         }
         public override string ExprString(bool requireParanthesis) {
             if (requireParanthesis) {

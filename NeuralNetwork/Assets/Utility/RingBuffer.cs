@@ -11,6 +11,11 @@ public class RingBuffer<T> : IEnumerable<T> {
             index %= MaxSize;
             return data[index];
         }
+        set {
+            index += startIndex;
+            index %= MaxSize;
+            data[index] = value;
+        }
     }
     public int MaxSize => data.Length;
     public int Count { get; private set; }

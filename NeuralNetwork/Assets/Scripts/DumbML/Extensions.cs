@@ -81,6 +81,20 @@ namespace DumbML {
 
             sb.Append("]");
             return sb.ToString();
+        } public static string ContentString(this List<int> t) {
+            StringBuilder sb = new StringBuilder();
+
+            sb.Append("[");
+
+
+            sb.Append(t[0]);
+            for (int i = 1; i < t.Count; i++) {
+
+                sb.Append(", " + t[i]);
+            }
+
+            sb.Append("]");
+            return sb.ToString();
         }
     }
 

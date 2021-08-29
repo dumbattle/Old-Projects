@@ -11,7 +11,7 @@ namespace Flappy {
         }
 
         public override void Reset() {
-            if (exp != null) {
+            if (exp.state != null) {
                 exp.reward = -1;
                 ai.AddExperience(exp);
             }
@@ -26,7 +26,7 @@ namespace Flappy {
 
             var t = g.GetState();
 
-            if (exp != null) {
+            if (exp.state != null) {
                 exp.reward = 1;
                 exp.nextState = t;
                 ai.AddExperience(exp);

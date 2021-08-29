@@ -2,7 +2,8 @@
     "name": "DumbML",
     "rootNamespace": "",
     "references": [
-        "GUID:c5b60c70d50cae64caa4e49f1bc13afa"
+        "GUID:c5b60c70d50cae64caa4e49f1bc13afa",
+        "GUID:1385955ca56047b4489b06b904467f92"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

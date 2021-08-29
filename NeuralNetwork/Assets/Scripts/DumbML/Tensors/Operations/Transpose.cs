@@ -2,6 +2,7 @@
 using UnityEngine;
 
 namespace DumbML {
+
     public class Transpose : Operation {
         static List<int> perm = new List<int>();
 
@@ -11,6 +12,15 @@ namespace DumbML {
         Cache c;
         Tensor[] errArr = new Tensor[1];
         public Transpose(Operation op, int[] permutation) : base(null, op) {
+            if (permutation == null) {
+                permutation = new int[op.shape.Length];
+
+                for (int i = 0; i < permutation.Length; i++) {
+                    permutation[i] = i;
+                }
+                permutation[permutation.Length - 1] = permutation.Length - 2;
+                permutation[permutation.Length - 2] = permutation.Length - 1;
+            }
             ValidatePermute(op.shape, permutation);
 
             this.permutation = permutation;
@@ -89,7 +99,12 @@ namespace DumbML {
             var offsets = c.offsets;
             var err = c.error;
 
-            for (int i = 0; i < operands[0].value.Length; i++) {
+            index.Clear();
+            for (int i = 0; i < perm.Count; i++) {
+                index.Add(0);
+            }
+
+            for (int i = 0; i < err.value.Length; i++) {
                 int ind = 0;
                 for (int j = index.Count - 1; j >= 0; j--) {
                     ind += index[j] * offsets[j];
@@ -102,7 +117,7 @@ namespace DumbML {
                 // get index
                 index[index.Count - 1]++;
                 for (int j = index.Count - 1; j >= 1; j--) {
-                    if (index[j] == operands[0].Shape[j]) {
+                    if (index[j] == err.Shape[j]) {
                         var k = j - 1;
                         index[k]++;
                         index[j] = 0;
@@ -139,6 +154,7 @@ namespace DumbML {
             // matk each index with a negative
             for (int i = 0; i < permute.Length; i++) {
                 var ind = Mathf.Abs(permute[i]);
+                ind %= permute.Length;
                 if (permute[ind] == 0) {
                     // zero can't be negative, so replace it with the length temporarily
                     permute[ind] = -permute.Length;

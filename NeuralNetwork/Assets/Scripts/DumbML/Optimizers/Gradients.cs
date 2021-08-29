@@ -34,7 +34,7 @@ namespace DumbML {
         }
         public void Reset() {
             profile.Begin();
-            var keys = grad.Keys;
+            //var keys = grad.Keys;
 
             foreach (var k in keys) {
                 grad[k].SetValuesToZero();

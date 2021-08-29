@@ -1,6 +1,7 @@
 ﻿using Unity.Profiling;
 
 namespace DumbML {
+
     public abstract class Optimizer {
         public Gradients grad;
         public virtual ProfilerMarker p { get; }

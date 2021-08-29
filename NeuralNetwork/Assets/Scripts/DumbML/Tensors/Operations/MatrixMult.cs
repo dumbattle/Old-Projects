@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 namespace DumbML {
 
+    
     public class MatrixMult : Operation {
 
         class Cache {
@@ -16,6 +17,7 @@ namespace DumbML {
 
         Vector3Int code;
         public MatrixMult(Operation left, Operation right) : base(null, left, right) {
+
             if (left.shape.Length == 1) {
                 shape = new[] { right.shape[1] };
 
@@ -52,7 +54,6 @@ namespace DumbML {
 
                 result = c.value;
             }
-
             Blas.MatrixMult(operands[0], operands[1], result);
             return result;
         }

@@ -6,18 +6,38 @@ namespace DumbML {
     /// </summary>
     public class DuplicateOperation : Operation {
         public Operation i;
+
+        Dictionary<List<int>, Tensor> dict = new Dictionary<List<int>, Tensor>( new ShapeComparer());
+        List<int> shapeCache = new List<int>();
+
+        Tensor[] err = new Tensor[1];
         public DuplicateOperation(Operation inner) : base(inner.shape) {
             i = inner;
-            i.dupeError = new Tensor(i.shape);
+            //i.dupeError = new Tensor(i.shape);
+
         }
 
         protected override Tensor _Compute(Tensor[] operands) {
+
+            if (i.dupeError == null) {
+                shapeCache.Clear();
+                shapeCache.AddRange(i.value.Shape);
+
+                if (dict.ContainsKey(shapeCache)) {
+                    i.dupeError = dict[shapeCache];
+                }
+                else {
+                    i.dupeError = new Tensor(shapeCache);
+                    dict.Add(shapeCache, i.dupeError);
+                }
+            }
             return value = i.value;
         }
 
         protected override Tensor[] _BackwardsPass(Tensor e) {
             i.dupeError.Add(e, true);
-            return new[] { e };
+            err[0] = e;
+            return err;
         }
         public override Operation Copy(Dictionary<Operation, Operation> track) {
             if (track.ContainsKey(i)) {

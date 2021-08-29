@@ -58,8 +58,9 @@
   <ItemGroup>
     <Compile Include="Assets\Games\_FB\FlappyPG.cs" />
     <Compile Include="Assets\Games\Chess\Move.cs" />
+    <Compile Include="Assets\Games\Astroids\Astroid.cs" />
     <Compile Include="Assets\MLModelAsset.cs" />
-    <Compile Include="Assets\Games\Astroids\Astroids.cs" />
+    <Compile Include="Assets\Games\Astroids\AstroidsMain.cs" />
     <Compile Include="Assets\RandomTestStuffMain.cs" />
     <Compile Include="Assets\Games\MCTS\TTT.cs" />
     <Compile Include="Assets\Games\_FB\BirdRL.cs" />
@@ -74,11 +75,14 @@
     <Compile Include="Assets\Games\Chess\Game.cs" />
     <Compile Include="Assets\Games\_FB\Bird.cs" />
     <Compile Include="Assets\Games\_FB\FlappyAC.cs" />
+    <Compile Include="Assets\Games\Astroids\GameData.cs" />
     <Compile Include="Assets\UnsafeTester.cs" />
+    <Compile Include="Assets\Games\Astroids\Player.cs" />
     <Compile Include="Assets\DupeTest.cs" />
     <Compile Include="Assets\Games\Chess\ChessModel.cs" />
     <Compile Include="Assets\Games\Chess\Chess.cs" />
     <Compile Include="Assets\Games\Chess\ChessTrainer.cs" />
+    <Compile Include="Assets\Games\Astroids\Parameters.cs" />
     <Compile Include="Assets\Games\Chess\Board.cs" />
     <Compile Include="Assets\Games\BoardShooter\ShooterMain.cs" />
     <Compile Include="Assets\GraphTester.cs" />
@@ -724,6 +728,10 @@
     <ProjectReference Include="DumbML.csproj">
       <Project>{D7E3E392-542A-1F3F-2367-FBCF755811B0}</Project>
       <Name>DumbML</Name>
+    </ProjectReference>
+    <ProjectReference Include="LPEASM.csproj">
+      <Project>{3B5631D6-3C68-46B8-CE5A-04CDBC8F6027}</Project>
+      <Name>LPEASM</Name>
     </ProjectReference>
     <ProjectReference Include="Utility.csproj">
       <Project>{599F5ECA-FFEC-5141-FF58-7FED81A4BE01}</Project>

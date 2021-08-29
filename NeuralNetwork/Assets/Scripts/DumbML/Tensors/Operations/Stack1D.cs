@@ -11,9 +11,10 @@ namespace DumbML {
         public Stack1D(params Operation[] ops) : base(new[] { ops.Length, ops[0].shape[0] }, ops) {
             errors = new Tensor[ops.Length];
             var length = ops[0].shape[0];
+
             for (int i = 0; i < ops.Length; i++) {
                 Operation o = ops[i];
-                if (o.value.Rank != 1) {
+                if (o.shape.Rank != 1) {
                     throw new System.InvalidOperationException($"Invalid rank: {o.value.Rank}");
                 }
                 if (o.shape[0] != length) {
@@ -65,6 +66,27 @@ namespace DumbML {
 
         public void SetValue(params Tensor[] t) {
             int l = t.Length;
+
+            Tensor result;
+
+            if (_dict.ContainsKey(l)) {
+                result = _dict[l];
+            }
+            else {
+                result = new Tensor(l, size);
+                _dict.Add(l, result);
+            }
+
+            for (int i = 0; i < l; i++) {
+                Tensor ten = t[i];
+                for (int x = 0; x < size; x++) {
+                    result[i, x] = ten[x];
+                }
+            }
+            value = result;
+        }
+        public void SetValue(List<Tensor> t) {
+            int l = t.Count;
 
             Tensor result;
 

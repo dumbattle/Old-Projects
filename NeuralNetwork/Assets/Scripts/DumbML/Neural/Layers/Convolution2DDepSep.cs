@@ -17,8 +17,8 @@ namespace DumbML {
             this.af = af ?? ActivationFunction.None;
         }
         public override Operation Build(Operation input) {
-            weightDepth = new Tensor(() => LPE.RNG.Normal(), filterSize.x, filterSize.y, input.shape[2]);
-            weightPoint = new Tensor(() => LPE.RNG.Normal(), input.shape[2], outputChannels);
+            weightDepth = new Tensor(() => RNG.Normal(), filterSize.x, filterSize.y, input.shape[2]);
+            weightPoint = new Tensor(() => RNG.Normal(), input.shape[2], outputChannels);
 
             weightDepth.SetName($"{weightDepth.shape.ContentString()} Depthwise filter");
             weightPoint.SetName($"{weightPoint.shape.ContentString()} Pointwise filter");
