@@ -11,7 +11,7 @@ namespace DumbML {
         public Model() { }
         public Model(Operation op) {
             var inputs = op.GetOperations<Placeholder>().ToArray();
-            op.Optimize();
+            //op.Optimize();
             Build(op, inputs);
         }
         public Model(Operation op, params Placeholder[] inputs) {

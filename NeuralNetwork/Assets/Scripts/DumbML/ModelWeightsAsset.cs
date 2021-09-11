@@ -10,13 +10,25 @@ namespace DumbML {
         public bool HasData => _data.Length != 0;
 
         public void Save(Variable[] data) {
-            _data = new TensorData[data.Length];
-            for (int i = 0; i < data.Length; i++) {
-                _data[i] = new TensorData() {
-                    val = data[i].value.value,
-                    shape = data[i].value.Shape,
-                    Name = data[i].Name
-                };
+            if (_data.Length == data.Length) {
+                for (int i = 0; i < data.Length; i++) {
+                    _data[i].val.Clear();
+                    _data[i].val.AddRange(data[i].value.value);
+                    _data[i].shape.Clear();
+                    _data[i].shape.AddRange(data[i].value.Shape);
+                    _data[i].Name = data[i].Name;
+                }
+            }
+            else {
+
+                _data = new TensorData[data.Length];
+                for (int i = 0; i < data.Length; i++) {
+                    _data[i] = new TensorData() {
+                        val = new List<float>(data[i].value.value),
+                        shape = new List<int>(data[i].value.Shape),
+                        Name = data[i].Name
+                    };
+                }
             }
         }
 
@@ -39,8 +51,8 @@ namespace DumbML {
         struct TensorData {
             [HideInInspector]
             public string Name;
-            public float[] val;
-            public int[] shape;
+            public List<float> val;
+            public List<int> shape;
 
             public Tensor ToTensor() {
                 IEnumerator<float> ie = ((IEnumerable<float>)val).GetEnumerator();

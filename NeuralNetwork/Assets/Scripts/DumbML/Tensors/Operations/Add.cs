@@ -4,30 +4,27 @@ using System.Collections.Generic;
 namespace DumbML {
 
     public class Add : Operation {
-        Tensor[] backwardsArray = new Tensor[2];
 
 
-        public Add(Operation left, Operation right) : base(left.shape, left, right) { }
+        public Add(Operation left, Operation right) : base(left.shape, left, right) { 
 
+        }
 
-        protected override Tensor _Compute(Tensor[] operands) {
-            var length = value.Size;
+        protected override void _Compute(Tensor[] operands, TensorCache result) {
+            result.SetShape(operands[0].Shape);
+            var length = result.tensor.Size;
 
             unsafe {
-                fixed (float* pd = value.value, pl = operands[0].value, pr = operands[1].value) {
+                fixed (float* pd = result.tensor.value, pl = operands[0].value, pr = operands[1].value) {
                     for (int i = 0; i < length; i++) {
                         pd[i] = pl[i] + pr[i];
                     }
                 }
             }
-
-            return value;
         }
-
-        protected override Tensor[] _BackwardsPass(Tensor e) {
-            backwardsArray[0] = e;
-            backwardsArray[1] = e;
-            return backwardsArray;
+        protected override void _BackwardsPass(Tensor e, Tensor[] result) {
+            result[0].Add(e, true);
+            result[1].Add(e, true);
         }
 
         public override Operation Copy(Dictionary<Operation, Operation> track) {

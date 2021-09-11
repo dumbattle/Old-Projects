@@ -4,25 +4,23 @@ using System.Collections.Generic;
 namespace DumbML {
     public class Variable : Operation {
         public bool Trainable = true;
-
-        public Tensor Value { get { return value; } set { base.value = value; } }
+        public Tensor Value;
 
         public Variable(Tensor value) : base(value.Shape) {
-            base.value = value;
+            _val.SetShape(value.Shape);
+            _val.tensor.CopyFrom(value);
+            Value = _val.tensor;
         }
-        public Variable(Tensor value, string name) : base(value.Shape){
-            base.value = value;
+        public Variable(Tensor value, string name) : this(value){
             Name = name;
         }
 
-        protected override Tensor _Compute(Tensor[] operands) {
-          
-            return value;
+
+        protected override void _Compute(Tensor[] operands, TensorCache result) {
         }
 
 
-        protected override Tensor[] _BackwardsPass(Tensor e) {          
-            return null;
+        protected override void _BackwardsPass(Tensor e, Tensor[] result) {
         }
 
         
@@ -30,7 +28,7 @@ namespace DumbML {
             return new Variable(t);
         }
         public override Operation Copy(Dictionary<Operation, Operation> track) {
-            return new Variable(Value.Copy());
+            return new Variable(_val.tensor.Copy());
         }
         public override string ExprString(bool requireParanthesis) {
             return Name ?? value.ToString();

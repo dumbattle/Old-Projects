@@ -21,15 +21,15 @@ namespace DumbML {
             int shapeY = (op.shape[1] - weight.shape[1] + padY) / strideY + 1;
 
             shape = new[] { shapeX, shapeY, weight.shape[2] };
-            value = new Tensor(shape);
         }
-
-        protected override Tensor _Compute(Tensor[] operands) {
-            return value = Blas.Parallel.Convolution2DDepthwise(operands[0], operands[1], value, stride, pad);
+        protected override void _Compute(Tensor[] operands, TensorCache result) {
+            result.SetShape(shape);
+            Blas.Parallel.Convolution2DDepthwise(operands[0], operands[1], result.tensor, stride, pad);
         }
-        protected override Tensor[] _BackwardsPass(Tensor e) {
-            Blas.Parallel.Convolution2DDepthwiseBackwards(inner[0].value, e, inner[1].value, (error[0], error[1]), stride, pad);
-            return error;
+        protected override void _BackwardsPass(Tensor e, Tensor[] result) {
+            Blas.Parallel.Convolution2DDepthwiseBackwards(inner[0].value, e, inner[1].value, (result[0], result[1]), stride, pad);
+            result[0].Add(error[0], true);
+            result[1].Add(error[1], true);
         }
 
         public override Operation Copy(Dictionary<Operation, Operation> track) {

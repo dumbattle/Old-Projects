@@ -6,24 +6,22 @@ namespace DumbML {
 
     public class Divide : Operation {
         Tensor ne, de;
-        Tensor[] err = new Tensor[2];
         public Divide(Operation numerator, Operation denominator) : base(numerator.shape, numerator, denominator) {
             ne = new Tensor(numerator.shape);
             de = new Tensor(denominator.shape);
         }
-        protected override Tensor _Compute(Tensor[] operands) {
-            for (int i = 0; i < value.Size; i++) {
-                value.value[i] = operands[0].value[i] / operands[1].value[i];
+        protected override void _Compute(Tensor[] operands, TensorCache result) {
+            result.SetShape(operands[0].Shape);
+            for (int i = 0; i < operands[0].Size; i++) {
+                result.tensor.value[i] = operands[0].value[i] / operands[1].value[i];
             }
-            return value;
         }
-
-        protected override Tensor[] _BackwardsPass(Tensor e) {
+        
+        protected override void _BackwardsPass(Tensor e, Tensor[] result) {
             ne.CopyFrom(e).PointWise(inner[1].value, (a, b) => a / b, true);
             de.CopyFrom(e).PointWise(inner[0].value, (a, b) => -a * b, true).PointWise(inner[1].value, (ea, b) => ea / (b * b), true);
-            err[0] = ne;
-            err[1] = de;
-            return err;
+            result[0].Add(ne, true);
+            result[1].Add(de, true);
         }
         public override string ExprString(bool requireParanthesis) {
             if (requireParanthesis) {

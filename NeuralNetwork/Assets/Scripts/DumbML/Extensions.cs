@@ -2,6 +2,8 @@
 using System.Text;
 using System;
 
+using Unity.Profiling;
+
 
 namespace DumbML {
     public static class Extensions {
@@ -66,6 +68,19 @@ namespace DumbML {
             return a[a.Count - 1];
         }
 
+        public static bool CompareContents<T>(this T[] a, T[] b) {
+            if (a.Length != b.Length) {
+                return false;
+            }
+
+            for (int i = 0; i < a.Length; i++) {
+                if (Comparer<T>.Default.Compare(a[i], b[i]) != 0) {
+                    return false;
+                }
+            }
+
+            return true;
+        }
 
         public static string ContentString(this int[] t) {
             StringBuilder sb = new StringBuilder();
@@ -81,7 +96,9 @@ namespace DumbML {
 
             sb.Append("]");
             return sb.ToString();
-        } public static string ContentString(this List<int> t) {
+        }
+        
+        public static string ContentString(this List<int> t) {
             StringBuilder sb = new StringBuilder();
 
             sb.Append("[");
@@ -95,6 +112,22 @@ namespace DumbML {
 
             sb.Append("]");
             return sb.ToString();
+        }
+    }
+
+    public static class ProfileUtility {
+        static Dictionary<string, ProfilerMarker> _dict = new Dictionary<string, ProfilerMarker>();
+
+        public static void Start(string s) {
+            if (!_dict.ContainsKey(s)) {
+                _dict.Add(s, new ProfilerMarker(s));
+            }
+            _dict[s].Begin();
+        }
+
+        public static void End(string s) {
+            _dict[s].End();
+
         }
     }
 

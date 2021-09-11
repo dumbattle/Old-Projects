@@ -32,7 +32,7 @@ namespace Astroids {
         }
 
     }
-    public class ACPlayer : Player{
+    public class ACPlayer : Player {
         public string aout;
         Tensor[] inputCache = new Tensor[2];
 
@@ -48,15 +48,17 @@ namespace Astroids {
         List<Tensor> activePT = new List<Tensor>();
         ModelWeightsAsset weights;
         Channel scoreChannel;
+        Channel avgScoreChannel;
 
-
+        Variable[] variables;
         int score;
-
+        float avgsSore;
+        int episodeCount = 0;
 
         public ACPlayer(ModelWeightsAsset weights) {
             ai = new AstroidAC();
             ai.Build();
-
+            variables = ai.GetVariables();
             if (weights?.HasData ?? false) {
                 ai.SetWeights(weights.Load());
             }
@@ -64,13 +66,16 @@ namespace Astroids {
 
             scoreChannel = Channel.New("Score");
             scoreChannel.autoYRange = true;
+            avgScoreChannel = Channel.New("Average Score");
+            avgScoreChannel.autoYRange = true;
 
             score = 0;
+            avgsSore = 0;
         }
 
         public override void Update(GameData game) {
             if (exp != null) {
-                exp.reward = 1;
+                exp.reward = 0;
                 ai.AddExperience(exp);
                 score++;
             }
@@ -91,9 +96,12 @@ namespace Astroids {
                 activeAT.Add(t);
             }
             astroidInput.SetValue(atList);
+            astroidInput.Eval();
             inputCache[0] = pp;
             inputCache[1] = astroidInput.value;
+            P.S();
             exp = ai.SampleAction(inputCache);
+            P.E();
             Vector2 dir = new Vector2(0, 0);
             switch (exp.action) {
                 case 0:
@@ -125,7 +133,7 @@ namespace Astroids {
 
             game.playerPos += dir * Parameters.PlayerSpeed;
             //ai.criticModel.forward.Eval();
-            //aout = ai.testOP.value.ToString();
+            aout = ai.attn.value?.ToString();
         }
         public override void EndGame(GameData game) {
             if (exp != null) {
@@ -143,53 +151,44 @@ namespace Astroids {
                 pPool.Return(t);
             }
             activePT.Clear();
-            weights?.Save(ai.GetVariables());
+            weights?.Save(variables);
             scoreChannel.Feed(score);
+            float g = .999f;
+            avgsSore = avgsSore * g + score * (1 - g);
+            if (episodeCount % 1000 == 0) {
+                avgScoreChannel.Feed(avgsSore);
+                avgScoreChannel.SetRange(scoreChannel.yMin, scoreChannel.yMax);
+            }
             score = 0;
+            episodeCount++;
         }
     }
     public class AstroidAC : ActorCritic {
         public Operation testOP;
+        public Operation attn;
+        public AstroidAC() {
+            discount = .999f;
+        }
         protected override Operation Input() {
             Operation playerPos = new InputLayer(2).Build().SetName("Player Position Input");          // [2]
             Operation astroidInput = new Placeholder("Astroid Input", -1, Parameters.AstroidDataSize); // [x, a]
 
-            //int asize = 8;
-            //int bsize = 8;
-
-            //Operation a = new FullyConnected(asize, ActivationFunction.Sigmoid, bias: false).Build(astroidInput); // [x, asize]
-            //Operation b = new FullyConnected(bsize, ActivationFunction.Sigmoid, bias: false).Build(astroidInput); // [x, bsize]
-            //a = new Transpose(a, new[] { 1, 0 }); // [asize, x]
-
-            //Operation c = new MatrixMult(a, b); // [asize, bsize]
-
-            //c = new FlattenOp(c);
-
-            //Operation op = new Append(c, playerPos);
-            //return op;
             int ksize = 16;
             int vsize = 17;
             int qSize = 3;
-            Operation aKey = new FullyConnected(ksize, /*ActivationFunction.Tanh,*/ bias: false).Build(astroidInput); // [x, ksize]
-            Operation aVal = new FullyConnected(vsize, /*ActivationFunction.Tanh, */bias: false).Build(astroidInput); // [x, vsize]
-
-            //Operation aKeyWeights = new Tensor(() => RNG.Normal(), Parameters.AstroidDataSize, ksize);
-            //Operation aKey = new MatrixMult(astroidInput, new Tanh(aKeyWeights));
-            //Operation aValWeights = new Tensor(() => RNG.Normal(), Parameters.AstroidDataSize, vsize);
-            //Operation aVal = new MatrixMult(astroidInput, new Tanh(aValWeights));
+            Operation aKey = new FullyConnected(ksize, bias: false).Build(astroidInput); // [x, ksize]
+            Operation aVal = new FullyConnected(vsize,bias: false).Build(astroidInput); // [x, vsize]
 
             Operation[] qInput = new Operation[qSize];
             for (int i = 0; i < qSize; i++) {
-                //var qWeights = new Tensor(() => RNG.Normal(), 2, ksize);
-                //qInput[i] = new MatrixMult(playerPos, new Tanh(qWeights));
                 qInput[i] = new FullyConnected(ksize).Build(playerPos);
             }
             Operation q = new Stack1D(qInput);                              // [qsize, ksize]
             var (op, attn) = Attention.ScaledDotProduct(aKey, aVal, q);
-            testOP = op;
+            this.attn = attn;
 
-            op = new FullyConnected(16, ActivationFunction.Sigmoid).Build(op); // [qsize, vsize]
             op = new FlattenOp(op);
+            op = new FullyConnected(16, ActivationFunction.Sigmoid).Build(op); // [qsize, vsize]
             op = new Append(playerPos, op);
             return op;
         }
@@ -198,7 +197,7 @@ namespace Astroids {
             Operation op = new FullyConnected(32, ActivationFunction.Sigmoid).Build(input);
             op = new FullyConnected(9, ActivationFunction.Sigmoid).Build(op);
             op = new FullyConnected(9).Build(op);
-            op = op.Softmax();
+            op = new Softmax(op);
 
             return op;
         }
@@ -213,8 +212,13 @@ namespace Astroids {
             return op;
         }
 
+        public override Operation AuxLoss() {
+            Operation entropy = new Sum(attn * new Log(attn)) * new Constant(Tensor.FromArray(new float[] { -1 }));
+            testOP = entropy;
+            return entropy;
+        }
         protected override Optimizer Optimizer() {
-            return new SGD(); ;
+            return new Adam(); ;
         }
     }
 

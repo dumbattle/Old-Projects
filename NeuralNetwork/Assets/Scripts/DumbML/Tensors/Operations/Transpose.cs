@@ -4,13 +4,13 @@ using UnityEngine;
 namespace DumbML {
 
     public class Transpose : Operation {
-        static List<int> perm = new List<int>();
+        List<int> perm = new List<int>();
 
         List<int> index = new List<int>();
         int[] permutation;
-        Dictionary<List<int>, Cache> valueDict = new Dictionary<List<int>, Cache>(new ShapeComparer());
-        Cache c;
-        Tensor[] errArr = new Tensor[1];
+        int[] offsets;
+
+
         public Transpose(Operation op, int[] permutation) : base(null, op) {
             if (permutation == null) {
                 permutation = new int[op.shape.Length];
@@ -24,50 +24,23 @@ namespace DumbML {
             ValidatePermute(op.shape, permutation);
 
             this.permutation = permutation;
+            offsets = new int[op.shape.Length];
             GetPermutation(op.shape, permutation);
             shape = perm.ToArray();
         }
 
-        protected override Tensor _Compute(Tensor[] operands) {
+
+        protected override void _Compute(Tensor[] operands, TensorCache result) {
             GetPermutation(operands[0].Shape, permutation);
-            c = null;
-
-            if (valueDict.ContainsKey(perm)) {
-                c = valueDict[perm];
-            }
-            else {
-                c = new Cache();
-                c.result = new Tensor(perm);
-                c.error = new Tensor(operands[0].Shape);
-
-                int[] multipliers = new int[perm.Count];
-                int[] o = new int[perm.Count];
-
-                int scale = 1;
-                for (int i = multipliers.Length - 1; i >= 0; i--) {
-                    multipliers[i] = scale;
-                    scale *= perm[i];
-                }
-
-                for (int i = 0; i < o.Length; i++) {
-                    o[permutation[i]] = multipliers[i];
-                }
-
-
-                c.offsets = o;
-                valueDict.Add(new List<int>(perm), c);
-            }
-
-
+            result.SetShape(perm);
+  
             //init index
             index.Clear();
             for (int i = 0; i < perm.Count; i++) {
                 index.Add(0);
             }
+            //var result = c.result;
 
-            var result = c.result;
-
-            var offsets = c.offsets;
             for (int i = 0; i < operands[0].value.Length; i++) {
                 var val = operands[0].value[i];
 
@@ -76,7 +49,7 @@ namespace DumbML {
                     ind += index[j] * offsets[j];
                 }
 
-                result.value[ind] = val;
+                result.tensor.value[ind] = val;
 
                 // get index
                 index[index.Count - 1]++;
@@ -91,33 +64,29 @@ namespace DumbML {
                     }
                 }
             }
-
-            return result;
         }
 
-        protected override Tensor[] _BackwardsPass(Tensor e) {
-            var offsets = c.offsets;
-            var err = c.error;
+        protected override void _BackwardsPass(Tensor e, Tensor[] result) {
 
             index.Clear();
             for (int i = 0; i < perm.Count; i++) {
                 index.Add(0);
             }
 
-            for (int i = 0; i < err.value.Length; i++) {
+            for (int i = 0; i < result[0].value.Length; i++) {
                 int ind = 0;
                 for (int j = index.Count - 1; j >= 0; j--) {
                     ind += index[j] * offsets[j];
                 }
 
 
-                err.value[i] = e.value[ind];
+                result[0].value[i] += e.value[ind];
 
 
                 // get index
                 index[index.Count - 1]++;
                 for (int j = index.Count - 1; j >= 1; j--) {
-                    if (index[j] == err.Shape[j]) {
+                    if (index[j] == result[0].Shape[j]) {
                         var k = j - 1;
                         index[k]++;
                         index[j] = 0;
@@ -127,21 +96,33 @@ namespace DumbML {
                     }
                 }
             }
-            errArr[0] = err;
-            return errArr;
         }
 
         public override Operation Copy(Dictionary<Operation, Operation> track) {
             return new Transpose(inner[0]._Copy(track), permutation);
         }
 
-        static void GetPermutation(int[] src, int[] permute) {
+        void GetPermutation(int[] src, int[] permute) {
 
             perm.Clear();
 
             for (int i = 0; i < src.Length; i++) {
                 perm.Add(src[permute[i]]);
             }
+
+            int[] multipliers = new int[perm.Count];
+
+            int scale = 1;
+            for (int i = multipliers.Length - 1; i >= 0; i--) {
+                multipliers[i] = scale;
+                scale *= perm[i];
+            }
+
+            for (int i = 0; i < offsets.Length; i++) {
+                offsets[permutation[i]] = multipliers[i];
+            }
+
+
 
         }
 

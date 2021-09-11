@@ -4,17 +4,18 @@ namespace DumbML {
         Tensor le, re;
         public Conv2DPoint(Operation op, Operation weight) : base(null, op, weight) {
             shape = new[] { op.shape[0], op.shape[1], weight.shape[1] };
-            value = new Tensor(shape);
             le = new Tensor(op.shape);
             re = new Tensor(weight.shape);
         }
 
-        protected override Tensor _Compute(Tensor[] operands) {
-            return Blas.Parallel.Convolution2DPointwise(operands[0], operands[1], value);
+        protected override void _Compute(Tensor[] operands, TensorCache result) {
+            result.SetShape(shape);
+            Blas.Parallel.Convolution2DPointwise(operands[0], operands[1], result.tensor);
         }
-        protected override Tensor[] _BackwardsPass(Tensor e) {
+        protected override void _BackwardsPass(Tensor e, Tensor[] result) {
             (le, re) = Blas.Parallel.Convolution2DPointwiseBackwards(inner[0].value, e, inner[1].value, (le, re));
-            return new[] { le, re };
+            result[0].Add(le, true); ;
+            result[1].Add(re, true); ;
         }
 
         public override Operation Copy(Dictionary<Operation, Operation> track) {

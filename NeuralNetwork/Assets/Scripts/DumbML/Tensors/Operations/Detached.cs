@@ -3,18 +3,16 @@
 
 namespace DumbML {
     public class Detached : Operation {
-        Tensor[] er;
 
         public Detached(Operation op) : base(op.shape, op) {
-            er = new[] { new Tensor(op.shape) };
         }
 
-        protected override Tensor _Compute(Tensor[] operands) {
-            return value.CopyFrom(operands[0]);
+        protected override void _Compute(Tensor[] operands, TensorCache result) {
+            result.SetShape(operands[0].Shape);
+            result.tensor.CopyFrom(operands[0]);
         }
 
-        protected override Tensor[] _BackwardsPass(Tensor e) {
-            return er;
+        protected override void _BackwardsPass(Tensor e, Tensor[] result) {
         }
 
         public override Operation Copy(Dictionary<Operation, Operation> track) {

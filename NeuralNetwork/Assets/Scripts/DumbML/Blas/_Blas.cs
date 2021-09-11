@@ -29,13 +29,59 @@ namespace DumbML {
 
 
         public static Tensor Sigmoid(this Tensor t) {
-            return t.PointWise((a) => 1 / (1 + (float)System.Math.Exp(-a)));
+            return t.PointWise(S);
+
+            static float S(float a) {
+
+                if (a > 0) {
+                    return 1 / (1 + (float)System.Math.Exp(-a));
+                }
+                else {
+                    float exp = (float)System.Math.Exp(a);
+                    return exp / (1 + exp);
+                }
+            }
         }
         public static Tensor Sigmoid(this Tensor t, Tensor dest) {
-            return dest.PointWise(t, (a, b) => 1 / (1 + (float)System.Math.Exp(-b)), true);
+            return dest.PointWise(
+                t, 
+                (a,b) => {
+                    if (b > 0) {
+                        return 1 / (1 + (float)System.Math.Exp(-b));
+                    }
+                    else {
+                        float exp = (float)System.Math.Exp(b);
+                        return exp / (1 + exp);
+                    }
+                },
+                true);
+
+        }
+        static float S(float a, float b) {
+
+            if (b > 0) {
+                return 1 / (1 + (float)System.Math.Exp(-b));
+            }
+            else {
+                float exp = (float)System.Math.Exp(b);
+                return exp / (1 + exp);
+            }
         }
         public static Tensor Tanh(this Tensor t, Tensor dest) {
-            return dest.PointWise(t, (a, b) => 2 / (1 + (float)System.Math.Exp(-b)) - 1, true);
+            return dest.PointWise(t, T, true);
+
+            static float T(float a, float b) {
+                float result;
+                if (b > 0) {
+                    result =  1 / (1 + (float)System.Math.Exp(-b));
+                }
+                else {
+                    float exp = (float)System.Math.Exp(b);
+                    result = exp / (1 + exp);
+                }
+
+                return result * 2 - 1;
+            }
         }
         public static Tensor Relu(this Tensor t) {
             return t.PointWise((a) => a > 0 ? a : 0);

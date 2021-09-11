@@ -2,18 +2,18 @@
 
 namespace DumbML {
     public class Constant : Operation {
+        Tensor val;
         public Tensor Value { get { return value; } }
 
         public Constant(Tensor value) : base(value.Shape) {
-            base.value = value;
+            val = value;
+        }
+        protected override void _Compute(Tensor[] operands, TensorCache result) {
+            result.SetShape(val.Shape);
+            result.tensor.CopyFrom(val);
         }
 
-        protected override Tensor _Compute(Tensor[] operands) {
-            return value;
-        }
-
-        protected override Tensor[] _BackwardsPass(Tensor e) {
-            return null;
+        protected override void _BackwardsPass(Tensor e, Tensor[] result) {
         }
 
         public override Operation Copy(Dictionary<Operation, Operation> track) {

@@ -14,6 +14,7 @@ namespace DumbML {
 
             for (int i = 0; i < ops.Length; i++) {
                 Operation o = ops[i];
+
                 if (o.shape.Rank != 1) {
                     throw new System.InvalidOperationException($"Invalid rank: {o.value.Rank}");
                 }
@@ -23,24 +24,23 @@ namespace DumbML {
                 errors[i] = new Tensor(ops[i].shape);
             }
         }
+        protected override void _Compute(Tensor[] operands, TensorCache result) {
+            result.SetShape(shape);
 
-        protected override Tensor _Compute(Tensor[] operands) {
             for (int i = 0; i < operands.Length; i++) {
                 var op = operands[i];
                 for (int j = 0; j < op.Size; j++) {
-                    value[i, j] = op[j];
+                    result.tensor[i, j] = op[j];
                 }
             }
-            return value;
         }
-        protected override Tensor[] _BackwardsPass(Tensor e) {
+        protected override void _BackwardsPass(Tensor e, Tensor[] result) {
             for (int i = 0; i < errors.Length; i++) {
-                var err = errors[i];
+                var err = result[i];
                 for (int j = 0; j < err.Size; j++) {
-                    err[j] = e[i, j];
+                    err[j] += e[i, j];
                 }
             }
-            return errors;
         }
         public override Operation Copy(Dictionary<Operation, Operation> track) {
             return new Stack1D(CopyInner(track));
@@ -53,62 +53,55 @@ namespace DumbML {
     /// Can handle different amounts, but can only be used as input operation
     /// </summary>
     public class VariableStack1D : Operation {
-        Dictionary<int, Tensor> _dict = new Dictionary<int, Tensor>();
+        int[] shapeCache = new int[2];
         int size;
+        TensorCache val = new TensorCache();
         public VariableStack1D(int size) : base(null) {
             shape = new[] { -1, size };
             this.size = size;
         }
-
-        protected override Tensor _Compute(Tensor[] operands) {
-            return value;
+        protected override void _Compute(Tensor[] operands, TensorCache result) {
+            result.SetShape(shapeCache);
+            result.tensor.CopyFrom(val.tensor);
         }
 
         public void SetValue(params Tensor[] t) {
             int l = t.Length;
+            shapeCache[0] = l;
+            shapeCache[1] = size;
 
-            Tensor result;
+            val.SetShape(shapeCache);
 
-            if (_dict.ContainsKey(l)) {
-                result = _dict[l];
-            }
-            else {
-                result = new Tensor(l, size);
-                _dict.Add(l, result);
-            }
+   
+
 
             for (int i = 0; i < l; i++) {
                 Tensor ten = t[i];
                 for (int x = 0; x < size; x++) {
-                    result[i, x] = ten[x];
+                    val.tensor[i, x] = ten[x];
                 }
             }
-            value = result;
-        }
+        }  
+        
+        
         public void SetValue(List<Tensor> t) {
             int l = t.Count;
+            shapeCache[0] = l;
+            shapeCache[1] = size;
 
-            Tensor result;
+            val.SetShape(shapeCache);
 
-            if (_dict.ContainsKey(l)) {
-                result = _dict[l];
-            }
-            else {
-                result = new Tensor(l, size);
-                _dict.Add(l, result);
-            }
+   
+
 
             for (int i = 0; i < l; i++) {
                 Tensor ten = t[i];
                 for (int x = 0; x < size; x++) {
-                    result[i, x] = ten[x];
+                    val.tensor[i, x] = ten[x];
                 }
             }
-            value = result;
         }
-
-        protected override Tensor[] _BackwardsPass(Tensor e) {
-            return null;
+        protected override void _BackwardsPass(Tensor e, Tensor[] result) {
         }
 
         public override Operation Copy(Dictionary<Operation, Operation> track) {

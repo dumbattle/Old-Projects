@@ -472,7 +472,7 @@ MonoBehaviour:
   actor: 
   critic: 
   score: 0
-  gameSpeed: 100
+  gameSpeed: 1000
 --- !u!4 &1169792543
 Transform:
   m_ObjectHideFlags: 0

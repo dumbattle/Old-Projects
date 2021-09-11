@@ -135,6 +135,11 @@ namespace DumbML {
                 value[i] = initializer();
             }
         }
+        public Tensor(Func<float> initializer, List<int> shape) : this(shape) {
+            for (int i = 0; i < value.Length; i++) {
+                value[i] = initializer();
+            }
+        }
 
         public static Tensor Random (params int[] shape) {
             var rng = new System.Random();
@@ -589,7 +594,7 @@ namespace DumbML {
 
         public void SetValuesToZero() {
             int length = value.Length;
-
+            //Array.Clear(value, 0, value.Length);
             unsafe {
                 fixed (float* pv = value) {
                     for (int i = 0; i < length; i++) {

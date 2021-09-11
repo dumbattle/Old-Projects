@@ -4,28 +4,34 @@ using System;
 
 namespace DumbML {
     public class Log : Operation {
-        Tensor[] error;
-        Tensor t;
         public Log(Operation op) : base(op.shape, op) {
-            error = new Tensor[1] { t = value.SameShape() };
         }
 
-        protected override Tensor _Compute(Tensor[] operands) {
+        protected override void _Compute(Tensor[] operands, TensorCache result) {
+            result.SetShape(operands[0].Shape);
+
+   
             for (int i = 0; i < operands[0].Size; i++) {
-                value.value[i] = (float)Math.Log(operands[0].value[i] + EPSILON);
+                var v = (float)Math.Log(operands[0].value[i] + EPSILON);
+                result.tensor.value[i] = v;
             }
 
-            return value;
+
         }
-        protected override Tensor[] _BackwardsPass(Tensor e) {
+        protected override void _BackwardsPass(Tensor e, Tensor[] result) {
             for (int i = 0; i < e.Size; i++) {
-                t.value[i] = e.value[i] / (inner[0].value.value[i] + EPSILON);
+                result[0].value[i] += e.value[i] / (inner[0].value.value[i] + EPSILON);
             }
-            return error;
         }
 
         public override Operation Copy(Dictionary<Operation, Operation> track) {
             return new Log(inner[0]._Copy(track));
+        }
+
+
+        class Cache {
+            public Tensor o;
+            public Tensor e;
         }
     }
 }

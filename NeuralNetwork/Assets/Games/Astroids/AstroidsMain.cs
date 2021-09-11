@@ -106,7 +106,7 @@ namespace Astroids {
 
             for (int i = 0; i < game.astroids.Count; i++) {
                 Astroid a = game.astroids[i];
-                a.pos += a.dir * .01f;
+                a.pos += a.dir * Parameters.AstroidrSpeed;
 
                 if ((a.pos - game.playerPos).sqrMagnitude < (a.size + playerSize) * (a.size + playerSize) / 4) {
                     ResetGame();

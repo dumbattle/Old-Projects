@@ -3,29 +3,20 @@ using System.Collections.Generic;
 
 namespace DumbML {
     public class Abs : Operation {
-        static ProfilerMarker profile = new ProfilerMarker("Abs.Eval");
-        static ProfilerMarker profileBackwards = new ProfilerMarker("Abs.Eval");
-        Tensor error;
-
 
         public Abs(Operation op) : base(op.shape, op) {
-            error= new Tensor(shape);
         }
 
-        protected override Tensor _Compute(Tensor[] operands) {
-            profile.Begin();
-            value.PointWise(operands[0], (a, b) => b >= 0 ? b : -b, true);
-            profile.End();
-            return value; 
+        protected override void _Compute(Tensor[] operands, TensorCache result) {
+            result.SetShape(operands[0].Shape);
+            result.tensor.PointWise(operands[0], (a, b) => b >= 0 ? b : -b, true);
         }
-        protected override Tensor[] _BackwardsPass(Tensor e) {
-            profileBackwards.Begin();
-            int s = error.Size;
+        protected override void _BackwardsPass(Tensor e, Tensor[] result) {
+            int s = e.Size;
+            var error = result[0];
             for (int i = 0; i < s; i++) {
-                error.value[i] = inner[0].value.value[i] >= 0 ? e.value[i] : -e.value[i];
+                error.value[i] += inner[0].value.value[i] >= 0 ? e.value[i] : -e.value[i];
             }
-            profileBackwards.End();
-            return new[] { error};
         }
 
         public override Operation Copy(Dictionary<Operation, Operation> track) {

@@ -75,11 +75,11 @@ namespace DumbML {
                         shape = ph.shape,
                     };
                 }
-                else if (ops[i] is DuplicateOperation dupe) {
-                    parameters[i] = new Parameters() {
-                        ind = ops.FindIndex((x) => x == dupe.i)
-                    };
-                }
+                //else if (ops[i] is DuplicateOperation dupe) {
+                //    parameters[i] = new Parameters() {
+                //        ind = ops.FindIndex((x) => x == dupe.i)
+                //    };
+                //}
 
                 _opTypes[i] = ops[i].GetType().Name;
                 _childOp[i] = new _ChildOp(ops[i].inner.Length);
@@ -143,9 +143,9 @@ namespace DumbML {
                     case "Divide":
                         res = new Divide(children[0], children[1]);
                         break;
-                    case "DuplicateOperation":
-                        res = new DuplicateOperation(BuildOp(parameters[ind].ind));
-                        break;
+                    //case "DuplicateOperation":
+                    //    res = new DuplicateOperation(BuildOp(parameters[ind].ind));
+                    //    break;
                     case "Exp":
                         res = new Exp(children[0]);
                         break;

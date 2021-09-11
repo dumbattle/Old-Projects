@@ -3,29 +3,18 @@ using System.Collections.Generic;
 
 namespace DumbML {
     public class Relu : Operation {
-        static ProfilerMarker profile = new ProfilerMarker("Relu.Eval");
-        static ProfilerMarker profileBackwards = new ProfilerMarker("Relu.Backwards");
-        Tensor error;
-
         public Relu(Operation op) : base(op.shape, op) {
-            error = new Tensor(shape);
+        }
+        protected override void _Compute(Tensor[] operands, TensorCache result) {
+            result.SetShape(operands[0].Shape);
+            result.tensor.PointWise(operands[0], (a, b) => (b > 0 ? b : 0), true);
         }
 
-        protected override Tensor _Compute(Tensor[] operands) {
-            profile.Begin();
-            value.PointWise(operands[0], (a, b) => (b > 0 ? b : 0), true);
-            profile.End();
-            return value; 
-        }
-
-        protected override Tensor[] _BackwardsPass(Tensor e) {
-            profileBackwards.Begin();
-            int s = error.Size;
+        protected override void _BackwardsPass(Tensor e, Tensor[] result) {
+            int s = e.Size;
             for (int i = 0; i < s; i++) {
-                error.value[i] = e.value[i] * (value.value[i] > 0 ? 1 : 0);
+                result[0].value[i] += e.value[i] * (value.value[i] > 0 ? 1 : 0);
             }
-            profileBackwards.End();
-            return new[] { error };
         }
         public override Operation Copy(Dictionary<Operation, Operation> track) {
             return new Relu(inner[0]._Copy(track));

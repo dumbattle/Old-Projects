@@ -7,7 +7,7 @@ namespace DumbML {
         ObjectPool<RLExperience> xpPool;
         RingBuffer<RLExperience> trajectory;
         List<RLExperience> usedXP = new List<RLExperience>();
-        float discount = .9f;
+        protected float discount = .9f;
 
         public Model actorModel { get; private set; }
         public Model criticModel { get; private set; }
@@ -21,7 +21,7 @@ namespace DumbML {
         Gradients g;
 
         TensorPool tensorPool = new TensorPool();
-
+        Tensor rewardTensor;
         public ActorCritic(int maxTrajectorySize = 1000) {
             trajectory = new RingBuffer<RLExperience>(maxTrajectorySize);
         }
@@ -32,28 +32,32 @@ namespace DumbML {
             Operation c = Critic(input);
             combinedAC = new Model(a + c);
             a.SetName("__ACTOR__");
-            a.SetName("__CRITIC__");
+            c.SetName("__CRITIC__");
 
             actorModel = new Model(a);
             criticModel = new Model(c);
 
 
             rewardPH = new Placeholder("t", 1);
-
+            rewardTensor = new Tensor(1);
+            rewardPH.SetVal(rewardTensor);
             var adv = rewardPH - c;
             actionMask = new Placeholder("tB", a.shape);
 
 
             var aloss = new Log(a * actionMask) * new BroadcastScalar(-1 * adv.Detach(), a.shape);
             var cLoss = Loss.MSE.Compute(rewardPH, c);
-
             loss = new Sum(aloss) + cLoss;
+            var al = AuxLoss();
+
+            if (al != null) {
+                loss += al;
+            }
 
             g = new Gradients(loss.GetOperations<Variable>());
             o = Optimizer();
             o.InitializeGradients(g);
             inputPH = loss.GetOperations<Placeholder>(condition: (x) => x != rewardPH && x != actionMask);
-
             xpPool = new ObjectPool<RLExperience>(NewXP);
             trainMask = new Tensor(actorModel.outputShape);
 
@@ -72,6 +76,9 @@ namespace DumbML {
             return new SGD();
         }
 
+        public virtual Operation AuxLoss() {
+            return null;
+        }
 
         public virtual void AddExperience(RLExperience exp) {
             trajectory.Add(exp);
@@ -107,7 +114,9 @@ namespace DumbML {
             RLExperience result = xpPool.Get();
 
             for (int i = 0; i < state.Length; i++) {
+                P.S();
                 var t = tensorPool.Get(state[i].Shape);
+                P.E();
                 t.CopyFrom(state[i]);
                 result.state[i] = t;
             }
@@ -116,7 +125,6 @@ namespace DumbML {
             result.output.CopyFrom(output);
             result.action = action;
             usedXP.Add(result);
-
             return result;
         }
 
@@ -136,7 +144,9 @@ namespace DumbML {
                     inputPH[j].SetVal(trajectory[i].state[j]);
                 }
 
-                rewardPH.value[0] = r;
+                rewardTensor.value[0] = r;
+                rewardPH.SetVal(rewardTensor);
+
                 actionMask.SetVal(trainMask);
 
                 loss.Eval();

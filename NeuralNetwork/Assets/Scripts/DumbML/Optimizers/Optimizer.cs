@@ -123,7 +123,14 @@ namespace DumbML {
 
         public override float UnpdateSingle(float g, int i) {
             v[i] = v[i] * gamma + g * g * (1 - gamma) ;
-            return g / (float)System.Math.Sqrt(v[i] + 1e-5f) * lr;
+            var result = g / (float)System.Math.Sqrt(v[i] + 1e-5f);
+            if (result > .0001f) {
+                result = .0001f;
+            }
+            else if (result < -.0001f) {
+                result = -.0001f;
+            }
+            return result * lr;
         }
     }
 
@@ -159,7 +166,8 @@ namespace DumbML {
         public override float UnpdateSingle(float g, int i) {
             v[i] = v[i] * gamma + g * g * (1 - gamma) ;
             m[i] = m[i] * beta + g * (1 - beta);
-            return m[i] / (float)System.Math.Sqrt(v[i] + 1e-5f) * lr;
+            var result = m[i] / (float)System.Math.Sqrt(v[i] + 1e-5f);
+            return result * lr;
         }
     }
 }

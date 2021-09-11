@@ -6,16 +6,9 @@ namespace DumbML {
 
     
     public class MatrixMult : Operation {
-
-        class Cache {
-            public Tensor value;
-            public Tensor le;
-            public Tensor re;
-        }
-        Tensor[] backwardsArray = new Tensor[2];
-        Dictionary<Vector3Int, Cache> dict = new Dictionary<Vector3Int, Cache>();
-
-        Vector3Int code;
+        TensorCache le = new TensorCache();
+        TensorCache re = new TensorCache();
+        List<int> shapeCache = new List<int>();
         public MatrixMult(Operation left, Operation right) : base(null, left, right) {
 
             if (left.shape.Length == 1) {
@@ -26,43 +19,33 @@ namespace DumbML {
                 shape = new[] { left.shape[0], right.shape[1] };
             }
         }
+        protected override void _Compute(Tensor[] operands, TensorCache result) {
 
-        protected override Tensor _Compute(Tensor[] operands) {
             var lshape = operands[0].Shape;
             var rshape = operands[1].Shape;
-            code = new Vector3Int(lshape.Length == 1 ? 1 : lshape[0], rshape[0], rshape[1]);
-            Tensor result;
+            var code = new Vector3Int(lshape.Length == 1 ? 1 : lshape[0], rshape[0], rshape[1]);
 
-            if (dict.ContainsKey(code)) {
-                result = dict[code].value;
+            shapeCache.Clear();
+            if (lshape.Length == 1) {
+                shapeCache.Add(code.z);
             }
             else {
-                var c = new Cache();
-                dict.Add(code, c);
-
-                if (lshape.Length == 1) {
-                    c.value = new Tensor(code.z);
-                    c.le = new Tensor(code.y);
-                    c.re = new Tensor(code.y, code.z);
-                }
-                else {
-                    c.value = new Tensor(code.x, code.z);
-                    c.le = new Tensor(code.x, code.y);
-                    c.re = new Tensor(code.y, code.z);
-                }
-
-
-                result = c.value;
+                shapeCache.Add(code.x);
+                shapeCache.Add(code.z);
             }
-            Blas.MatrixMult(operands[0], operands[1], result);
-            return result;
+
+            result.SetShape(shapeCache);
+            result.tensor.SetValuesToZero();
+            Blas.MatrixMult(operands[0], operands[1], result.tensor);
+
         }
-        protected override Tensor[] _BackwardsPass(Tensor e) {
-            var c = dict[code];
-            Blas.MatrixMultBackwards(inner[0].value, inner[1].value, e, (c.le, c.re));
-            backwardsArray[0] = c.le;
-            backwardsArray[1] = c.re;
-            return backwardsArray;
+        protected override void _BackwardsPass(Tensor e, Tensor[] result) {
+            //le.SetShape(result[0].Shape);
+            //re.SetShape(result[1].Shape);
+
+            Blas.MatrixMultBackwards(inner[0].value, inner[1].value, e, (result[0], result[1]));
+            //result[0].Add(le.tensor, true);
+            //result[1].Add(re.tensor, true);
         }
         public override Operation Copy(Dictionary<Operation, Operation> track) {
             return new MatrixMult(inner[0]._Copy(track), inner[1]._Copy(track));

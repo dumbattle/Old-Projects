@@ -10,7 +10,6 @@ namespace DumbML {
                 int rx = r.Shape[0];
                 int ry = r.Shape[1];
 
-
                 if (ly != rx) {
                     throw new System.InvalidOperationException($"Tensors do not have compatible dimensions: {l.Shape.ContentString()}, {r.Shape.ContentString()}");
                 }
@@ -18,15 +17,22 @@ namespace DumbML {
                 var rv = r.value;
                 var dv = dest.value;
 
+
+                int di = 0;
                 for (int x = 0; x < lx; x++) {
                     for (int y = 0; y < ry; y++) {
                         float sum = 0;
+                        int ri = y;
+                        int li = x * ly;
                         for (int i = 0; i < ly; i++) {
                             //sum += l[x, i] * r[i, y];
-                            sum += lv[x * ly + i] * rv[i * ry + y];
+                            sum += lv[li] * rv[ri];
+                            ri += ry;
+                            li++;
                         }
-                        //dest[x, y] = sum;
-                        dv[x * ry + y] = sum;
+                        //dest[x, y] += sum;
+                        dv[di] = sum;
+                        di++;
                     }
                 }
                 return dest;
@@ -37,21 +43,34 @@ namespace DumbML {
                 int ly = l.Shape[1];
                 int rx = r.Shape[0];
                 int ry = r.Shape[1];
-                if(e.value.Length == 0) {
+
+                var lv = l.value;
+                var rv = r.value;
+                var ev = e.value;
+                var drv = dest.re.value;
+                var dlv = dest.le.value;
+
+                if (e.value.Length == 0) {
                     return dest;
                 }
 
-                dest.le.SetValuesToZero();
-                dest.re.SetValuesToZero();
+                //dest.le.SetValuesToZero();
+                //dest.re.SetValuesToZero();
 
-            
 
+                int ei = 0;
                 for (int x = 0; x < lx; x++) {
                     for (int y = 0; y < ry; y++) {
+                        float err = ev[ei];
                         for (int i = 0; i < ly; i++) {
-                            dest.le[x, i] += r[i, y] * e[x,y];
-                            dest.re[i, y] += l[x, i] * e[x,y];
+                            //dest.le[x, i] += r[i, y] * e[x,y];
+                            //dest.re[i, y] += l[x, i] * e[x,y];
+                            int ri = i * ry + y;
+                            int li = x * ly + i;
+                            dlv[li] += rv[ri] * err;
+                            drv[ri] += lv[li] * err;
                         }
+                        ei++;
                     }
                 }
                 return dest;
@@ -129,11 +148,11 @@ namespace DumbML {
                     for (int y = 0; y < ry; y++) {
                         float err = ev[y];
                         v += err * rv[rind];
-                        dr[rind] = err * lv[i];
+                        dr[rind] += err * lv[i];
                         rind++;
 
                     }
-                    dl[i] = v;
+                    dl[i] += v;
                 };
 
 

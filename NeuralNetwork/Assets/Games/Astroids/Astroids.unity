@@ -235,15 +235,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4614d2c569e82ec4a8fa556c6b586620, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weights: {fileID: 11400000, guid: 0c4582a456747cb41ab22ed42c0b3553, type: 2}
-  mapSize: {x: 10, y: 10}
-  astroidSpawnChance: 0.01
-  astroidSize: {x: 0.25, y: 0.75}
-  playerSize: 1
   background: {fileID: 2086127694}
-  playerObj: {fileID: 96766939}
   astroidSrc: {fileID: 1487621605}
-  gameSpeed: 100
+  playerObj: {fileID: 96766939}
+  weights: {fileID: 11400000, guid: 83492007ff17d0a42bcf48c9c365a705, type: 2}
+  gameSpeed: 1000
   actor: 
 --- !u!4 &1262715943
 Transform:

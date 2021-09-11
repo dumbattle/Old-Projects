@@ -2,16 +2,14 @@
 
 namespace DumbML {
     public class Append : Operation {
-        Tensor[] errors;
+        int[] shapeCache;
         public Append(params Operation[] ops) : base(null, ops) {
             int dim = ops[0].shape.Length;
             shape = new int[dim];
-            errors = new Tensor[ops.Length];
-
+            shapeCache = new int[dim];
             for (int i = 0; i < ops.Length; i++) {
                 Operation o = (Operation)ops[i];
                 shape[0] += o.shape[0];
-                errors[i] = new Tensor(ops[i].shape);
 
                 if (o.shape.Length != dim) {
                     throw new System.InvalidOperationException("Cant append Operations");
@@ -23,32 +21,31 @@ namespace DumbML {
                     shape[j] = o.shape[j];
                 }
             }
-            value = new Tensor(shape);
         }
 
-        protected override Tensor _Compute(Tensor[] operands) {
+        protected override void _Compute(Tensor[] operands, TensorCache result) {
+          
+            result.SetShape(shape);
 
             int ind = 0;
 
             foreach (var o in operands) {
                 for (int i = 0; i < o.value.Length; i++) {
-                    value.value[ind] = o.value[i];
+                    result.tensor.value[ind] += o.value[i];
                     ind++;
                 }
             }
-            return value;
         }
 
-        protected override Tensor[] _BackwardsPass(Tensor e) {
+        protected override void _BackwardsPass(Tensor e, Tensor[] result) {
             int ind = 0;
 
-            foreach (var o in errors) {
+            foreach (var o in result) {
                 for (int i = 0; i < o.value.Length; i++) {
-                    o.value[i] = e.value[ind];
+                    o.value[i] += e.value[ind];
                     ind++;
                 }
             }
-            return errors;
         }
         public override Operation Copy(Dictionary<Operation, Operation> track) {
             return new Append(CopyInner(track));
