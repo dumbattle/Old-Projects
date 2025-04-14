@@ -38,26 +38,7 @@ namespace DumbML {
         }
 
         public void Optimize() {
-            //RemoveDupes();
         }
-        //void RemoveDupes(List<Operation> ops = null) {
-        //    if (ops == null) {
-        //        ops = new List<Operation>() { };
-        //    }
-
-        //    ops.Add(this);
-
-        //    for (int i = 0; i < inner.Length; i++) {
-        //        Operation op = inner[i];
-
-        //        if (ops.Contains(op)) {
-        //            inner[i] = new DuplicateOperation(op);
-        //        }
-        //        else {
-        //            op.RemoveDupes(ops);
-        //        }
-        //    }
-        //}
 
         #region Forward
         public Tensor Eval() {
@@ -80,14 +61,6 @@ namespace DumbML {
                 ProfileUtility.End(pfForward);
             }
 
-            //for (int i = 0; i < inner.Length; i++) {
-            //    operands[i] = inner[i].Eval();
-            //}
-            //ProfileUtility.Start(pfForward);
-            //ProfileUtility.Start(pfName);
-            //value = _Compute(operands);
-            //ProfileUtility.End(pfName);
-            //ProfileUtility.End(pfForward);
             return value;
         }
 
@@ -298,7 +271,6 @@ namespace DumbML {
 
 
         public Tensor SetShape(int[] shape) {
-            P.S();
             bool same = false;
             if (shape.Length == shapeList.Count) {
                 same = true;
@@ -310,7 +282,6 @@ namespace DumbML {
             }
 
             if (same) {
-            P.E();
                 return tensor;
             }
 
@@ -327,13 +298,11 @@ namespace DumbML {
 
                 dict.Add(new List<int>(shapeList), tensor);
             }
-            P.E();
             return tensor;
 
         }
         
         public Tensor SetShape(List<int> shape) {
-            P.S();
             bool same = false;
             if (shape.Count == shapeList.Count) {
                 same = true;
@@ -345,7 +314,6 @@ namespace DumbML {
             }
 
             if (same) {
-            P.E();
                 return tensor;
             }
             shapeList.Clear();
@@ -361,7 +329,6 @@ namespace DumbML {
 
                 dict.Add(new List<int>(shapeList), tensor);
             }
-            P.E();
             return tensor;
 
         }

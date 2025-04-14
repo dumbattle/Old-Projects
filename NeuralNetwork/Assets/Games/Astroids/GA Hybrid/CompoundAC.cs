@@ -14,8 +14,8 @@ namespace Astroids {
             }
         }
 
-        protected override Operation Actor(Operation input) {
-            Operation op = new FullyConnected(pCount).Build(input);
+        protected override Operation Actor(Operation[] input) {
+            Operation op = new FullyConnected(pCount).Build(input[0]);
             op = new Softmax(op);
 
 
@@ -32,13 +32,13 @@ namespace Astroids {
             return op;
         }
 
-        protected override Operation Critic(Operation input) {
-            Operation op = new FullyConnected(16, ActivationFunction.Sigmoid).Build(input);
+        protected override Operation Critic(Operation[] input) {
+            Operation op = new FullyConnected(16, ActivationFunction.Sigmoid).Build(input[0]);
             op = new FullyConnected(1).Build(op);
             return op;
         }
 
-        protected override Operation Input() {
+        protected override Operation[] Input() {
 
             Operation playerPos = new InputLayer(2).Build().SetName("Player Position Input");          // [2]
             Operation astroidInput = new Placeholder("Astroid Input", -1, Parameters.AstroidDataSize); // [x, a]
@@ -60,7 +60,7 @@ namespace Astroids {
             op = new Append(playerPos, op);
             op = new FullyConnected(32, ActivationFunction.Sigmoid).Build(op);
 
-            return op;
+            return new[] { op };
         }
     }
 }

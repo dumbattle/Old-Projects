@@ -8,8 +8,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <RootNamespace>
-    </RootNamespace>
+    <RootNamespace></RootNamespace>
     <ProjectGuid>{9882B084-551B-F402-60A9-6ECAD97EBAA8}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -57,46 +56,42 @@
     <Analyzer Include="C:\Program Files (x86)\Microsoft Visual Studio Tools for Unity\16.0\Analyzers\Microsoft.Unity.Analyzers.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Games\BoardShooter\ShooterMain.cs" />
-    <Compile Include="Assets\Games\Astroids\AstroidsACMain.cs" />
     <Compile Include="Assets\Games\_FB\FlappyPG.cs" />
     <Compile Include="Assets\Games\Chess\Move.cs" />
     <Compile Include="Assets\Games\Astroids\Astroid.cs" />
-    <Compile Include="Assets\Games\Snake\Scripts\SnakePG.cs" />
     <Compile Include="Assets\Games\Astroids\GA Hybrid\UnitPolicy.cs" />
-    <Compile Include="Assets\Games\TTT\PPOTest.cs" />
     <Compile Include="Assets\MLModelAsset.cs" />
+    <Compile Include="Assets\Games\Astroids\AstroidsACMain.cs" />
     <Compile Include="Assets\RandomTestStuffMain.cs" />
     <Compile Include="Assets\Games\MCTS\TTT.cs" />
-    <Compile Include="Assets\Games\TTT\Models.cs" />
     <Compile Include="Assets\Games\Astroids\GA Hybrid\GameController.cs" />
     <Compile Include="Assets\Games\_FB\BirdRL.cs" />
     <Compile Include="Assets\Games\_FB\Block.cs" />
+    <Compile Include="Assets\Games\Astroids\GA Hybrid\CompoundAC.cs" />
+    <Compile Include="Assets\Games\Snake\Scripts\SnakePG.cs" />
     <Compile Include="Assets\Games\Astroids\GA Hybrid\CompoundACPlayer.cs" />
-    <Compile Include="Assets\Games\_FB\FlappyAC.cs" />
     <Compile Include="Assets\WeightTester.cs" />
     <Compile Include="Assets\Games\Chess\Piece.cs" />
-    <Compile Include="Assets\Games\TTT\TTTMain.cs" />
     <Compile Include="Assets\Main.cs" />
-    <Compile Include="Assets\Games\Astroids\GameData.cs" />
     <Compile Include="Assets\ConvTester.cs" />
     <Compile Include="Assets\Games\Chess\ChessPlayer.cs" />
-    <Compile Include="Assets\Games\TTT\Game.cs" />
     <Compile Include="Assets\Games\Astroids\AstroidMainBase.cs" />
     <Compile Include="Assets\Games\Snake\Scripts\SnakeGA.cs" />
     <Compile Include="Assets\Games\Chess\Game.cs" />
     <Compile Include="Assets\Games\_FB\Bird.cs" />
+    <Compile Include="Assets\Games\_FB\FlappyAC.cs" />
+    <Compile Include="Assets\Games\Astroids\GameData.cs" />
     <Compile Include="Assets\UnsafeTester.cs" />
+    <Compile Include="Assets\Games\Astroids\Player.cs" />
     <Compile Include="Assets\DupeTest.cs" />
     <Compile Include="Assets\Games\Astroids\GA Hybrid\ModelUtility.cs" />
-    <Compile Include="Assets\Games\Astroids\GA Hybrid\CompoundAC.cs" />
     <Compile Include="Assets\Games\Chess\ChessModel.cs" />
     <Compile Include="Assets\Games\Astroids\GA Hybrid\ACPoolMain.cs" />
-    <Compile Include="Assets\Games\Astroids\Player.cs" />
     <Compile Include="Assets\Games\Chess\Chess.cs" />
     <Compile Include="Assets\Games\Chess\ChessTrainer.cs" />
     <Compile Include="Assets\Games\Astroids\Parameters.cs" />
     <Compile Include="Assets\Games\Chess\Board.cs" />
+    <Compile Include="Assets\Games\BoardShooter\ShooterMain.cs" />
     <Compile Include="Assets\GraphTester.cs" />
     <Compile Include="Assets\Games\_FB\FlappyBird.cs" />
     <Compile Include="Assets\Games\Astroids\AstroidsMain.cs" />
@@ -104,6 +99,10 @@
     <Compile Include="Assets\Games\_FB\BirdPG.cs" />
     <Compile Include="Assets\SerializationTester.cs" />
     <Compile Include="Assets\Games\_FB\FlappyAgent.cs" />
+    <Compile Include="Assets\Games\TTT\TTTMain.cs" />
+    <Compile Include="Assets\Games\TTT\Game.cs" />
+    <Compile Include="Assets\Games\TTT\Models.cs" />
+    <Compile Include="Assets\Games\TTT\PPOTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">
@@ -750,9 +749,6 @@
       <Project>{599F5ECA-FFEC-5141-FF58-7FED81A4BE01}</Project>
       <Name>Utility</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Assets\Games\_Salmon\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />

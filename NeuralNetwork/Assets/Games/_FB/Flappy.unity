@@ -471,8 +471,10 @@ MonoBehaviour:
   advantage: 
   actor: 
   critic: 
+  steps: 0
+  highScore: 0
   score: 0
-  gameSpeed: 1000
+  gameSpeed: 100
 --- !u!4 &1169792543
 Transform:
   m_ObjectHideFlags: 0

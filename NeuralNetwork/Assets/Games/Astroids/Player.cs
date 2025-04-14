@@ -38,7 +38,7 @@ namespace Astroids {
 
         VariableStack1D astroidInput = new VariableStack1D(Parameters.AstroidDataSize);
         List<Tensor> atList = new List<Tensor>();
-        AstroidAC ai;
+        public AstroidAC ai;
         RLExperience exp;
         ObjectPool<Tensor> atPool = new ObjectPool<Tensor>(() => new Tensor(Parameters.AstroidDataSize));
 
@@ -86,6 +86,9 @@ namespace Astroids {
 
             atList.Clear();
             foreach (var a in game.astroids) {
+                if (!game.AstroidInMap(a)) {
+                    continue;
+                }
                 var t = atPool.Get();
                 t[0] = a.pos.x / game.mapSize.x;
                 t[1] = a.pos.y / game.mapSize.y;
@@ -153,31 +156,34 @@ namespace Astroids {
             activePT.Clear();
             weights?.Save(variables);
             scoreChannel.Feed(score);
-            float g = .999f;
+            float g = avgsSore == 0 ? 0 : .999f;
             avgsSore = avgsSore * g + score * (1 - g);
-            if (episodeCount % 1000 == 0) {
-                avgScoreChannel.Feed(avgsSore);
-                avgScoreChannel.SetRange(scoreChannel.yMin, scoreChannel.yMax);
-            }
+            avgScoreChannel.Feed(avgsSore);
+            avgScoreChannel.SetRange(scoreChannel.yMin, scoreChannel.yMax);
             score = 0;
-            episodeCount++;
         }
     }
     public class AstroidAC : ActorCritic {
         public Operation testOP;
         public Operation attn;
         public AstroidAC() {
-            discount = .999f;
+            discount = .9f;
         }
-        protected override Operation Input() {
+        protected override Operation[] Input() {
             Operation playerPos = new InputLayer(2).Build().SetName("Player Position Input");          // [2]
             Operation astroidInput = new Placeholder("Astroid Input", -1, Parameters.AstroidDataSize); // [x, a]
 
-            int ksize = 16;
-            int vsize = 17;
-            int qSize = 3;
-            Operation aKey = new FullyConnected(ksize, bias: false).Build(astroidInput); // [x, ksize]
-            Operation aVal = new FullyConnected(vsize,bias: false).Build(astroidInput); // [x, vsize]
+            return new[] { playerPos, astroidInput };
+        }
+
+        protected override Operation Actor(Operation[] input) {
+            Operation playerPos = input[0];          // [2]
+            Operation astroidInput = input[1];       // [x, a]
+            int ksize = 8;
+            int vsize = 8;
+            int qSize = 8;
+            Operation aKey = new FullyConnected(ksize).Build(astroidInput); // [x, ksize]
+            Operation aVal = new FullyConnected(vsize).Build(astroidInput); // [x, vsize]
 
             Operation[] qInput = new Operation[qSize];
             for (int i = 0; i < qSize; i++) {
@@ -188,22 +194,41 @@ namespace Astroids {
             this.attn = attn;
 
             op = new FlattenOp(op);
-            op = new FullyConnected(16, ActivationFunction.Sigmoid).Build(op); // [qsize, vsize]
+            op = new FullyConnected(64, ActivationFunction.Sigmoid).Build(op); // [qsize, vsize]
             op = new Append(playerPos, op);
-            return op;
-        }
 
-        protected override Operation Actor(Operation input) {
-            Operation op = new FullyConnected(32, ActivationFunction.Sigmoid).Build(input);
-            op = new FullyConnected(9, ActivationFunction.Sigmoid).Build(op);
+
+            op = new FullyConnected(64, ActivationFunction.Sigmoid).Build(op);
+            op = new FullyConnected(64, ActivationFunction.Sigmoid).Build(op);
             op = new FullyConnected(9).Build(op);
             op = new Softmax(op);
 
             return op;
         }
 
-        protected override Operation Critic(Operation input) {
-            Operation op = new FullyConnected(16, ActivationFunction.Sigmoid).Build(input);
+        protected override Operation Critic(Operation[] input) {
+            Operation playerPos = input[0];          // [2]
+            Operation astroidInput = input[1];       // [x, a]
+            int ksize = 8;
+            int vsize = 8;
+            int qSize = 8;
+            Operation aKey = new FullyConnected(ksize, bias: false).Build(astroidInput); // [x, ksize]
+            Operation aVal = new FullyConnected(vsize, bias: false).Build(astroidInput); // [x, vsize]
+
+            Operation[] qInput = new Operation[qSize];
+            for (int i = 0; i < qSize; i++) {
+                qInput[i] = new FullyConnected(ksize).Build(playerPos);
+            }
+            Operation q = new Stack1D(qInput);                              // [qsize, ksize]
+            var (op, attn) = Attention.ScaledDotProduct(aKey, aVal, q);
+
+            op = new FlattenOp(op);
+            op = new FullyConnected(32, ActivationFunction.Sigmoid).Build(op); // [qsize, vsize]
+            op = new Append(playerPos, op);
+
+
+            op = new FullyConnected(32, ActivationFunction.Sigmoid).Build(op);
+            op = new FullyConnected(16, ActivationFunction.Sigmoid).Build(op);
             var f = new FullyConnected(1);
             op = f.Build(op);
             f.bias.SetName("Critic bias");
@@ -213,7 +238,8 @@ namespace Astroids {
         }
 
         public override Operation AuxLoss() {
-            Operation entropy = new Sum(attn * new Log(attn)) * new Constant(Tensor.FromArray(new float[] { -1 }));
+            return null;
+            Operation entropy = new Sum(attn * new Log(attn)) * new Constant(Tensor.FromArray(new float[] { -.00001f }));
             testOP = entropy;
             return entropy;
         }

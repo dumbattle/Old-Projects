@@ -65,8 +65,6 @@ namespace DumbML {
                                     for (int fx = 0; fx < filterWidth; fx++) {
                                         for (int fy = 0; fy < filterHeight; fy++) {
                                             //v += input[x * strideX + fx, y * strideY + fy, ic] * filters[fx, fy, ic, oc];
-
-
                                             int inputIndex =
                                                 inputStart +
                                                 i_f_x +

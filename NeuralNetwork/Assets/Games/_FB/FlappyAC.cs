@@ -18,20 +18,20 @@ namespace Flappy {
             combinedAC.SetWeights(weights);
         }
 
-        protected override Operation Input() {
+        protected override Operation[] Input() {
             Operation x = new InputLayer(4).Build();
             x = new FullyConnected(30, ActivationFunction.Sigmoid).Build(x);
-            return x;
+            return new[] { x };
         }
-        protected override Operation Actor(Operation input) {
-            Operation a = new FullyConnected(2).Build(input);
+        protected override Operation Actor(Operation[] input) {
+            Operation a = new FullyConnected(2).Build(input[0]);
 
             //a = a.Softmax();
             a = new Softmax(a);
             return a;
         }
-        protected override Operation Critic(Operation input) {
-            Operation c = new FullyConnected(1).Build(input);
+        protected override Operation Critic(Operation[] input) {
+            Operation c = new FullyConnected(1).Build(input[0]);
 
             return c;
         }

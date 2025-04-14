@@ -242,7 +242,7 @@ namespace Shooter {
             size = (x, y);
         }
 
-        protected override Operation Input() {
+        protected override Operation[] Input() {
             Operation inp = new InputLayer(size.x, size.y, 3).Build();
             Operation x = new Convolution2D(8, (3, 3), ActivationFunction.Tanh, (1, 1), false).Build(inp);
             x = new Convolution2D(8, (3, 3), ActivationFunction.Tanh, (1, 1), false).Build(x);
@@ -260,17 +260,17 @@ namespace Shooter {
 
             Operation result = new Append(x, y);
             result = new FullyConnected(64, ActivationFunction.Sigmoid, false).Build(result);
-            return result;
+            return new[] { result };
         }
 
-        protected override Operation Actor(Operation input) {
-            Operation x = new FullyConnected(4, bias: false).Build(input);
+        protected override Operation Actor(Operation[] input) {
+            Operation x = new FullyConnected(4, bias: false).Build(input[0]);
             x = x.Softmax();
             return x;
         }
 
-        protected override Operation Critic(Operation input) {
-            Operation x = new FullyConnected(1, bias: true).Build(input);
+        protected override Operation Critic(Operation[] input) {
+            Operation x = new FullyConnected(1, bias: true).Build(input[0]);
             return x;
         }
 

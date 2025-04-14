@@ -100,6 +100,11 @@ public class SnakePG : MonoBehaviour {
             food = RandomPos(newPos);
             noFoodCount = 0;
         }
+        else {
+            float dx = newPos.x - food.x;
+            float dy = newPos.y - food.y;
+            reward = .5f / Mathf.Sqrt(dx * dx + dy * dy);
+        }
         totalReward += reward;
         exp.reward = reward;
 
@@ -158,7 +163,7 @@ public class SnakeAC : ActorCritic {
         combinedAC.SetWeights(weights);
     }
 
-    protected override Operation Input() {
+    protected override Operation[] Input() {
         Operation inp = new InputLayer(_mapShape.x, _mapShape.y, 2).Build();
         Operation x = new Convolution2D(5, af: ActivationFunction.Tanh, pad: false).Build(inp);
         x = new Convolution2DDepSep(5, af: ActivationFunction.Tanh, pad: false).Build(x);
@@ -175,18 +180,18 @@ public class SnakeAC : ActorCritic {
         Operation o = new Append(x, y);
         o = new FullyConnected(50, ActivationFunction.Sigmoid, false).Build(o);
 
-        return o;
+        return new[] { o };
     }
 
 
-    protected override Operation Actor(Operation input) {
-        Operation x = new FullyConnected(4, bias: false).Build(input);
+    protected override Operation Actor(Operation[] input) {
+        Operation x = new FullyConnected(4, bias: false).Build(input[0]);
         x = x.Softmax();
         return x;
     }
 
-    protected override Operation Critic(Operation input) {
-        Operation x = new FullyConnected(1, bias: true).Build(input);
+    protected override Operation Critic(Operation[] input) {
+        Operation x = new FullyConnected(1, bias: true).Build(input[0]);
         return x;
     }
 

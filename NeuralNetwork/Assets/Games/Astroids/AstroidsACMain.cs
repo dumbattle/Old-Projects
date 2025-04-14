@@ -35,12 +35,11 @@ namespace Astroids {
                 GameUpdate();
             }
             actor = ((ACPlayer)player).aout;
-            DisplayGame();
+            DisplayGame(((ACPlayer)player).ai.attn.value);
         }
 
         private void GameUpdate() {
 
-            player.Update(game);
             if (game.playerPos.x > Parameters.mapSize.x / 2) {
                 ResetGame();
                 return;
@@ -105,6 +104,8 @@ namespace Astroids {
                     i--;
                 }
             }
+            player.Update(game);
+
         }
         void ResetGame() {
             player.EndGame(game);
@@ -114,18 +115,56 @@ namespace Astroids {
             }
             game.astroids.Clear();
         }
-        void DisplayGame() {
+        void DisplayGame(DumbML.Tensor attn = null) {
             playerObj.transform.position = game.playerPos;
             foreach (var a in activeAstroids) {
                 a.SetActive(false);
                 astroidPool.Return(a);
             }
             activeAstroids.Clear();
+
+            int i = 0;
+
+
+            float max = 0;
+            if (attn != null) {
+                foreach (var a in game.astroids) {
+                    if (game.AstroidInMap(a)) {
+                        int count = attn.Shape[0];
+                        float sum = 0;
+                        for (int j = 0; j < count; j++) {
+                            sum += attn[j, i];
+                        }
+                        sum /= count;
+                        max = Mathf.Max(max, sum);
+                        i++;
+                    }
+                }
+            }
+
+            i = 0;
             foreach (var a in game.astroids) {
+                Color c = Color.black;
+
+                if (attn != null) {
+                    if (game.AstroidInMap(a)) {
+                        int count = attn.Shape[0];
+                        float sum = 0;
+                        for (int j = 0; j < count; j++) {
+                            sum += attn[j, i];
+                        }
+                        sum /= count;
+                        c.r = sum / max;
+                        i++;
+                    }
+                    else {
+                        c.a = 0;
+                    }
+                }
                 var obj = astroidPool.Get();
                 obj.SetActive(true);
                 activeAstroids.Add(obj);
-
+                obj.GetComponent<SpriteRenderer>().color = c;
                 obj.transform.position = a.pos;
                 obj.transform.localScale = new Vector3(a.size, a.size);
             }

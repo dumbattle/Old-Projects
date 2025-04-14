@@ -19,7 +19,6 @@ namespace DumbML {
 
         Optimizer o;
         Gradients g;
-
         TensorPool tensorPool = new TensorPool();
         Tensor rewardTensor;
         public ActorCritic(int maxTrajectorySize = 1000) {
@@ -27,7 +26,7 @@ namespace DumbML {
         }
 
         public void Build() {
-            Operation input = Input();
+            Operation[] input = Input();
             Operation a = Actor(input);
             Operation c = Critic(input);
             combinedAC = new Model(a + c);
@@ -68,9 +67,9 @@ namespace DumbML {
             }
         }
 
-        protected abstract Operation Input();
-        protected abstract Operation Actor(Operation input);
-        protected abstract Operation Critic(Operation input);
+        protected abstract Operation[] Input();
+        protected abstract Operation Actor(Operation[] input);
+        protected abstract Operation Critic(Operation[] input);
 
         protected virtual Optimizer Optimizer() {
             return new SGD();
@@ -109,14 +108,11 @@ namespace DumbML {
 
         public RLExperience SampleAction(params Tensor[] state) {
             Tensor output = actorModel.Compute(state);
-
             int action = output.Sample();
             RLExperience result = xpPool.Get();
 
             for (int i = 0; i < state.Length; i++) {
-                P.S();
                 var t = tensorPool.Get(state[i].Shape);
-                P.E();
                 t.CopyFrom(state[i]);
                 result.state[i] = t;
             }
@@ -221,14 +217,4 @@ namespace DumbML {
         }
     }
 
-}
-public static class P {
-    static Unity.Profiling.ProfilerMarker pm = new Unity.Profiling.ProfilerMarker("Test2");
-
-    public static void S() {
-        pm.Begin();
-    }
-    public static void E() {
-        pm.End();
-    }
 }

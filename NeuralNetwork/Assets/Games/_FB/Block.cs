@@ -1,7 +1,23 @@
-﻿using UnityEngine;
+﻿using LPE;
+using UnityEngine;
 
 namespace Flappy {
     public class Block : IGameObject {
+        static ObjectPool<Block> pool = new ObjectPool<Block>(() => new Block());
+
+        public static Block Get(float bottom, float top, Game g) {
+            var result = pool.Get();
+            result.g = g;
+            result.bottom = bottom;
+            result.top = top;
+            result.obj.SetActive(true);
+            result.obj.transform.localScale = new Vector2(Game.blockSize.x, top - bottom);
+            result.x = Game.gameSize.x - 1;
+            g.blocks.Add(result);
+            return result;
+        }
+
+
         public GameObject obj { get; }
         public Vector2 position { get => new Vector2(x, (top + bottom) / 2); }
 
@@ -9,26 +25,18 @@ namespace Flappy {
         public float top;
         public float x;
         Game g;
-        public Block(float bottom, float top, Game g) {
-            this.g = g;
-            this.bottom = bottom;
-            this.top = top;
 
+        public Block() { 
             obj = FlappyBird.GetBlock();
-            obj.transform.localScale = new Vector2(Game.blockSize.x, top - bottom);
-            x = Game.gameSize.x - 1;
-            g.OnUpdate += Next;
-            g.OnReset += Die;
-            g.blocks.Add(this);
         }
-        void Die() {
-            g.OnUpdate -= Next;
-            g.OnReset -= Die;
+
+        public void Die() {
             g.blocks.Remove(this);
-            Object.Destroy(obj);
             x = 1000; 
+            pool.Return(this);
+            obj.SetActive(false);
         }
-        void Next() {
+        public void Next() {
             x -= g.speed;
             g.SetWorldPosition(this);
             if (x < - Game.blockSize.x) {
@@ -48,11 +56,7 @@ namespace Flappy {
                 }
             }
 
-
             return false;
         }
-
     }
-
-
 }

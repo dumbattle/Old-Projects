@@ -14,11 +14,14 @@ namespace Flappy {
         public float speed = .1f;
         public Bird bird;
         public List<Block> blocks = new List<Block>();
+        Tensor stateTensor = new Tensor(4);
 
         float spawnTimer = 0;
         public float score = 0;
 
         Channel scoreChannel;
+        bool doReset;
+
 
         public Game(Vector2 offset) {
             scoreChannel = Channel.New("Score");
@@ -33,16 +36,26 @@ namespace Flappy {
 
         public void Next() {
             OnUpdate?.Invoke();
+
+            for (int i = blocks.Count - 1; i >= 0; i--) {
+                Block block = blocks[i];
+                block.Next();
+            }
+            if (doReset) {
+                Reset();
+            }
+
             spawnTimer -= .1f;
             score += .1f;
             if (spawnTimer <= 0) {
                 CreateBlock();
                 spawnTimer = 10;
             }
-
+        
             bird.Next();
             SetWorldPosition(bird);
             var b = GetClosestBlocks();
+
         }
 
 
@@ -62,10 +75,15 @@ namespace Flappy {
 
         }
         public void BirdCollision () {
-            Reset();
+            doReset = true;
         }
         public void Reset() {
+            doReset = false;
             OnReset?.Invoke();
+            for (int i = blocks.Count - 1; i >= 0; i--) {
+                Block block = blocks[i];
+                block.Die();
+            }
             scoreChannel.Feed(score);
             score = 0;
             spawnTimer = 0;
@@ -74,8 +92,8 @@ namespace Flappy {
         void CreateBlock() {
             //get height
             float bottom = Random.Range(1, gameSize.y - 1 - blockSize.y);
-            Block b1 = new Block(0, bottom,this);
-            Block b2 = new Block(bottom + blockSize.y, gameSize.y,this);
+            Block b1 = Block.Get(0, bottom,this);
+            Block b2 = Block.Get(bottom + blockSize.y, gameSize.y,this);
             SetWorldPosition(b1);
             SetWorldPosition(b2);
         }
@@ -90,14 +108,13 @@ namespace Flappy {
             /// bird velocity
             /// closest block
             /// block height
-            Tensor result = new Tensor(4);
             var closest = GetClosestBlocks();
 
-            result[0] = bird.height / gameSize.y;
-            result[1] = bird.velocity / 10;
-            result[2] = closest.top.x / gameSize.x;
-            result[3] = closest.bottom.top / gameSize.y;
-            return result;
+            stateTensor[0] = bird.height / gameSize.y;
+            stateTensor[1] = bird.velocity / 10;
+            stateTensor[2] = closest.top.x / gameSize.x;
+            stateTensor[3] = closest.bottom.top / gameSize.y;
+            return stateTensor;
         }
     }
     public delegate void GameUpdate();

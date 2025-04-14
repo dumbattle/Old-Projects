@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using DumbML;
+using System.Diagnostics;
 namespace Flappy {
     public class FlappyBird : MonoBehaviour {
         public static FlappyBird main;
@@ -16,11 +17,13 @@ namespace Flappy {
         public Vector2 blockSize;
 
         public string output, value, advantage, actor, critic;
+        public int steps;
+        public float highScore;
         public float score;
         [Space]
         public int gameSpeed = 1;
         Game game;
-        
+        Stopwatch timer = new Stopwatch();
 
         void Start() {
             main = this;
@@ -30,18 +33,25 @@ namespace Flappy {
             bird.SetActive(false);
             block.SetActive(false);
             game = new Game(-gameSize / 2);
-            StartCoroutine(Next());
+            steps = 0;
         }
 
-        IEnumerator Next() {
-            while (true) {
-                for (int i = 0; i < gameSpeed; i++) {
-                    game.Next();
+        void Update() {
+            timer.Restart();
+            for (int i = 0; i < gameSpeed; i++) {
+                if (timer.ElapsedMilliseconds > 1000) {
+                    gameSpeed = i;
+                    break;
+                }
+                steps++;
+                game.Next();
+                if (game.score > highScore) {
+                    highScore = game.score;
                 }
 
-                score = game.score;
-                yield return null;
             }
+            timer.Stop();
+            score = game.score;
         }
 
         public static GameObject GetBird() {
