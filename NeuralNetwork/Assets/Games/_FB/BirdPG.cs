@@ -42,7 +42,5 @@ namespace Flappy {
             ai.EndTrajectory();
             base.Reset();
         }
-
     }
-
 }

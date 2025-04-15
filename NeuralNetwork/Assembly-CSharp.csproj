@@ -8,8 +8,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <RootNamespace>
-    </RootNamespace>
+    <RootNamespace></RootNamespace>
     <ProjectGuid>{9882B084-551B-F402-60A9-6ECAD97EBAA8}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -53,9 +52,6 @@
     <UnityBuildTarget>StandaloneWindows64:19</UnityBuildTarget>
     <UnityVersion>2020.3.1f1</UnityVersion>
   </PropertyGroup>
-  <ItemGroup>
-    <Analyzer Include="C:\Program Files (x86)\Microsoft Visual Studio Tools for Unity\16.0\Analyzers\Microsoft.Unity.Analyzers.dll" />
-  </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Games\BoardShooter\ShooterMain.cs" />
     <Compile Include="Assets\Games\Astroids\AstroidsACMain.cs" />
@@ -104,8 +100,19 @@
     <Compile Include="Assets\Games\_FB\BirdPG.cs" />
     <Compile Include="Assets\SerializationTester.cs" />
     <Compile Include="Assets\Games\_FB\FlappyAgent.cs" />
+    <Compile Include="Assets\Games\_Salmon\Scripts\SalmonMain.cs" />
+    <Compile Include="Assets\Games\_Salmon\Scripts\SalmonGame.cs" />
+    <Compile Include="Assets\Games\_Salmon\Scripts\Obstacle.cs" />
+    <Compile Include="Assets\Games\_Salmon\Scripts\SalmonParameters.cs" />
+    <Compile Include="Assets\Games\_Salmon\Scripts\SalmonAC.cs" />
+    <Compile Include="Assets\Games\_Salmon\Scripts\SalmonTrainer.cs" />
+    <Compile Include="Assets\Games\_Salmon\Scripts\SalmonObjectBehaviour.cs" />
+    <Compile Include="Assets\Games\_Salmon\Scripts\AnimatedSalmonObjectBehaviour.cs" />
+    <Compile Include="Assets\Games\_Salmon\Scripts\PlayerSalmonObjectBehaviour.cs" />
+    <Compile Include="Assets\Games\_Salmon\Scripts\BackgroundBehaviour.cs" />
   </ItemGroup>
   <ItemGroup>
+     <None Include="Assets\Imported Assets\src.txt" />
     <Reference Include="UnityEngine">
       <HintPath>C:\Program Files\Unity\Hub\Editor\2020.3.1f1\Editor\Data\Managed\UnityEngine\UnityEngine.dll</HintPath>
     </Reference>
@@ -750,9 +757,6 @@
       <Project>{599F5ECA-FFEC-5141-FF58-7FED81A4BE01}</Project>
       <Name>Utility</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Assets\Games\_Salmon\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />

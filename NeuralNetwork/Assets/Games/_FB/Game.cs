@@ -12,8 +12,10 @@ namespace Flappy {
 
         public Vector2 offset;
         public float speed = .1f;
-        public Bird bird;
         public List<Block> blocks = new List<Block>();
+        public Bird bird;
+
+
         Tensor stateTensor = new Tensor(4);
 
         float spawnTimer = 0;
