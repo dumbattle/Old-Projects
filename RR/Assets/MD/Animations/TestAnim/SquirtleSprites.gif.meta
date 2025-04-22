@@ -1,0 +1,946 @@
+fileFormatVersion: 2
+guid: ad123e701b2e318458e81cea3c8907fa
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 740720103671623585
+    second: Idle_Left_1
+  - first:
+      213: -1796155980374728456
+    second: Idle_UpRight_1
+  - first:
+      213: 6502853895771192927
+    second: e53c188ed5719f62ded647cc57e9dae9_2
+  - first:
+      213: -3130085333274652723
+    second: e53c188ed5719f62ded647cc57e9dae9_3
+  - first:
+      213: -6646615454181286149
+    second: e53c188ed5719f62ded647cc57e9dae9_4
+  - first:
+      213: 1796691140875379643
+    second: e53c188ed5719f62ded647cc57e9dae9_5
+  - first:
+      213: -5648861096766455220
+    second: e53c188ed5719f62ded647cc57e9dae9_6
+  - first:
+      213: 4266186456729283098
+    second: e53c188ed5719f62ded647cc57e9dae9_7
+  - first:
+      213: -6365959649825133965
+    second: e53c188ed5719f62ded647cc57e9dae9_8
+  - first:
+      213: -2383065568604507859
+    second: e53c188ed5719f62ded647cc57e9dae9_9
+  - first:
+      213: -5088652029398702059
+    second: e53c188ed5719f62ded647cc57e9dae9_10
+  - first:
+      213: 17983724437714364
+    second: e53c188ed5719f62ded647cc57e9dae9_11
+  - first:
+      213: 4635506261505610429
+    second: e53c188ed5719f62ded647cc57e9dae9_12
+  - first:
+      213: 5865290157992368723
+    second: e53c188ed5719f62ded647cc57e9dae9_13
+  - first:
+      213: -6557514900196669117
+    second: e53c188ed5719f62ded647cc57e9dae9_14
+  - first:
+      213: -1859255987137191295
+    second: e53c188ed5719f62ded647cc57e9dae9_15
+  - first:
+      213: 4408517658087812519
+    second: e53c188ed5719f62ded647cc57e9dae9_16
+  - first:
+      213: 2115507328890299267
+    second: e53c188ed5719f62ded647cc57e9dae9_17
+  - first:
+      213: 3704505670571289271
+    second: e53c188ed5719f62ded647cc57e9dae9_18
+  - first:
+      213: 7228347291427872131
+    second: e53c188ed5719f62ded647cc57e9dae9_19
+  - first:
+      213: 8124025429100901285
+    second: e53c188ed5719f62ded647cc57e9dae9_20
+  - first:
+      213: 4217837728042524652
+    second: e53c188ed5719f62ded647cc57e9dae9_21
+  - first:
+      213: 5328728460753910448
+    second: e53c188ed5719f62ded647cc57e9dae9_22
+  - first:
+      213: 8301454389574520608
+    second: e53c188ed5719f62ded647cc57e9dae9_23
+  - first:
+      213: -4872540138478641585
+    second: e53c188ed5719f62ded647cc57e9dae9_24
+  - first:
+      213: 5748004435161962418
+    second: e53c188ed5719f62ded647cc57e9dae9_25
+  - first:
+      213: -1145378274323389610
+    second: e53c188ed5719f62ded647cc57e9dae9_26
+  - first:
+      213: 1803275220025335090
+    second: e53c188ed5719f62ded647cc57e9dae9_27
+  - first:
+      213: 1809581394992570079
+    second: e53c188ed5719f62ded647cc57e9dae9_28
+  - first:
+      213: -8248268345102845144
+    second: e53c188ed5719f62ded647cc57e9dae9_29
+  - first:
+      213: 4154603215693981302
+    second: e53c188ed5719f62ded647cc57e9dae9_30
+  - first:
+      213: -6137280419621089627
+    second: e53c188ed5719f62ded647cc57e9dae9_31
+  - first:
+      213: 9002374462263831998
+    second: e53c188ed5719f62ded647cc57e9dae9_32
+  - first:
+      213: 8589561567368170418
+    second: e53c188ed5719f62ded647cc57e9dae9_33
+  - first:
+      213: -9154938936311538209
+    second: e53c188ed5719f62ded647cc57e9dae9_34
+  - first:
+      213: -2460613436219064174
+    second: e53c188ed5719f62ded647cc57e9dae9_35
+  - first:
+      213: 1961748122776988666
+    second: e53c188ed5719f62ded647cc57e9dae9_36
+  - first:
+      213: 1792689313365521015
+    second: e53c188ed5719f62ded647cc57e9dae9_37
+  - first:
+      213: 4155953054283478936
+    second: e53c188ed5719f62ded647cc57e9dae9_38
+  - first:
+      213: 7736937374923117701
+    second: e53c188ed5719f62ded647cc57e9dae9_39
+  - first:
+      213: -4547069176574291451
+    second: e53c188ed5719f62ded647cc57e9dae9_40
+  - first:
+      213: 5399542749070099349
+    second: e53c188ed5719f62ded647cc57e9dae9_41
+  - first:
+      213: -5152589838885727678
+    second: e53c188ed5719f62ded647cc57e9dae9_42
+  - first:
+      213: 569852075905505285
+    second: e53c188ed5719f62ded647cc57e9dae9_43
+  - first:
+      213: 6019262984612377615
+    second: e53c188ed5719f62ded647cc57e9dae9_44
+  - first:
+      213: -7902640586286773544
+    second: e53c188ed5719f62ded647cc57e9dae9_45
+  - first:
+      213: -8921525482803935587
+    second: e53c188ed5719f62ded647cc57e9dae9_46
+  - first:
+      213: -119499660067574333
+    second: e53c188ed5719f62ded647cc57e9dae9_47
+  - first:
+      213: -432473950797576978
+    second: e53c188ed5719f62ded647cc57e9dae9_48
+  - first:
+      213: 4914585035406352826
+    second: e53c188ed5719f62ded647cc57e9dae9_49
+  - first:
+      213: -6775513053328512677
+    second: e53c188ed5719f62ded647cc57e9dae9_50
+  - first:
+      213: 7786079393248543889
+    second: e53c188ed5719f62ded647cc57e9dae9_51
+  - first:
+      213: -3735565932965042795
+    second: e53c188ed5719f62ded647cc57e9dae9_52
+  - first:
+      213: -4811386523846846695
+    second: e53c188ed5719f62ded647cc57e9dae9_53
+  - first:
+      213: -3941262871617523852
+    second: e53c188ed5719f62ded647cc57e9dae9_54
+  - first:
+      213: 5179259314320248031
+    second: e53c188ed5719f62ded647cc57e9dae9_55
+  - first:
+      213: 4544189122523315664
+    second: e53c188ed5719f62ded647cc57e9dae9_56
+  - first:
+      213: 4929949597596303192
+    second: e53c188ed5719f62ded647cc57e9dae9_57
+  - first:
+      213: -2143803141268309011
+    second: e53c188ed5719f62ded647cc57e9dae9_58
+  - first:
+      213: -4367348189181810794
+    second: e53c188ed5719f62ded647cc57e9dae9_59
+  - first:
+      213: 8789494659368840759
+    second: e53c188ed5719f62ded647cc57e9dae9_60
+  - first:
+      213: -4980979093645100907
+    second: e53c188ed5719f62ded647cc57e9dae9_61
+  - first:
+      213: -5870279410265603726
+    second: e53c188ed5719f62ded647cc57e9dae9_62
+  - first:
+      213: -4456250815082625245
+    second: e53c188ed5719f62ded647cc57e9dae9_63
+  - first:
+      213: -3347237728557179490
+    second: e53c188ed5719f62ded647cc57e9dae9_64
+  - first:
+      213: 8793046852814044470
+    second: e53c188ed5719f62ded647cc57e9dae9_65
+  - first:
+      213: -3045612632076037498
+    second: e53c188ed5719f62ded647cc57e9dae9_66
+  - first:
+      213: -5355334864413148782
+    second: e53c188ed5719f62ded647cc57e9dae9_67
+  - first:
+      213: -6600341928589755298
+    second: e53c188ed5719f62ded647cc57e9dae9_68
+  - first:
+      213: -834693201800485962
+    second: e53c188ed5719f62ded647cc57e9dae9_69
+  - first:
+      213: -2940412676945678181
+    second: e53c188ed5719f62ded647cc57e9dae9_70
+  - first:
+      213: -3914386940891405437
+    second: e53c188ed5719f62ded647cc57e9dae9_71
+  - first:
+      213: 8263228265808720541
+    second: e53c188ed5719f62ded647cc57e9dae9_72
+  - first:
+      213: 9017896523485575875
+    second: e53c188ed5719f62ded647cc57e9dae9_73
+  - first:
+      213: -5235193848513361048
+    second: e53c188ed5719f62ded647cc57e9dae9_74
+  - first:
+      213: -7352268110551678052
+    second: e53c188ed5719f62ded647cc57e9dae9_75
+  - first:
+      213: 8730954874185424004
+    second: e53c188ed5719f62ded647cc57e9dae9_76
+  - first:
+      213: -8290305704959085869
+    second: e53c188ed5719f62ded647cc57e9dae9_77
+  - first:
+      213: -2662313993724385502
+    second: e53c188ed5719f62ded647cc57e9dae9_78
+  - first:
+      213: -2700231036912217885
+    second: e53c188ed5719f62ded647cc57e9dae9_79
+  - first:
+      213: 1547875867695317942
+    second: e53c188ed5719f62ded647cc57e9dae9_80
+  - first:
+      213: 975657387823422595
+    second: e53c188ed5719f62ded647cc57e9dae9_81
+  - first:
+      213: -4426815838391881170
+    second: e53c188ed5719f62ded647cc57e9dae9_82
+  - first:
+      213: 3505239321002771444
+    second: e53c188ed5719f62ded647cc57e9dae9_83
+  - first:
+      213: -7562512919724577209
+    second: e53c188ed5719f62ded647cc57e9dae9_84
+  - first:
+      213: -9203796653346876849
+    second: e53c188ed5719f62ded647cc57e9dae9_85
+  - first:
+      213: -1196910106018161553
+    second: e53c188ed5719f62ded647cc57e9dae9_86
+  - first:
+      213: -7128876919011380
+    second: e53c188ed5719f62ded647cc57e9dae9_87
+  - first:
+      213: -5162309159059690826
+    second: e53c188ed5719f62ded647cc57e9dae9_88
+  - first:
+      213: 3841779961879601924
+    second: e53c188ed5719f62ded647cc57e9dae9_89
+  - first:
+      213: 1337100167189521236
+    second: e53c188ed5719f62ded647cc57e9dae9_90
+  - first:
+      213: 4689544434369661231
+    second: e53c188ed5719f62ded647cc57e9dae9_91
+  - first:
+      213: 5744626905980334409
+    second: e53c188ed5719f62ded647cc57e9dae9_92
+  - first:
+      213: 2776138103807626069
+    second: e53c188ed5719f62ded647cc57e9dae9_93
+  - first:
+      213: -3894981528801492932
+    second: e53c188ed5719f62ded647cc57e9dae9_94
+  - first:
+      213: -8690905521200762264
+    second: e53c188ed5719f62ded647cc57e9dae9_95
+  - first:
+      213: 4235730488747108592
+    second: e53c188ed5719f62ded647cc57e9dae9_96
+  - first:
+      213: 3137510598563620850
+    second: e53c188ed5719f62ded647cc57e9dae9_97
+  - first:
+      213: 8787786519973137796
+    second: e53c188ed5719f62ded647cc57e9dae9_98
+  - first:
+      213: 3504330802911539631
+    second: e53c188ed5719f62ded647cc57e9dae9_99
+  - first:
+      213: -8594272280226902416
+    second: e53c188ed5719f62ded647cc57e9dae9_100
+  - first:
+      213: -3857906094739348795
+    second: e53c188ed5719f62ded647cc57e9dae9_101
+  - first:
+      213: -9072766266097312770
+    second: e53c188ed5719f62ded647cc57e9dae9_102
+  - first:
+      213: -40850458114007349
+    second: e53c188ed5719f62ded647cc57e9dae9_103
+  - first:
+      213: 5687322903365138020
+    second: e53c188ed5719f62ded647cc57e9dae9_104
+  - first:
+      213: -2381862143581017505
+    second: e53c188ed5719f62ded647cc57e9dae9_105
+  - first:
+      213: -265723265669185663
+    second: e53c188ed5719f62ded647cc57e9dae9_106
+  - first:
+      213: -602192688268560909
+    second: e53c188ed5719f62ded647cc57e9dae9_107
+  - first:
+      213: -6592013853354877968
+    second: e53c188ed5719f62ded647cc57e9dae9_108
+  - first:
+      213: -8805622807753708285
+    second: e53c188ed5719f62ded647cc57e9dae9_109
+  - first:
+      213: 4561867164475344704
+    second: e53c188ed5719f62ded647cc57e9dae9_110
+  - first:
+      213: 6813583983549496792
+    second: e53c188ed5719f62ded647cc57e9dae9_111
+  - first:
+      213: 6123255919940122466
+    second: e53c188ed5719f62ded647cc57e9dae9_112
+  - first:
+      213: 5677432781299666671
+    second: e53c188ed5719f62ded647cc57e9dae9_113
+  - first:
+      213: 5919084720785083361
+    second: e53c188ed5719f62ded647cc57e9dae9_114
+  - first:
+      213: -7327148540425178011
+    second: e53c188ed5719f62ded647cc57e9dae9_115
+  - first:
+      213: 988933147587528354
+    second: e53c188ed5719f62ded647cc57e9dae9_116
+  - first:
+      213: 3136967458587131865
+    second: e53c188ed5719f62ded647cc57e9dae9_117
+  - first:
+      213: -1395314300098613235
+    second: e53c188ed5719f62ded647cc57e9dae9_118
+  - first:
+      213: -2173247144383820618
+    second: e53c188ed5719f62ded647cc57e9dae9_119
+  - first:
+      213: -5292001640735736283
+    second: e53c188ed5719f62ded647cc57e9dae9_120
+  - first:
+      213: -6209381162342576029
+    second: e53c188ed5719f62ded647cc57e9dae9_121
+  - first:
+      213: -5244982380070173679
+    second: e53c188ed5719f62ded647cc57e9dae9_122
+  - first:
+      213: -5693574047466099640
+    second: e53c188ed5719f62ded647cc57e9dae9_123
+  - first:
+      213: 5014325724044260582
+    second: e53c188ed5719f62ded647cc57e9dae9_124
+  - first:
+      213: -1508182402459171389
+    second: e53c188ed5719f62ded647cc57e9dae9_125
+  - first:
+      213: 5726007149652310822
+    second: e53c188ed5719f62ded647cc57e9dae9_126
+  - first:
+      213: -3365245900880783040
+    second: e53c188ed5719f62ded647cc57e9dae9_127
+  - first:
+      213: -8661693002749892574
+    second: e53c188ed5719f62ded647cc57e9dae9_128
+  - first:
+      213: 890677446703130647
+    second: e53c188ed5719f62ded647cc57e9dae9_129
+  - first:
+      213: 4398087842537389744
+    second: e53c188ed5719f62ded647cc57e9dae9_130
+  - first:
+      213: -7994057552294977791
+    second: e53c188ed5719f62ded647cc57e9dae9_131
+  - first:
+      213: -615597357287725896
+    second: e53c188ed5719f62ded647cc57e9dae9_132
+  - first:
+      213: -3131348451813705316
+    second: Idle_Left_2
+  - first:
+      213: 7620518249995742098
+    second: Walk_Left_1
+  - first:
+      213: -2640027349551633736
+    second: Walk_Left_2
+  - first:
+      213: 3009983986703172755
+    second: Walk_Left_3
+  - first:
+      213: 7407478088547337978
+    second: Idle_UpLeft_1
+  - first:
+      213: 6230844599671793605
+    second: Walk_UpRight_3
+  - first:
+      213: 6281449477019138656
+    second: Idle_Right_1
+  - first:
+      213: -6418054059245859064
+    second: Walk_Right_1
+  - first:
+      213: 1320365309772467090
+    second: Idle_DownLeft_1
+  - first:
+      213: -8855452131865071831
+    second: Walk_DownRight_3
+  - first:
+      213: -4882036243900793782
+    second: Walk_Right_2
+  - first:
+      213: -1862413736918858869
+    second: Walk_Right_3
+  - first:
+      213: 8449435055435204937
+    second: Walk_UpLeft_2
+  - first:
+      213: 7322257877143515663
+    second: Idle_UpLeft_1
+  - first:
+      213: 2756592719983629935
+    second: Walk_UpRight_2
+  - first:
+      213: 6787455229449132423
+    second: Walk_DownLeft_2
+  - first:
+      213: 6549324309735477454
+    second: Idle_DownLeft_1
+  - first:
+      213: 8769273561881175616
+    second: Walk_DownRight_2
+  - first:
+      213: -8855452131865071831
+    second: Idle_DownRight_1
+  externalObjects: {}
+  serializedVersion: 10
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: -1
+    mipBias: -100
+    wrapU: 1
+    wrapV: 1
+    wrapW: -1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 40
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  platformSettings:
+  - serializedVersion: 2
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+  - serializedVersion: 2
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+  - serializedVersion: 2
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Walk_Left_1
+      rect:
+        serializedVersion: 2
+        x: 77
+        y: 139
+        width: 23
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3cce29f12e5f5ec49a1eeb334112329c
+      internalID: 7620518249995742098
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Walk_Left_2
+      rect:
+        serializedVersion: 2
+        x: 103
+        y: 139
+        width: 23
+        height: 18
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e68f47520fcdc7d479951b0ac4075a7a
+      internalID: -2640027349551633736
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Walk_Left_3
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 139
+        width: 23
+        height: 18
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7bf39ee1f4247dd40bcf98ee245df7ad
+      internalID: 3009983986703172755
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Walk_UpLeft_3
+      rect:
+        serializedVersion: 2
+        x: 93
+        y: 213
+        width: 20
+        height: 20
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 69545fb6105284b4dad35fcf45ed4b9d
+      internalID: 7407478088547337978
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Walk_UpRight_3
+      rect:
+        serializedVersion: 2
+        x: 191
+        y: 213
+        width: 20
+        height: 20
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2538866434768c042b58fbf3b2565a64
+      internalID: 6230844599671793605
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Walk_Right_1
+      rect:
+        serializedVersion: 2
+        x: 204
+        y: 139
+        width: 23
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9f7046eda55819f4bad8046354659263
+      internalID: -6418054059245859064
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Walk_DownLeft_3
+      rect:
+        serializedVersion: 2
+        x: 58
+        y: 98
+        width: 22
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b759a4844c8588d46bcf61d6f9c058dc
+      internalID: 1320365309772467090
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Walk_DownRight_3
+      rect:
+        serializedVersion: 2
+        x: 224
+        y: 98
+        width: 22
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 35cd683966f6cec46b25eadfcbf1551b
+      internalID: -8855452131865071831
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Walk_Right_2
+      rect:
+        serializedVersion: 2
+        x: 178
+        y: 139
+        width: 23
+        height: 18
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d2e34069c723cf14093b4a739032a41a
+      internalID: -4882036243900793782
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Walk_Right_3
+      rect:
+        serializedVersion: 2
+        x: 153
+        y: 139
+        width: 23
+        height: 18
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1d9bb2affaccb754fab4086953779083
+      internalID: -1862413736918858869
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Walk_UpLeft_2
+      rect:
+        serializedVersion: 2
+        x: 70
+        y: 214
+        width: 20
+        height: 20
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bc5502f78060b944089d93de71986267
+      internalID: 8449435055435204937
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Idle_UpLeft_1
+      rect:
+        serializedVersion: 2
+        x: 46
+        y: 214
+        width: 20
+        height: 20
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: eca1c98811dcf2a478aaf2023e41d8fa
+      internalID: 7322257877143515663
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Walk_UpRight_2
+      rect:
+        serializedVersion: 2
+        x: 214
+        y: 214
+        width: 20
+        height: 20
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 74c631a3df4cc14478d8e8ee0bcec299
+      internalID: 2756592719983629935
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Idle_UpRight_1
+      rect:
+        serializedVersion: 2
+        x: 238
+        y: 214
+        width: 20
+        height: 20
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 80be6c588821ffe478b5d087a43779ce
+      internalID: -1796155980374728456
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Walk_DownLeft_2
+      rect:
+        serializedVersion: 2
+        x: 38
+        y: 98
+        width: 18
+        height: 21
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9410008ed7cbf984c87d2e31bfa76509
+      internalID: 6787455229449132423
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Idle_DownLeft_1
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 98
+        width: 19
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: debec2591a7d0d44c8f2276b8f3789d9
+      internalID: 6549324309735477454
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Walk_DownRight_2
+      rect:
+        serializedVersion: 2
+        x: 248
+        y: 98
+        width: 18
+        height: 21
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 73db01428c26aa14cb2754d1dbd68efc
+      internalID: 8769273561881175616
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Idle_DownRight_1
+      rect:
+        serializedVersion: 2
+        x: 269
+        y: 98
+        width: 19
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7c05a6100ec074543a8f0a53a913fa77
+      internalID: -8855452131865071831
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 90f7f8710faa60041ae2b8b24b800b56
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

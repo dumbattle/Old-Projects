@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44b2f831bd985c94184f00d2686923af, type: 3}
+  m_Name: _Unit Animator
+  m_EditorClassIdentifier: 
+  idleDL: {fileID: 11400000, guid: 087380a7162db2e44a57c2e9666155e0, type: 2}
+  idleDR: {fileID: 11400000, guid: 82d9a0aa9b0d5144db4c90972ea4860b, type: 2}
+  idleL: {fileID: 11400000, guid: eae26edad850cca4aa84f715ba3bdc3e, type: 2}
+  idleR: {fileID: 11400000, guid: 8b2035b092dd7064594b722bb8e901a5, type: 2}
+  idleUL: {fileID: 11400000, guid: 691165671bb486743850221640162931, type: 2}
+  idleUR: {fileID: 11400000, guid: ca93805333ac2724ea9360dbace068de, type: 2}
+  moveDL: {fileID: 11400000, guid: 4512995e4a276eb4bb0eb53e57aa70ca, type: 2}
+  moveDR: {fileID: 11400000, guid: 5c650b3fa50afa443be28f67ec09a93f, type: 2}
+  moveL: {fileID: 11400000, guid: 1df2f8663539c9a499bacef4b6522540, type: 2}
+  moveR: {fileID: 11400000, guid: 67fae8595d3dda04a9be6831a1534dc4, type: 2}
+  moveUL: {fileID: 11400000, guid: 56713749f9172664b8809cf47d4212c0, type: 2}
+  moveUR: {fileID: 11400000, guid: 9d2bc5c29502f9248b7cf0909b924a32, type: 2}
