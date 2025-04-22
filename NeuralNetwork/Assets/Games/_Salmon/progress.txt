@@ -1,0 +1,17 @@
+'100'		 '  18561'		'  17099' steps
+'200'		 '  95968'		' 143359' steps
+'400'		 ' 166274'		' 213496' steps
+'800'		 ' 284233'		' 308383' steps
+'1600'		 ' 482633'		' 539941' steps
+'3200'		 '1207295'		'1056696' steps
+'6400'		 '2393985'		'2054187' steps
+'12800'		 '4147837'		'3754523' steps
+
+Achieved average score of '100' after '17380' steps
+Achieved average score of '200' after '83987' steps
+Achieved average score of '400' after '209984' steps
+Achieved average score of '800' after '324555' steps
+Achieved average score of '1600' after '522849' steps
+Achieved average score of '3200' after '1175893' steps
+Achieved average score of '6400' after '2410152' steps
+Achieved average score of '12800' after '4119506' steps

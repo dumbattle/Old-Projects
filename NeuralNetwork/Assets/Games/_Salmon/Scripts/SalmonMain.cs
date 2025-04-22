@@ -8,6 +8,7 @@ using UnityEngine;
 
 namespace Swimming {
     public class SalmonMain : MonoBehaviour {
+        public SalmonParamsUiManagerBehaviour uiManager;
         public SalmonParameters parameters;
         public ObstacleEntry[] obstaclesEntries;
         public SalmonObjectBehaviour playerObj;
@@ -27,7 +28,9 @@ namespace Swimming {
 
         SalmonAC ai = new SalmonAC();
         Stopwatch timer = new Stopwatch();
+        float nextTargetScore = 100;
 
+        string debugString = "";
         void Start() {
             Application.targetFrameRate = 30;
             obstacles = new Obstacle[obstaclesEntries.Length];
@@ -43,12 +46,26 @@ namespace Swimming {
 
 
             trainer = new SalmonTrainer(game,ai);
+            uiManager.Init(game);
         }
 
         void Update() {
+            uiManager.UpdateParams(game);
+
+           
+            int targetFrames = 1;
+
+            if(uiManager.spedUp) {
+                targetFrames = 1000;
+            }
+            if(uiManager.paused) {
+                targetFrames = 0;
+            }
+
+
             timer.Restart();
-            for (int i = 0; i < gameSpeed; i++) {
-                if (timer.ElapsedMilliseconds > 1000) {
+            for (int i = 0; i < targetFrames; i++) {
+                if (timer.ElapsedMilliseconds > 1f/30f) {
                     gameSpeed = i;
                     break;
                 }
@@ -60,8 +77,16 @@ namespace Swimming {
                         highScore = s;
                     }
                     movingAvgScore = movingAvgScore * 0.99f + 0.01f * s;
-                }
 
+
+                    if (movingAvgScore >= nextTargetScore) {
+                        var s2 = $"Achieved average score of '{nextTargetScore}' after '{steps}' steps\n";
+                        debugString += s2;
+                        print(debugString);
+                        print(s2);
+                        nextTargetScore *= 2;
+                    }
+                }
             }
             score = game.score;
             timer.Stop();

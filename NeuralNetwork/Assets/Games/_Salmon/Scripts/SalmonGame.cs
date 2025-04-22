@@ -1,7 +1,9 @@
 ﻿using DumbML;
 using Flappy;
 using System.Collections.Generic;
+using System.Reflection;
 using UnityEngine;
+using static UnityEditor.PlayerSettings;
 
 namespace Swimming {
     public enum MoveInput {
@@ -14,7 +16,7 @@ namespace Swimming {
         public List<(int, Vector2)> activeObstacles = new List<(int, Vector2)>();
         public int score;
         public bool done;
-        SalmonParameters parameters;
+        public SalmonParameters parameters;
         Obstacle[] obstacles;
 
         Channel scoreChannel;
@@ -45,15 +47,15 @@ namespace Swimming {
             score++;
 
             if (movement == MoveInput.up) {
-                playerVelocity += parameters.moveSpeed;
+                playerVelocity += parameters.envParams.moveSpeed;
             }
             else if (movement == MoveInput.down) {
-                playerVelocity -= parameters.moveSpeed;
+                playerVelocity -= parameters.envParams.moveSpeed;
             }
             else {
                 playerVelocity *= parameters.swimDecay;
             }
-            playerVelocity = Mathf.Clamp(playerVelocity, -parameters.moveSpeed, parameters.moveSpeed);
+            playerVelocity = Mathf.Clamp(playerVelocity, -parameters.envParams.moveSpeed, parameters.envParams.moveSpeed);
             playerPosition += playerVelocity;
             SpawnObstacle();
             MoveObstacles();
@@ -62,9 +64,9 @@ namespace Swimming {
 
             if (collided) {
                 done = true;
-                return parameters.dieScore;
+                return parameters.envParams.dieScore;
             }
-            return parameters.aliveScore + (movement == MoveInput.none ? parameters.idleBonus : 0);
+            return parameters.envParams.aliveScore;
         }
 
 
@@ -73,7 +75,7 @@ namespace Swimming {
             for (int i = 0; i < activeObstacles.Count; i++) {
                 var (ind, pos) = activeObstacles[i];
                 var ob = obstacles[ind];
-                pos.x -= ob.speed + parameters.swimSpeed;
+                pos.x -= ob.speed + parameters.envParams.swimSpeed;
 
                 activeObstacles[i] = (ind, pos);
 
@@ -94,7 +96,7 @@ namespace Swimming {
             if (obstacleSpawnTimer > 0) {
                 return;
             }
-            obstacleSpawnTimer = parameters.obstaclePeriod;
+            obstacleSpawnTimer = parameters.envParams.obstaclePeriod;
 
 
             var obstacleIndex = UnityEngine.Random.Range(0, obstacles.Length);
@@ -134,16 +136,25 @@ namespace Swimming {
             }
             return false;
         }
+        
         public Tensor GetState() {
             /// bird height
             /// bird velocity
             /// closest block
             /// block height
-            var (index, pos) = activeObstacles[0];
+
+            if (activeObstacles.Count == 0) {
+                stateTensor[1] = 1;
+                stateTensor[2] = 0;
+                stateTensor[3] = 0;
+            }
+            else {
+                var (index, pos) = activeObstacles[0];
+                stateTensor[1] = pos.x / parameters.playableWidth;
+                stateTensor[2] = pos.y / parameters.playableHeight;
+                stateTensor[3] = (pos.y + obstacles[index].size.y) / parameters.playableHeight;
+            }
             stateTensor[0] = playerPosition / parameters.playableHeight;
-            stateTensor[1] = pos.x / parameters.playableWidth;
-            stateTensor[2] = pos.y / parameters.playableHeight;
-            stateTensor[3] = (pos.y + obstacles[index].size.y) / parameters.playableHeight;
             return stateTensor;
         }
         //public void ToTensor(Tensor<float> result) {

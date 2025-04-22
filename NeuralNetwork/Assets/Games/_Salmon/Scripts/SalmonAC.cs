@@ -19,16 +19,18 @@ namespace Swimming {
 
         protected override Operation[] Input() {
             Operation x = new InputLayer(4).Build();
-            x = new FullyConnected(30, ActivationFunction.Sigmoid).Build(x);
+            //x = new FullyConnected(30, ActivationFunction.Sigmoid).Build(x);
             return new[] { x };
         }
         protected override Operation Actor(Operation[] input) {
-            Operation a = new FullyConnected(3).Build(input[0]);
+            Operation a = new FullyConnected(32).Build(input[0]);
+            a = new FullyConnected(3).Build(a);
             a = new Softmax(a);
             return a;
         }
         protected override Operation Critic(Operation[] input) {
-            Operation c = new FullyConnected(1).Build(input[0]);
+            Operation c = new FullyConnected(32).Build(input[0]);
+            c = new FullyConnected(1).Build(c);
 
             return c;
         }
